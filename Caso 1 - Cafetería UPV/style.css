@@ -1,0 +1,349 @@
+@import url("https://fonts.googleapis.com/css2?family=Koulen&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inclusive+Sans:ital@0;1&display=swap");
+
+/* Reset básico */
+* {
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+}
+
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: #faf0e2;
+  color: #111;
+  font-family: "Inclusive Sans", Helvetica, sans-serif;
+  line-height: 1.35;
+}
+
+
+
+/* Contenedor principal */
+.pagina-cafeteria {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.pagina-cafeteria .div {
+  width: 100%;
+  max-width: 1200px;
+  padding: 0 40px 120px;
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  grid-auto-rows: auto;
+  column-gap: 70px;
+  row-gap: 12px;
+}
+
+/* Ocultar bloques exportados sobrantes */
+.encabezado,
+.text-wrapper,
+.text-wrapper-2,
+.text-wrapper-3,
+.text-wrapper-5,
+.text-wrapper-6 {
+  display: none !important;
+}
+
+/* Header */
+.encabezado-sitio {
+  grid-column: 1 / -1;
+  position: relative;
+  padding: 40px 0 10px;
+  text-align: center;
+}
+
+.titulo {
+  font-family: "Koulen", Helvetica, sans-serif;
+  font-size: 56px;
+  font-weight: 400;
+  margin: 0;
+  letter-spacing: .5px;
+}
+
+.nav-principal {
+  margin-top: 14px;
+  display: flex;
+  gap: 60px;
+  justify-content: center;
+  font-size: 17px;
+  flex-wrap: wrap;
+}
+
+.nav-enlace {
+  font-family: "Inclusive Sans", Helvetica, sans-serif;
+  color: #111;
+  text-decoration: none;
+  position: relative;
+  padding: 4px 0;
+}
+
+.nav-enlace:hover,
+.nav-enlace:focus-visible {
+  font-weight: 600;
+}
+
+.nav-enlace:hover::after,
+.nav-enlace:focus-visible::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  height: 2px;
+  width: 100%;
+  background: #111;
+}
+
+.logos-encabezado {
+  position: absolute;
+  top: 16px;
+  right: 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.logo-upv {
+  width: 220px;
+  height: auto;
+  display: block;
+}
+
+.text-wrapper-4 {
+  grid-column: 1;
+  grid-row: 2;
+  font-family: "Koulen", Helvetica, sans-serif;
+  font-size: 50px;
+  letter-spacing: .5px;
+  text-transform: uppercase;
+  margin: 0;
+  text-align: center;
+  line-height: 1.05;
+  width: 100%;
+}
+
+.frame {
+  grid-column: 1;
+  grid-row: 3;
+  max-width: 680px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.p {
+  margin: 0;
+  font-size: 16px;
+  letter-spacing: .2px;
+  line-height: 1.45;
+}
+
+/* Imagen jaguar (ocupa las filas del título + párrafo) */
+.logo-jaguar {
+  grid-column: 2;
+  grid-row: 2 / span 2;
+  align-self: center;
+  width: 100%;
+  max-width: 360px;
+  aspect-ratio: 1/1;
+  object-fit: cover;
+  border-radius: 50%;
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, .15));
+  justify-self: end;
+}
+
+/* Imagen del menú */
+.menu {
+  grid-column: 1 / -1;
+  display: block;
+  width: 640px;
+  max-width: 100%;
+  margin: 40px auto 80px;
+  border-radius: 8px;
+  box-shadow: 0 4px 18px -4px rgba(0, 0, 0, .18);
+}
+
+/* Sección Horario + Contacto */
+.seccion-horario-contacto {
+  grid-column: 1 / -1;
+  margin: 0 auto;
+  max-width: 520px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 70px;
+  padding: 10px 0 20px;
+}
+
+.apartado-horario,
+.apartado-contacto {
+  width: 100%;
+  text-align: center;
+}
+
+.titulo-horario,
+.titulo-contacto {
+  font-family: "Koulen", Helvetica, sans-serif;
+  font-size: 28px;
+  margin: 0 0 26px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.Horario,
+.Horario-Comida {
+  margin: 14px 0;
+  font-size: 16px;
+  color: #222;
+}
+
+.contacto-imagen-wrap {
+  display: flex;
+  justify-content: center;
+}
+
+.contacto-imagen {
+  max-width: 240px;
+  width: 70%;
+  height: auto;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px -2px rgba(0, 0, 0, .18);
+}
+
+/* Utilidades */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+a:focus-visible {
+  outline: 2px solid #111;
+  outline-offset: 2px;
+}
+
+/* Responsive */
+@media (max-width:1200px) {
+  .titulo {
+    font-size: 52px;
+  }
+
+  .pagina-cafeteria .div {
+    column-gap: 50px;
+    grid-template-columns: 1fr 320px;
+  }
+
+  .logo-jaguar {
+    max-width: 320px;
+  }
+}
+
+@media (max-width:1050px) {
+  .pagina-cafeteria .div {
+    grid-template-columns: 1fr 300px;
+    column-gap: 40px;
+  }
+
+  .logo-jaguar {
+    max-width: 300px;
+  }
+}
+
+@media (max-width:900px) {
+  .pagina-cafeteria .div {
+    grid-template-columns: 1fr;
+  }
+
+  .logos-encabezado {
+    position: static;
+    justify-content: center;
+    margin: 0 auto 8px;
+  }
+
+  .logo-upv {
+    width: 180px;
+  }
+
+  .logo-jaguar {
+    grid-column: 1;
+    grid-row: auto;
+    max-width: 260px;
+    justify-self: center;
+    margin: 24px 0 10px;
+  }
+
+  .menu {
+    margin: 30px auto 70px;
+  }
+
+  .text-wrapper-4 {
+    font-size: 44px;
+  }
+}
+
+@media (max-width:640px) {
+  .titulo {
+    font-size: 44px;
+  }
+
+  .nav-principal {
+    gap: 34px;
+    font-size: 15px;
+  }
+
+  .text-wrapper-4 {
+    font-size: 38px;
+  }
+
+  .p {
+    font-size: 15px;
+  }
+
+  .logo-jaguar {
+    max-width: 230px;
+  }
+
+  .titulo-horario,
+  .titulo-contacto {
+    font-size: 26px;
+  }
+}
+
+@media (max-width:480px) {
+  .titulo {
+    font-size: 38px;
+  }
+
+  .nav-principal {
+    gap: 22px;
+    font-size: 14px;
+  }
+
+  .logo-upv {
+    width: 140px;
+  }
+
+  .text-wrapper-4 {
+    font-size: 32px;
+  }
+
+  .p {
+    font-size: 14px;
+  }
+
+  .seccion-horario-contacto {
+    gap: 56px;
+  }
+
+  .titulo-horario,
+  .titulo-contacto {
+    font-size: 24px;
+  }
+
+  .Horario,
+  .Horario-Comida {
+    font-size: 14px;
+  }
+}
