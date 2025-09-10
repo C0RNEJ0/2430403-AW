@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Datos de Estudiante</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 900px; margin: 20px auto; line-height: 1.5; }
+    h1, h2 { color: #333; }
+    img { max-width: 150px; border-radius: 8px; }
+    .dato b { display: inline-block; width: 80px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+    th, td { border: 1px solid #aaa; padding: 6px; text-align: center; }
+    tfoot td { font-weight: bold; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Información del Estudiante</h1>
+    <section>
+      <h2>Datos Personales</h2>
+      <p class="dato"><b>Nombre:</b> Jose Guadalupe Cornejo Alva</p>
+      <p class="dato"><b>Carrera:</b> Ing. en Tecnologías de la Información e Innovación Digital (ITIID)</p>
+      <p class="dato"><b>Correo:</b> <a href="mailto:2430403@upv.edu.mx">2430403@upv.edu.mx</a></p>
+    </section>
+
+    <section>
+      <h2>Foto</h2>
+      <figure>
+        <img src="imagen1.jpeg" alt="Foto de Jose Guadalupe Cornejo Alva">
+        <figcaption>Estudiante: Jose Guadalupe Cornejo Alva</figcaption>
+      </figure>
+    </section>
+
+    <section>
+      <h2>Horario de Clases</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Materia</th>
+            <th>Profesor</th>
+            <th>Grupo</th>
+            <th>Lunes</th>
+            <th>Martes</th>
+            <th>Miércoles</th>
+            <th>Jueves</th>
+            <th>Viernes</th>
+            <th>Créditos</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Inglés IV</td>
+            <td>Juan Manuel Guzmán Martínez</td>
+            <td>ITIID-76124</td>
+            <td colspan="5">08:50 - 09:44 A210 (A4)</td>
+            <td>5</td>
+          </tr>
+          <tr>
+            <td>Ética Profesional</td>
+            <td>Vanessa Janeth Lara Valdez</td>
+            <td>ITIID-76125</td>
+            <td colspan="5">11:10 - 12:04 A210 (A4)</td>
+            <td>4</td>
+          </tr>
+          <tr>
+            <td>Cálculo de Varias Variables</td>
+            <td>Ma. Gloria Guerrero Tinajero</td>
+            <td>ITIID-76126</td>
+            <td colspan="5">07:55 - 08:49 A210 (A4)</td>
+            <td>5</td>
+          </tr>
+          <tr>
+            <td>Aplicaciones Web</td>
+            <td>Mario Humberto Rodríguez Chávez</td>
+            <td>ITIID-76127</td>
+            <td colspan="5">07:00 - 07:54 A210 (A4)</td>
+            <td>5</td>
+          </tr>
+          <tr>
+            <td>Estructura de Datos</td>
+            <td>Said Polanco Martagón</td>
+            <td>ITIID-76128</td>
+            <td colspan="5">13:00 - 13:54 A210 (A4)</td>
+            <td>5</td>
+          </tr>
+          <tr>
+            <td>Desarrollo de Aplicaciones Móviles</td>
+            <td>Marco Aurelio Nuño Maganda</td>
+            <td>ITIID-76129</td>
+            <td colspan="4">12:05 - 12:59 A210 (A4)</td>
+            <td>11:10 - 12:04</td>
+            <td>6</td>
+          </tr>
+          <tr>
+            <td>Análisis y Diseño de Software</td>
+            <td>Luis Roberto Flores de la Fuente</td>
+            <td>ITIID-76130</td>
+            <td colspan="5">09:45 - 10:39 A210 (A4)</td>
+            <td>5</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="8" style="text-align:right;">Total de Créditos:</td>
+            <td>35</td>
+          </tr>
+        </tfoot>
+      </table>
+    </section>
+  </header>
+</body>
+</html>
+
