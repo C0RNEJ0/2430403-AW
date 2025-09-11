@@ -1,7 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Koulen&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Inclusive+Sans:ital@0;1&display=swap");
 
-/* Reset básico */
 * {
   box-sizing: border-box;
   -webkit-font-smoothing: antialiased;
@@ -19,13 +18,11 @@ body {
   overflow-x: hidden;
 }
 
-/* Utilidades */
 img {
   max-width: 100%;
   height: auto;
 }
 
-/* Estilos existentes ajustados a las nuevas fuentes */
 .inicio {
     background-color: #faf0e2;
     width: 100%;
@@ -226,7 +223,6 @@ img {
     right: 5%;
 }
 
-/* Líneas del menú con CSS (reemplazan imágenes) */
 .inicio .linea-superior,
 .inicio .linea-inferior {
   display: none;
@@ -242,11 +238,9 @@ img {
   background: #111; /* color de la línea */
 }
 
-/* Ajusta estos valores si mueves el menú */
 .inicio .contenedor::before { top: 150px; }
 .inicio .contenedor::after { top: 217px; }
 
-/* Media queries para responsive design */
 @media (max-width: 1200px) {
     .inicio .titulo-sitio {
         font-size: 56px;
@@ -334,7 +328,6 @@ img {
         top: 15px;
     }
     
-    /* Navegación en dos filas para tablets */
     .inicio .nav-inicio {
         left: 3%;
         font-size: 20px;

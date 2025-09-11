@@ -124,7 +124,7 @@ html, body {
     display: block;
 }
 
-/* Grilla de productos */
+/* productos */
 .grilla-productos {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
@@ -133,7 +133,7 @@ html, body {
     margin: 0 auto;
 }
 
-/* Tarjetas de productos - Guisos (sin precio) */
+/* Tarjetas de productos - Guisos*/
 .tarjeta-producto {
     background: #fff;
     border-radius: 15px;
@@ -351,7 +351,6 @@ html, body {
     animation: fadeIn 0.5s ease-in-out;
 }
 
-/* Estados de hover para mejor UX */
 .tarjeta-producto,
 .tarjeta-producto-precio {
     cursor: pointer;

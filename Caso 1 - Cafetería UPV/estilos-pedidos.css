@@ -415,7 +415,6 @@ html, body {
     animation: fadeIn 0.5s ease-in-out;
 }
 
-/* Estados de hover para mejor UX */
 .tarjeta-pedido {
     cursor: pointer;
 }

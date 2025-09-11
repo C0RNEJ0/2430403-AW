@@ -220,47 +220,6 @@ html, body {
     box-shadow: 0 4px 12px rgba(129, 199, 132, 0.3);
 }
 
-/* Modal de éxito */
-.modal-exito {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-    animation: fadeIn 0.3s ease-in-out;
-}
-
-.modal-exito.oculto {
-    display: none;
-}
-
-.contenido-modal {
-    background: #fff;
-    border-radius: 20px;
-    padding: 40px;
-    text-align: center;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-    max-width: 400px;
-    margin: 20px;
-    animation: slideIn 0.3s ease-in-out;
-}
-
-.icono-exito {
-    margin-bottom: 20px;
-}
-
-.mensaje-exito {
-    font-family: "Inclusive Sans", Helvetica, sans-serif;
-    font-size: 20px;
-    font-weight: 600;
-    color: #333;
-    margin: 0 0 30px 0;
-}
 
 .boton-aceptar {
     background: #4CAF50;
@@ -336,10 +295,6 @@ html, body {
         max-width: 250px;
     }
     
-    .contenido-modal {
-        padding: 30px;
-        margin: 15px;
-    }
 }
 
 @media (max-width: 480px) {
@@ -391,13 +346,6 @@ html, body {
         max-width: 200px;
     }
     
-    .contenido-modal {
-        padding: 25px;
-    }
-    
-    .mensaje-exito {
-        font-size: 18px;
-    }
 }
 
 /* Animaciones */
