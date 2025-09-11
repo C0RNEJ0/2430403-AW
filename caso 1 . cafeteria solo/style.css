@@ -1,0 +1,278 @@
+@import url("https://fonts.googleapis.com/css2?family=Koulen&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inclusive+Sans:ital@0;1&display=swap");
+
+/* Reset básico */
+* {
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+}
+
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: #faf0e2;
+  color: #111;
+  font-family: "Inclusive Sans", Helvetica, sans-serif;
+  line-height: 1.35;
+}
+
+.logos-encabezado {
+  position: absolute;
+  top: 16px;
+  right: 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+a:focus-visible {
+  outline: 2px solid #111;
+  outline-offset: 2px;
+}@media (max-width:900px) {
+
+
+  .logos-encabezado {
+    position: static;
+    justify-content: center;
+    margin: 0 auto 8px;
+  }}
+/* ===== Bridge CSS para el HTML actual (Cafetería Jaguares) ===== */
+
+/* Tipos, fondo y texto (mismo look & feel) */
+html, body {
+  background: #faf0e2;
+  color: #111;
+  font-family: "Inclusive Sans", Helvetica, sans-serif;
+  line-height: 1.35;
+}
+
+/* Contenedor base */
+.wrap {
+  width: 100%;
+  max-width: 1200px;
+  padding: 0 24px;
+  margin: 0 auto;
+}
+
+/* Secciones */
+.panel {
+  padding: 40px 0;
+}
+.section-title {
+  font-family: "Koulen", Helvetica, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  font-size: 32px;
+  margin: 8px 0 22px;
+  text-align: center;
+}
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 24px;
+}
+.brand {
+  font-family: "Koulen", Helvetica, sans-serif;
+  font-size: 36px;
+  letter-spacing: .5px;
+}
+.logos img { display: block; width: 200px; height: auto; }
+.navwrap {
+  display: flex;
+  gap: 40px;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: 10px 0;
+}
+.navwrap a {
+  color: #111;
+  text-decoration: none;
+  position: relative;
+  padding: 6px 2px;
+  font-size: 16px;
+}
+.navwrap a:hover,
+.navwrap a:focus-visible { font-weight: 600; }
+.navwrap a:hover::after,
+.navwrap a:focus-visible::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -4px;
+  height: 2px;
+  background: #111;
+}
+
+/* Hero (texto + imagen circular) */
+.hero {
+  display: grid;
+  grid-template-columns: 1.2fr 360px;
+  align-items: center;
+  gap: 50px;
+}
+.hero h1 {
+  font-family: "Koulen", Helvetica, sans-serif;
+  font-size: 56px;
+  margin: 0 0 8px;
+  line-height: 1.05;
+  letter-spacing: .5px;
+}
+.hero p {
+  margin: 0;
+  font-size: 16px;
+  letter-spacing: .2px;
+  line-height: 1.45;
+}
+.circle {
+  width: 360px;
+  height: 360px;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 6px 14px rgba(0,0,0,.15);
+  justify-self: end;
+}
+.circle img { width: 100%; height: 100%; object-fit: cover; }
+
+/* Foto representativa */
+.fotorepresentativa img {
+  display: block;
+  width: 100%;
+  max-width: 860px;
+  margin: 26px auto 0;
+  border-radius: 8px;
+  box-shadow: 0 4px 18px -4px rgba(0,0,0,.18);
+}
+
+/* Cards, columnas y splits */
+.card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 18px;
+  box-shadow: 0 4px 14px -6px rgba(0,0,0,.22);
+}
+.card-center { display: grid; place-items: center; }
+
+.columns {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 24px;
+  align-items: start;
+}
+
+/* Icon rows (Contacto) */
+.icon-row { display: grid; gap: 16px; }
+.icon {
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  gap: 12px;
+  align-items: center;
+}
+.icon .pill {
+  display: inline-block;
+  background: #111;
+  color: #faf0e2;
+  border-radius: 999px;
+  padding: 2px 8px;
+  font-size: 12px;
+}
+.muted { opacity: .7; }
+
+/* Back link */
+.back {
+  display: inline-block;
+  margin-bottom: 8px;
+  text-decoration: none;
+  color: #111;
+  opacity: .8;
+}
+.back:hover { opacity: 1; }
+
+/* Tamaños utilitarios usados en el HTML */
+.square-180 { width: 180px; height: 180px; object-fit: cover; }
+.square-220 { width: 220px; height: 220px; object-fit: cover; }
+.gmapslogo { width: 120px; height: auto; }
+
+/* Mapa (dos tarjetas) */
+.maprow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}@media (max-width: 1100px) {
+
+  .hero { grid-template-columns: 1.2fr 320px; gap: 40px; }
+  .circle { width: 320px; height: 320px; }
+  .columns { grid-template-columns: 1fr 300px; }}
+@media (max-width: 900px) {
+
+  .hero { grid-template-columns: 1fr; text-align: center; }
+  .circle { width: 260px; height: 260px; justify-self: center; margin-top: 10px; }
+  .columns { grid-template-columns: 1fr; }
+  .logos img { width: 160px; }
+  .brand { font-size: 32px; }
+  .section-title { font-size: 28px; }}
+@media (max-width: 640px) {
+
+  .navwrap { gap: 24px; }
+  .hero h1 { font-size: 44px; }}
+@media (max-width: 420px) {
+
+  .section-title { font-size: 24px; }}
+
+
+/* MENÚ como imagen estática: ocultar UI dinámica previa dentro de #menu */
+#menu .tabs,
+#menu .subtabs,
+#menu .grid,
+#menu .item,
+#menu .thumb,
+#menu .caption,
+#menu .columns,
+#menu .split { display: none !important; }
+
+/* Estilos para centrar y destacar la imagen estática del menú */
+#menu .card.card-center {
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
+}
+#menu .card.card-center img {
+  display: block;
+  width: 100%;
+  max-width: 860px;
+  height: auto;
+  margin: 20px auto 60px;
+  border-radius: 8px;
+  box-shadow: 0 4px 18px -4px rgba(0,0,0,.18);
+}
+#menu .muted {
+  text-align: center;
+  margin-top: 10px;
+  opacity: .75;
+}
+
+/* ===== Simplified overrides (20250911-121619) ===== */
+#pedidos { display:none !important; }
+a[href="#pedidos"] { display:none !important; }
+
+/* MENU como imagen estática */
+#menu .tabs, #menu .subtabs, #menu .grid, #menu .item, #menu .thumb, #menu .caption, #menu .columns, #menu .split {
+  display:none !important;
+}
+#menu .card.card-center {
+  padding:0;
+  background:transparent;
+  box-shadow:none;
+}
+#menu .card.card-center img {
+  display:block;
+  width:100%;
+  max-width:860px;
+  height:auto;
+  margin:20px auto 60px;
+  border-radius:8px;
+  box-shadow:0 4px 18px -4px rgba(0,0,0,.18);
+}
+#menu .muted { text-align:center; margin-top:10px; opacity:.75; }
