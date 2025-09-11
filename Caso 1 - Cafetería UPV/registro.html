@@ -64,22 +64,10 @@
                     </svg>
                 </div>
                 <h3 class="mensaje-exito">Usuario registrado con éxito</h3>
-                <button class="boton-aceptar" onclick="cerrarModal()">Aceptar</button>
+                <button class="boton-aceptar">Aceptar</button>
             </div>
         </div>
     </div>
-
-    <script>
-        function cerrarModal() {
-            document.getElementById('modal-exito').classList.add('oculto');
-            window.location.href = 'login.html';
-        }
-
-        document.querySelector('.form-registro').addEventListener('submit', function(e) {
-            e.preventDefault();
-            document.getElementById('modal-exito').classList.remove('oculto');
-        });
-    </script>
 </body>
 
 </html>
