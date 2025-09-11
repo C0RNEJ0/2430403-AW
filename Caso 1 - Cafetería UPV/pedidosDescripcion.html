@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="estilos-pedidos.css" />
+</head>
+
+<body>
+    <div class="contenedor-pedidos">
+        <!-- Encabezado -->
+        <div class="encabezado-pedidos">
+            <a href="pedidos.html" class="boton-regresar">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </a>
+            <h1 class="titulo-pedidos">PEDIDOS</h1>
+            <img class="decorativo-encabezado" src="imagenes-inicio/logoupv.png" alt="Logotipo UPV" />
+        </div>
+
+        <!-- Navegación de pestañas -->
+        <div class="navegacion-pestanas">
+            <a href="pedidos.html" class="pestana">Mis pedidos</a>
+            <a href="pedidosDescripcion.html" class="pestana activa">Descripción del pedido</a>
+        </div>
+
+        <!-- Contenido de Descripción del pedido -->
+        <div class="contenido-pestana activo">
+            <div class="formulario-descripcion">
+                <h2 class="titulo-descripcion">Agrega la descripción de tu pedido</h2>
+                <div class="area-descripcion">
+                    <textarea class="campo-descripcion" placeholder="Describe los guisos de tu pedido" rows="6"></textarea>
+                    <button class="boton-realizar-pedido">Realizar pedido</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

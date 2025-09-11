@@ -1,0 +1,445 @@
+@import url("https://fonts.googleapis.com/css2?family=Koulen&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inclusive+Sans:ital@0;1&display=swap");
+
+/* Reset básico */
+* {
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    background: #faf0e2;
+    color: #111;
+    font-family: "Inclusive Sans", Helvetica, sans-serif;
+    line-height: 1.45;
+    width: 100%;
+    overflow-x: hidden;
+}
+
+/* Contenedor principal */
+.contenedor-registro {
+    width: 100vw;
+    min-height: 100vh;
+    background: #faf0e2;
+    padding: 0;
+    margin: 0;
+    position: relative;
+}
+
+/* Encabezado */
+.encabezado-registro {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 3%;
+    background: #faf0e2;
+    position: relative;
+}
+
+.boton-regresar {
+    background: #d0d0d0;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+    color: #333;
+}
+
+.boton-regresar:hover {
+    background: #c0c0c0;
+    text-decoration: none;
+}
+
+.titulo-registro {
+    font-family: "Koulen", Helvetica, sans-serif;
+    font-size: 32px;
+    font-weight: 400;
+    margin: 0;
+    color: #000;
+    letter-spacing: 2px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.decorativo-encabezado {
+    width: 300px;
+    height: 105px;
+}
+
+/* Contenido principal */
+.contenido-registro {
+    padding: 40px 5%;
+    max-width: 1000px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 60px;
+    min-height: calc(100vh - 160px);
+}
+
+/* Imagen del jaguar */
+.contenedor-imagen-jaguar {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.imagen-jaguar {
+    width: 100%;
+    max-width: 350px;
+    height: auto;
+    object-fit: contain;
+}
+
+/* Formulario de registro */
+.formulario-registro {
+    flex: 1;
+    max-width: 400px;
+}
+
+.form-registro {
+    background: #fff;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    border: 1px solid #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+/* Campos de entrada */
+.campo-usuario,
+.campo-contrasena,
+.campo-fecha-nacimiento {
+    position: relative;
+}
+
+.input-usuario,
+.input-contrasena {
+    width: 100%;
+    padding: 15px 20px;
+    border: 2px solid #ddd;
+    border-radius: 25px;
+    font-family: "Inclusive Sans", Helvetica, sans-serif;
+    font-size: 16px;
+    color: #333;
+    background: #f8f8f8;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+.input-usuario:focus,
+.input-contrasena:focus {
+    border-color: #4CAF50;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+}
+
+.input-usuario::placeholder,
+.input-contrasena::placeholder {
+    color: #999;
+}
+
+/* Campo de fecha de nacimiento */
+.etiqueta-fecha {
+    display: block;
+    font-family: "Inclusive Sans", Helvetica, sans-serif;
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+.contenedor-fecha {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #f8f8f8;
+    border: 2px solid #ddd;
+    border-radius: 25px;
+    padding: 15px 20px;
+    transition: all 0.3s ease;
+}
+
+.contenedor-fecha:focus-within {
+    border-color: #4CAF50;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+}
+
+.input-fecha {
+    border: none;
+    background: transparent;
+    font-family: "Inclusive Sans", Helvetica, sans-serif;
+    font-size: 16px;
+    color: #333;
+    text-align: center;
+    width: 50px;
+    outline: none;
+}
+
+.input-fecha::placeholder {
+    color: #999;
+}
+
+.separador-fecha {
+    color: #999;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+/* Botón de continuar */
+.boton-continuar {
+    background: #81C784;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    padding: 15px 30px;
+    font-family: "Inclusive Sans", Helvetica, sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+}
+
+.boton-continuar:hover {
+    background: #66BB6A;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(129, 199, 132, 0.3);
+}
+
+/* Modal de éxito */
+.modal-exito {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.modal-exito.oculto {
+    display: none;
+}
+
+.contenido-modal {
+    background: #fff;
+    border-radius: 20px;
+    padding: 40px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    max-width: 400px;
+    margin: 20px;
+    animation: slideIn 0.3s ease-in-out;
+}
+
+.icono-exito {
+    margin-bottom: 20px;
+}
+
+.mensaje-exito {
+    font-family: "Inclusive Sans", Helvetica, sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: #333;
+    margin: 0 0 30px 0;
+}
+
+.boton-aceptar {
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    padding: 12px 30px;
+    font-family: "Inclusive Sans", Helvetica, sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 120px;
+}
+
+.boton-aceptar:hover {
+    background: #45a049;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .titulo-registro {
+        font-size: 28px;
+    }
+    
+    .decorativo-encabezado {
+        width: 250px;
+        height: auto;
+    }
+    
+    .contenido-registro {
+        gap: 40px;
+    }
+    
+    .imagen-jaguar {
+        max-width: 300px;
+    }
+}
+
+@media (max-width: 768px) {
+    .encabezado-registro {
+        padding: 15px 3%;
+    }
+    
+    .titulo-registro {
+        font-size: 24px;
+    }
+    
+    .contenido-registro {
+        flex-direction: column;
+        padding: 30px 3%;
+        gap: 30px;
+        text-align: center;
+    }
+    
+    .form-registro {
+        padding: 30px;
+    }
+    
+    .boton-regresar {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .decorativo-encabezado {
+        width: 220px;
+        height: auto;
+    }
+    
+    .imagen-jaguar {
+        max-width: 250px;
+    }
+    
+    .contenido-modal {
+        padding: 30px;
+        margin: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .titulo-registro {
+        font-size: 20px;
+    }
+    
+    .boton-regresar {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .decorativo-encabezado {
+        width: 180px;
+        height: auto;
+    }
+    
+    .contenido-registro {
+        padding: 20px 3%;
+        gap: 25px;
+    }
+    
+    .form-registro {
+        padding: 25px;
+        gap: 20px;
+    }
+    
+    .input-usuario,
+    .input-contrasena {
+        padding: 12px 18px;
+        font-size: 15px;
+    }
+    
+    .contenedor-fecha {
+        padding: 12px 18px;
+    }
+    
+    .input-fecha {
+        font-size: 15px;
+        width: 45px;
+    }
+    
+    .boton-continuar {
+        padding: 12px 25px;
+        font-size: 16px;
+    }
+    
+    .imagen-jaguar {
+        max-width: 200px;
+    }
+    
+    .contenido-modal {
+        padding: 25px;
+    }
+    
+    .mensaje-exito {
+        font-size: 18px;
+    }
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.form-registro {
+    animation: fadeInUp 0.6s ease-in-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Estados de focus para accesibilidad */
+.boton-regresar:focus {
+    outline: 2px solid #4CAF50;
+    outline-offset: 2px;
+}
+
+.boton-continuar:focus,
+.boton-aceptar:focus {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+}

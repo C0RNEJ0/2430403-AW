@@ -1,0 +1,431 @@
+@import url("https://fonts.googleapis.com/css2?family=Koulen&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inclusive+Sans:ital@0;1&display=swap");
+
+/* Reset básico */
+* {
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    background: #faf0e2;
+    color: #111;
+    font-family: "Inclusive Sans", Helvetica, sans-serif;
+    line-height: 1.45;
+    width: 100%;
+    overflow-x: hidden;
+}
+
+/* Contenedor principal */
+.contenedor-pedidos {
+    width: 100vw;
+    min-height: 100vh;
+    background: #faf0e2;
+    padding: 0;
+    margin: 0;
+}
+
+/* Encabezado */
+.encabezado-pedidos {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 3%;
+    background: #faf0e2;
+    position: relative;
+}
+
+.boton-regresar {
+    background: #d0d0d0;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+    color: #333;
+}
+
+.boton-regresar:hover {
+    background: #c0c0c0;
+    text-decoration: none;
+}
+
+.titulo-pedidos {
+    font-family: "Koulen", Helvetica, sans-serif;
+    font-size: 48px;
+    font-weight: 400;
+    margin: 0;
+    color: #000;
+    letter-spacing: 3px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.decorativo-encabezado {
+    width: 300px;
+    height: 105px;
+}
+
+/* Navegación de pestañas */
+.navegacion-pestanas {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    padding: 25px 5%;
+    margin: 0;
+    background: #faf0e2;
+}
+
+.pestana {
+    background: #fff;
+    border: 1px solid #999;
+    border-radius: 25px;
+    padding: 12px 30px;
+    font-family: "Inclusive Sans", Helvetica, sans-serif;
+    font-size: 17px;
+    font-weight: 500;
+    color: #333;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 160px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.pestana:hover {
+    background: #f5f5f5;
+    border-color: #777;
+    text-decoration: none;
+    color: #333;
+}
+
+.pestana.activa {
+    background: #666;
+    color: #fff;
+    border-color: #666;
+}
+
+/* Contenido de pestañas */
+.contenido-pestana {
+    display: none;
+    padding: 30px 5%;
+    width: 100%;
+}
+
+.contenido-pestana.activo {
+    display: block;
+}
+
+/* Sección de productos */
+.seccion-productos {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.categoria-productos {
+    margin-bottom: 40px;
+}
+
+.titulo-categoria {
+    font-family: "Koulen", Helvetica, sans-serif;
+    font-size: 28px;
+    font-weight: 400;
+    color: #000;
+    margin: 0 0 25px 0;
+    text-align: center;
+    letter-spacing: 1px;
+}
+
+/* Contenedor de productos */
+.productos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    margin-bottom: 30px;
+}
+
+/* Tarjetas de pedidos */
+.tarjeta-pedido {
+    background: #fff;
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid #e0e0e0;
+    min-height: 250px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.tarjeta-pedido:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+/* Etiqueta de precio */
+.etiqueta-precio {
+    background: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 15px;
+    padding: 8px 18px;
+    font-family: "Inclusive Sans", Helvetica, sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 15px;
+    display: inline-block;
+}
+
+/* Imágenes de pedidos */
+.imagen-pedido {
+    width: 100%;
+    max-width: 150px;
+    height: 120px;
+    object-fit: contain;
+    border-radius: 10px;
+    margin: 0 auto 15px;
+    display: block;
+    background: #f9f9f9;
+}
+
+/* Nombres de pedidos */
+.nombre-pedido {
+    font-family: "Inclusive Sans", Helvetica, sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin: 10px 0 0 0;
+    line-height: 1.3;
+}
+
+/* Formulario de descripción */
+.formulario-descripcion {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.titulo-descripcion {
+    font-family: "Inclusive Sans", Helvetica, sans-serif;
+    font-size: 24px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+.area-descripcion {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+}
+
+.campo-descripcion {
+    width: 100%;
+    max-width: 600px;
+    min-height: 150px;
+    padding: 15px;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    font-family: "Inclusive Sans", Helvetica, sans-serif;
+    font-size: 16px;
+    color: #333;
+    background: #fff;
+    resize: vertical;
+    transition: border-color 0.3s ease;
+}
+
+.campo-descripcion:focus {
+    outline: none;
+    border-color: #4CAF50;
+}
+
+.campo-descripcion::placeholder {
+    color: #999;
+}
+
+.boton-realizar-pedido {
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    padding: 15px 40px;
+    font-family: "Inclusive Sans", Helvetica, sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    min-width: 200px;
+}
+
+.boton-realizar-pedido:hover {
+    background: #45a049;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .titulo-pedidos {
+        font-size: 42px;
+    }
+    
+    .productos {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+    }
+    
+    .decorativo-encabezado {
+        width: 250px;
+        height: auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .encabezado-pedidos {
+        padding: 15px 3%;
+    }
+    
+    .titulo-pedidos {
+        font-size: 36px;
+    }
+    
+    .navegacion-pestanas {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 15px;
+        padding: 20px 3%;
+        justify-content: center;
+    }
+    
+    .pestana {
+        min-width: 140px;
+        font-size: 15px;
+        padding: 10px 25px;
+    }
+    
+    .productos {
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 15px;
+    }
+    
+    .contenido-pestana {
+        padding: 20px 3%;
+    }
+    
+    .boton-regresar {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .decorativo-encabezado {
+        width: 220px;
+        height: auto;
+    }
+
+    .titulo-categoria {
+        font-size: 24px;
+    }
+}
+
+@media (max-width: 480px) {
+    .titulo-pedidos {
+        font-size: 32px;
+    }
+    
+    .boton-regresar {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .decorativo-encabezado {
+        width: 180px;
+        height: auto;
+    }
+    
+    .navegacion-pestanas {
+        gap: 10px;
+        padding: 15px 3%;
+    }
+    
+    .pestana {
+        min-width: 120px;
+        font-size: 14px;
+        padding: 8px 20px;
+    }
+    
+    .productos {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+    
+    .tarjeta-pedido {
+        padding: 15px;
+        min-height: 220px;
+    }
+    
+    .imagen-pedido {
+        max-width: 120px;
+        height: 100px;
+    }
+    
+    .nombre-pedido {
+        font-size: 14px;
+    }
+
+    .titulo-categoria {
+        font-size: 22px;
+    }
+
+    .campo-descripcion {
+        min-height: 120px;
+        padding: 12px;
+        font-size: 15px;
+    }
+
+    .boton-realizar-pedido {
+        padding: 12px 30px;
+        font-size: 16px;
+        min-width: 160px;
+    }
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.contenido-pestana.activo {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Estados de hover para mejor UX */
+.tarjeta-pedido {
+    cursor: pointer;
+}
+
+.pestana:focus {
+    outline: 2px solid #4CAF50;
+    outline-offset: 2px;
+}
+
+.boton-realizar-pedido:focus {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+}

@@ -1,0 +1,260 @@
+@import url("https://fonts.googleapis.com/css2?family=Koulen&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inclusive+Sans:ital@0;1&display=swap");
+
+/* Reset básico */
+* {
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    background: #faf0e2;
+    color: #111;
+    font-family: "Inclusive Sans", Helvetica, sans-serif;
+    line-height: 1.45;
+    width: 100%;
+    overflow-x: hidden;
+}
+
+/* Contenedor principal */
+.contenedor-horario {
+    width: 100vw;
+    min-height: 100vh;
+    background: #faf0e2;
+    padding: 0;
+    margin: 0;
+}
+
+/* Encabezado */
+.encabezado-horario {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 3%;
+    background: #faf0e2;
+    position: relative;
+}
+
+.boton-regresar {
+    background: #d0d0d0;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+    color: #333;
+}
+
+.boton-regresar:hover {
+    background: #c0c0c0;
+    text-decoration: none;
+}
+
+.titulo-horario {
+    font-family: "Koulen", Helvetica, sans-serif;
+    font-size: 48px;
+    font-weight: 400;
+    margin: 0;
+    color: #000;
+    letter-spacing: 3px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.decorativo-encabezado {
+    width: 300px;
+    height: 105px;
+}
+
+/* Contenido principal */
+.contenido-horario {
+    padding: 40px 5%;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 50px;
+}
+
+/* Mensaje de bienvenida */
+.mensaje-bienvenida {
+    flex: 1;
+    text-align: left;
+    max-width: 500px;
+}
+
+.texto-bienvenida {
+    font-family: "Inclusive Sans", Helvetica, sans-serif;
+    font-size: 24px;
+    color: #333;
+    margin: 0;
+    line-height: 1.4;
+    font-weight: 400;
+}
+
+/* Contenedor de imagen del horario */
+.contenedor-imagen-horario {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 500px;
+}
+
+.imagen-horario {
+    max-width: 100%;
+    height: auto;
+    max-height: 600px;
+    object-fit: contain;
+    border-radius: 20px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    border: 3px solid #fff;
+    background: #fff;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .titulo-horario {
+        font-size: 42px;
+    }
+    
+    .decorativo-encabezado {
+        width: 250px;
+        height: auto;
+    }
+    
+    .contenido-horario {
+        gap: 40px;
+    }
+    
+    .texto-bienvenida {
+        font-size: 22px;
+    }
+    
+    .imagen-horario {
+        max-height: 500px;
+    }
+}
+
+@media (max-width: 768px) {
+    .encabezado-horario {
+        padding: 15px 3%;
+    }
+    
+    .titulo-horario {
+        font-size: 36px;
+    }
+    
+    .contenido-horario {
+        padding: 30px 3%;
+        gap: 30px;
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .mensaje-bienvenida {
+        text-align: center;
+        max-width: 100%;
+    }
+    
+    .texto-bienvenida {
+        font-size: 20px;
+    }
+    
+    .contenedor-imagen-horario {
+        max-width: 100%;
+    }
+    
+    .boton-regresar {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .decorativo-encabezado {
+        width: 220px;
+        height: auto;
+    }
+    
+    .imagen-horario {
+        max-height: 400px;
+        border-radius: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .titulo-horario {
+        font-size: 32px;
+    }
+    
+    .boton-regresar {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .decorativo-encabezado {
+        width: 180px;
+        height: auto;
+    }
+    
+    .contenido-horario {
+        padding: 20px 3%;
+        gap: 25px;
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .mensaje-bienvenida {
+        text-align: center;
+        max-width: 100%;
+    }
+    
+    .texto-bienvenida {
+        font-size: 18px;
+    }
+    
+    .contenedor-imagen-horario {
+        max-width: 100%;
+    }
+    
+    .imagen-horario {
+        max-height: 350px;
+        border-radius: 12px;
+        border: 2px solid #fff;
+    }
+}
+
+/* Animaciones y efectos */
+.imagen-horario:hover {
+    transform: scale(1.02);
+    transition: transform 0.3s ease;
+}
+
+/* Estados de focus para accesibilidad */
+.boton-regresar:focus {
+    outline: 2px solid #4CAF50;
+    outline-offset: 2px;
+}
+
+/* Animación de entrada */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.contenido-horario {
+    animation: fadeIn 0.6s ease-in-out;
+}

@@ -7,7 +7,6 @@
   -webkit-font-smoothing: antialiased;
 }
 
-
 html,
 body {
   margin: 0;
@@ -16,201 +15,8 @@ body {
   color: #111;
   font-family: "Inclusive Sans", Helvetica, sans-serif;
   line-height: 1.35;
-}
-
-
-
-/* Contenedor principal */
-.pagina-cafeteria {
-  display: flex;
-  justify-content: center;
   width: 100%;
-}
-
-.pagina-cafeteria .div {
-  width: 100%;
-  max-width: 1200px;
-  padding: 0 40px 120px;
-  position: relative;
-  display: grid;
-  grid-template-columns: 1fr 360px;
-  grid-auto-rows: auto;
-  column-gap: 70px;
-  row-gap: 12px;
-}
-
-/* Ocultar bloques exportados sobrantes */
-.encabezado,
-.text-wrapper,
-.text-wrapper-2,
-.text-wrapper-3,
-.text-wrapper-5,
-.text-wrapper-6 {
-  display: none !important;
-}
-
-/* Header */
-.encabezado-sitio {
-  grid-column: 1 / -1;
-  position: relative;
-  padding: 40px 0 10px;
-  text-align: center;
-}
-
-.titulo {
-  font-family: "Koulen", Helvetica, sans-serif;
-  font-size: 56px;
-  font-weight: 400;
-  margin: 0;
-  letter-spacing: .5px;
-}
-
-.nav-principal {
-  margin-top: 14px;
-  display: flex;
-  gap: 60px;
-  justify-content: center;
-  font-size: 17px;
-  flex-wrap: wrap;
-}
-
-.nav-enlace {
-  font-family: "Inclusive Sans", Helvetica, sans-serif;
-  color: #111;
-  text-decoration: none;
-  position: relative;
-  padding: 4px 0;
-}
-
-.nav-enlace:hover,
-.nav-enlace:focus-visible {
-  font-weight: 600;
-}
-
-.nav-enlace:hover::after,
-.nav-enlace:focus-visible::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: -4px;
-  height: 2px;
-  width: 100%;
-  background: #111;
-}
-
-.logos-encabezado {
-  position: absolute;
-  top: 16px;
-  right: 24px;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.logo-upv {
-  width: 220px;
-  height: auto;
-  display: block;
-}
-
-.text-wrapper-4 {
-  grid-column: 1;
-  grid-row: 2;
-  font-family: "Koulen", Helvetica, sans-serif;
-  font-size: 50px;
-  letter-spacing: .5px;
-  text-transform: uppercase;
-  margin: 0;
-  text-align: center;
-  line-height: 1.05;
-  width: 100%;
-}
-
-.frame {
-  grid-column: 1;
-  grid-row: 3;
-  max-width: 680px;
-  margin: 0 auto;
-  text-align: center;
-}
-
-.p {
-  margin: 0;
-  font-size: 16px;
-  letter-spacing: .2px;
-  line-height: 1.45;
-}
-
-/* Imagen jaguar (ocupa las filas del título + párrafo) */
-.logo-jaguar {
-  grid-column: 2;
-  grid-row: 2 / span 2;
-  align-self: center;
-  width: 100%;
-  max-width: 360px;
-  aspect-ratio: 1/1;
-  object-fit: cover;
-  border-radius: 50%;
-  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, .15));
-  justify-self: end;
-}
-
-/* Imagen del menú */
-.menu {
-  grid-column: 1 / -1;
-  display: block;
-  width: 640px;
-  max-width: 100%;
-  margin: 40px auto 80px;
-  border-radius: 8px;
-  box-shadow: 0 4px 18px -4px rgba(0, 0, 0, .18);
-}
-
-/* Sección Horario + Contacto */
-.seccion-horario-contacto {
-  grid-column: 1 / -1;
-  margin: 0 auto;
-  max-width: 520px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 70px;
-  padding: 10px 0 20px;
-}
-
-.apartado-horario,
-.apartado-contacto {
-  width: 100%;
-  text-align: center;
-}
-
-.titulo-horario,
-.titulo-contacto {
-  font-family: "Koulen", Helvetica, sans-serif;
-  font-size: 28px;
-  margin: 0 0 26px;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-}
-
-.Horario,
-.Horario-Comida {
-  margin: 14px 0;
-  font-size: 16px;
-  color: #222;
-}
-
-.contacto-imagen-wrap {
-  display: flex;
-  justify-content: center;
-}
-
-.contacto-imagen {
-  max-width: 240px;
-  width: 70%;
-  height: auto;
-  border-radius: 6px;
-  box-shadow: 0 4px 12px -2px rgba(0, 0, 0, .18);
+  overflow-x: hidden;
 }
 
 /* Utilidades */
@@ -219,131 +25,540 @@ img {
   height: auto;
 }
 
-a:focus-visible {
-  outline: 2px solid #111;
-  outline-offset: 2px;
+/* Estilos existentes ajustados a las nuevas fuentes */
+.inicio {
+    background-color: #faf0e2;
+    width: 100%;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
 }
 
-/* Responsive */
-@media (max-width:1200px) {
-  .titulo {
-    font-size: 52px;
-  }
-
-  .pagina-cafeteria .div {
-    column-gap: 50px;
-    grid-template-columns: 1fr 320px;
-  }
-
-  .logo-jaguar {
-    max-width: 320px;
-  }
+.inicio .contenedor {
+    background-color: #faf0e2;
+    width: 100%;
+    min-height: 100vh;
+    position: relative;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
 }
 
-@media (max-width:1050px) {
-  .pagina-cafeteria .div {
-    grid-template-columns: 1fr 300px;
-    column-gap: 40px;
-  }
-
-  .logo-jaguar {
-    max-width: 300px;
-  }
+.inicio .titulo-sitio {
+    position: absolute;
+    width: auto;
+    top: 19px;
+    left: 5%;
+    font-family: "Koulen", Helvetica, sans-serif;
+    font-weight: 400;
+    color: #000000;
+    font-size: 64px;
+    letter-spacing: 0;
+    line-height: normal;
 }
 
-@media (max-width:900px) {
-  .pagina-cafeteria .div {
-    grid-template-columns: 1fr;
-  }
-
-  .logos-encabezado {
-    position: static;
-    justify-content: center;
-    margin: 0 auto 8px;
-  }
-
-  .logo-upv {
-    width: 180px;
-  }
-
-  .logo-jaguar {
-    grid-column: 1;
-    grid-row: auto;
-    max-width: 260px;
-    justify-self: center;
-    margin: 24px 0 10px;
-  }
-
-  .menu {
-    margin: 30px auto 70px;
-  }
-
-  .text-wrapper-4 {
-    font-size: 44px;
-  }
-}
-
-@media (max-width:640px) {
-  .titulo {
-    font-size: 44px;
-  }
-
-  .nav-principal {
-    gap: 34px;
-    font-size: 15px;
-  }
-
-  .text-wrapper-4 {
-    font-size: 38px;
-  }
-
-  .p {
-    font-size: 15px;
-  }
-
-  .logo-jaguar {
-    max-width: 230px;
-  }
-
-  .titulo-horario,
-  .titulo-contacto {
-    font-size: 26px;
-  }
-}
-
-@media (max-width:480px) {
-  .titulo {
-    font-size: 38px;
-  }
-
-  .nav-principal {
-    gap: 22px;
-    font-size: 14px;
-  }
-
-  .logo-upv {
-    width: 140px;
-  }
-
-  .text-wrapper-4 {
+.inicio .nav-inicio {
+    position: absolute;
+    top: 164px;
+    left: 5%;
+    font-family: "Inclusive Sans", Helvetica, sans-serif;
+    font-weight: 400;
+    color: #000000;
     font-size: 32px;
-  }
+    letter-spacing: 0;
+    line-height: normal;
+}
 
-  .p {
-    font-size: 14px;
-  }
+.inicio .nav-menu {
+    position: absolute;
+    top: 164px;
+    left: 15%;
+    font-family: "Inclusive Sans", Helvetica, sans-serif;
+    font-weight: 400;
+    color: #000000;
+    font-size: 32px;
+    letter-spacing: 0;
+    line-height: normal;
+}
 
-  .seccion-horario-contacto {
-    gap: 56px;
-  }
+.inicio .nav-pedidos {
+    position: absolute;
+    top: 164px;
+    left: 27%;
+    font-family: "Inclusive Sans", Helvetica, sans-serif;
+    font-weight: 400;
+    color: #000000;
+    font-size: 32px;
+    letter-spacing: 0;
+    line-height: normal;
+    white-space: nowrap;
+}
 
-  .titulo-horario,
-  .titulo-contacto {
+.inicio .nav-contacto {
+    position: absolute;
+    top: 164px;
+    left: 38%;
+    font-family: "Inclusive Sans", Helvetica, sans-serif;
+    font-weight: 400;
+    color: #000000;
+    font-size: 32px;
+    letter-spacing: 0;
+    line-height: normal;
+}
+
+.inicio .nav-horario {
+    position: absolute;
+    top: 164px;
+    left: 49%;
+    font-family: "Inclusive Sans", Helvetica, sans-serif;
+    font-weight: 400;
+    color: #000000;
+    font-size: 32px;
+    letter-spacing: 0;
+    line-height: normal;
+    text-decoration: none;
+}
+
+.inicio .nav-ubicacion {
+    position: absolute;
+    top: 164px;
+    left: 60%;
+    font-family: "Inclusive Sans", Helvetica, sans-serif;
+    font-weight: 400;
+    color: #000000;
+    font-size: 32px;
+    letter-spacing: 0;
+    line-height: normal;
+    text-decoration: none;
+}
+
+.inicio .nav-iniciar-sesion {
+    position: absolute;
+    top: 164px;
+    right: 5%;
+    font-family: "Inclusive Sans", Helvetica, sans-serif;
+    font-weight: 400;
+    color: #000000;
+    font-size: 32px;
+    letter-spacing: 0;
+    line-height: normal;
+}
+
+.inicio .imagen-banner {
+    width: 100%;
+    height: 450px;
+    top: 574px;
+    left: 0;
+    position: absolute;
+    object-fit: cover;
+    max-width: 100%;
+}
+
+.inicio .linea-inferior {
+    top: 217px;
+    position: absolute;
+    width: 100vw;
+    height: 4px;
+    left: 0;
+    object-fit: cover;
+}
+
+.inicio .linea-superior {
+    top: 150px;
+    position: absolute;
+    width: 100vw;
+    height: 4px;
+    left: 0;
+    object-fit: cover;
+}
+
+.inicio .titulo-bienvenida {
+    position: absolute;
+    width: 419px;
+    top: 265px;
+    left: 245px;
+    font-family: "Koulen", Helvetica, sans-serif;
+    font-weight: 400;
+    color: #000000;
+    font-size: 48px;
+    letter-spacing: 0;
+    line-height: normal;
+}
+
+.inicio .contenedor-descripcion {
+    position: absolute;
+    width: 437px;
+    height: 125px;
+    top: 353px;
+    left: 236px;
+}
+
+.inicio .descripcion {
+    position: absolute;
+    width: 657px;
+    top: -1px;
+    left: -135px;
+    font-family: "Inclusive Sans", Helvetica, sans-serif;
+    font-weight: 400;
+    color: #000000;
     font-size: 24px;
-  }
+    text-align: center;
+    letter-spacing: 0;
+    line-height: normal;
+}
 
-  .Horario,
-  .Horario-Comida {
-    font-size: 14px;
-  }
+.inicio .imagen-destacada {
+    width: 406px;
+    height: 334px;
+    top: 232px;
+    left: 944px;
+    aspect-ratio: 1.22;
+    position: absolute;
+    object-fit: cover;
+}
+
+.inicio .decorativo-encabezado {
+    position: absolute;
+    width: 276px;
+    height: 97px;
+    top: 25px;
+    right: 5%;
+}
+
+/* Líneas del menú con CSS (reemplazan imágenes) */
+.inicio .linea-superior,
+.inicio .linea-inferior {
+  display: none;
+}
+
+.inicio .contenedor::before,
+.inicio .contenedor::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 2px; /* grosor de la línea */
+  background: #111; /* color de la línea */
+}
+
+/* Ajusta estos valores si mueves el menú */
+.inicio .contenedor::before { top: 150px; }
+.inicio .contenedor::after { top: 217px; }
+
+/* Media queries para responsive design */
+@media (max-width: 1200px) {
+    .inicio .titulo-sitio {
+        font-size: 56px;
+        left: 3%;
+    }
+    
+    .inicio .nav-inicio,
+    .inicio .nav-menu,
+    .inicio .nav-pedidos,
+    .inicio .nav-contacto,
+    .inicio .nav-horario,
+    .inicio .nav-ubicacion,
+    .inicio .nav-iniciar-sesion {
+        font-size: 28px;
+    }
+    
+    .inicio .decorativo-encabezado {
+        width: 240px;
+        right: 3%;
+    }
+    
+    .inicio .titulo-bienvenida {
+        font-size: 42px;
+        left: 180px;
+        width: 350px;
+    }
+    
+    .inicio .descripcion {
+        font-size: 22px;
+        width: 580px;
+        left: -120px;
+    }
+    
+    .inicio .imagen-destacada {
+        width: 350px;
+        height: 290px;
+        left: 800px;
+    }
+}
+
+@media (max-width: 992px) {
+    .inicio .titulo-sitio {
+        font-size: 48px;
+        left: 3%;
+    }
+    
+    .inicio .nav-inicio,
+    .inicio .nav-menu,
+    .inicio .nav-pedidos,
+    .inicio .nav-contacto,
+    .inicio .nav-horario,
+    .inicio .nav-ubicacion,
+    .inicio .nav-iniciar-sesion {
+        font-size: 24px;
+    }
+    
+    .inicio .decorativo-encabezado {
+        width: 200px;
+        right: 3%;
+    }
+    
+    .inicio .titulo-bienvenida {
+        font-size: 38px;
+        left: 150px;
+        width: 320px;
+    }
+    
+    .inicio .descripcion {
+        font-size: 20px;
+        width: 500px;
+        left: -100px;
+    }
+    
+    .inicio .imagen-destacada {
+        width: 300px;
+        height: 250px;
+        left: 650px;
+    }
+}
+
+@media (max-width: 768px) {
+    .inicio .titulo-sitio {
+        font-size: 40px;
+        left: 3%;
+        top: 15px;
+    }
+    
+    /* Navegación en dos filas para tablets */
+    .inicio .nav-inicio {
+        left: 3%;
+        font-size: 20px;
+    }
+    
+    .inicio .nav-menu {
+        left: 18%;
+        font-size: 20px;
+    }
+    
+    .inicio .nav-pedidos {
+        left: 33%;
+        font-size: 20px;
+    }
+    
+    .inicio .nav-contacto {
+        left: 48%;
+        font-size: 20px;
+    }
+    
+    .inicio .nav-horario {
+        left: 3%;
+        top: 200px;
+        font-size: 20px;
+    }
+    
+    .inicio .nav-ubicacion {
+        left: 18%;
+        top: 200px;
+        font-size: 20px;
+    }
+    
+    .inicio .nav-iniciar-sesion {
+        right: 3%;
+        top: 200px;
+        font-size: 20px;
+    }
+    
+    .inicio .decorativo-encabezado {
+        width: 150px;
+        right: 3%;
+        top: 15px;
+    }
+    
+    /* Ajustar contenido principal */
+    .inicio .imagen-banner {
+        top: 620px;
+        height: 350px;
+    }
+    
+    .inicio .titulo-bienvenida {
+        font-size: 32px;
+        left: 50%;
+        top: 300px;
+        transform: translateX(-50%);
+        text-align: center;
+        width: 300px;
+    }
+    
+    .inicio .contenedor-descripcion {
+        left: 50%;
+        top: 380px;
+        transform: translateX(-50%);
+        width: 90%;
+        text-align: center;
+    }
+    
+    .inicio .descripcion {
+        font-size: 18px;
+        width: 100%;
+        left: 0;
+        text-align: center;
+    }
+    
+    .inicio .imagen-destacada {
+        width: 250px;
+        height: 200px;
+        left: 50%;
+        top: 250px;
+        transform: translateX(-50%);
+    }
+    
+    /* Ajustar líneas decorativas */
+    .inicio .contenedor::before { top: 180px; }
+    .inicio .contenedor::after { top: 235px; }
+}
+
+@media (max-width: 480px) {
+    .inicio .titulo-sitio {
+        font-size: 32px;
+        left: 50%;
+        top: 10px;
+        transform: translateX(-50%);
+        text-align: center;
+        width: 90%;
+    }
+    
+    /* Navegación vertical para móviles */
+    .inicio .nav-inicio,
+    .inicio .nav-menu,
+    .inicio .nav-pedidos,
+    .inicio .nav-contacto,
+    .inicio .nav-horario,
+    .inicio .nav-ubicacion,
+    .inicio .nav-iniciar-sesion {
+        font-size: 18px;
+        left: 50%;
+        transform: translateX(-50%);
+        text-align: center;
+        width: auto;
+    }
+    
+    .inicio .nav-inicio { top: 120px; }
+    .inicio .nav-menu { top: 150px; }
+    .inicio .nav-pedidos { top: 180px; }
+    .inicio .nav-contacto { top: 210px; }
+    .inicio .nav-horario { top: 240px; }
+    .inicio .nav-ubicacion { top: 270px; }
+    .inicio .nav-iniciar-sesion { 
+        top: 300px;
+        right: auto;
+    }
+    
+    .inicio .decorativo-encabezado {
+        width: 120px;
+        left: 50%;
+        top: 60px;
+        transform: translateX(-50%);
+        right: auto;
+    }
+    
+    /* Contenido principal */
+    .inicio .imagen-banner {
+        top: 750px;
+        height: 300px;
+    }
+    
+    .inicio .titulo-bienvenida {
+        font-size: 28px;
+        left: 50%;
+        top: 370px;
+        transform: translateX(-50%);
+        text-align: center;
+        width: 90%;
+    }
+    
+    .inicio .contenedor-descripcion {
+        left: 50%;
+        top: 430px;
+        transform: translateX(-50%);
+        width: 90%;
+        text-align: center;
+        height: auto;
+    }
+    
+    .inicio .descripcion {
+        font-size: 16px;
+        width: 100%;
+        left: 0;
+        text-align: center;
+        line-height: 1.5;
+    }
+    
+    .inicio .imagen-destacada {
+        width: 200px;
+        height: 160px;
+        left: 50%;
+        top: 320px;
+        transform: translateX(-50%);
+    }
+    
+    /* Ajustar líneas decorativas */
+    .inicio .contenedor::before { top: 100px; }
+    .inicio .contenedor::after { top: 335px; }
+    
+    /* Ajustar altura mínima del contenedor */
+    .inicio .contenedor {
+        min-height: 1100px;
+    }
+}
+
+/* Estilos para enlaces de navegación */
+.inicio a.nav-inicio,
+.inicio a.nav-menu,
+.inicio a.nav-pedidos,
+.inicio a.nav-contacto,
+.inicio a.nav-horario,
+.inicio a.nav-ubicacion,
+.inicio a.nav-iniciar-sesion {
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+/* Transiciones suaves para elementos responsivos */
+.inicio .titulo-sitio,
+.inicio .titulo-bienvenida,
+.inicio .descripcion,
+.inicio .imagen-destacada,
+.inicio .decorativo-encabezado {
+    transition: all 0.3s ease;
+}
+
+.inicio a.nav-inicio:hover,
+.inicio a.nav-menu:hover,
+.inicio a.nav-pedidos:hover,
+.inicio a.nav-contacto:hover,
+.inicio a.nav-horario:hover,
+.inicio a.nav-ubicacion:hover,
+.inicio a.nav-iniciar-sesion:hover {
+    color: #4CAF50;
+    text-decoration: none;
+    transform: translateY(-2px);
+}
+
+.inicio a.nav-inicio:focus,
+.inicio a.nav-menu:focus,
+.inicio a.nav-pedidos:focus,
+.inicio a.nav-contacto:focus,
+.inicio a.nav-horario:focus,
+.inicio a.nav-ubicacion:focus,
+.inicio a.nav-iniciar-sesion:focus {
+    outline: 2px solid #4CAF50;
+    outline-offset: 2px;
+    border-radius: 4px;
 }

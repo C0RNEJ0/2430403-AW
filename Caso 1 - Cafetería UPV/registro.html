@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="estilos-registro.css" />
+</head>
+
+<body>
+    <div class="contenedor-registro">
+        <!-- Encabezado -->
+        <div class="encabezado-registro">
+            <a href="login.html" class="boton-regresar">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </a>
+            <h1 class="titulo-registro">CAFETERIA JAGUARES</h1>
+            <img class="decorativo-encabezado" src="imagenes-inicio/logoupv.png" alt="Logotipo UPV" />
+        </div>
+
+        <!-- Contenido principal -->
+        <div class="contenido-registro">
+            <!-- Imagen del jaguar -->
+            <div class="contenedor-imagen-jaguar">
+                <img src="imagenes-inicio/jaguar.png" alt="Jaguar Cafetería" class="imagen-jaguar">
+            </div>
+
+            <!-- Formulario de registro -->
+            <div class="formulario-registro">
+                <form class="form-registro">
+                    <div class="campo-usuario">
+                        <input type="text" id="usuario" name="usuario" placeholder="Usuario" class="input-usuario" required>
+                    </div>
+                    
+                    <div class="campo-contrasena">
+                        <input type="password" id="contrasena" name="contrasena" placeholder="Contraseña" class="input-contrasena" required>
+                    </div>
+                    
+                    <div class="campo-fecha-nacimiento">
+                        <label class="etiqueta-fecha">Fecha de nacimiento</label>
+                        <div class="contenedor-fecha">
+                            <input type="number" id="dia" name="dia" placeholder="DD" min="1" max="31" class="input-fecha" required>
+                            <span class="separador-fecha">/</span>
+                            <input type="number" id="mes" name="mes" placeholder="MM" min="1" max="12" class="input-fecha" required>
+                            <span class="separador-fecha">/</span>
+                            <input type="number" id="ano" name="ano" placeholder="AA" min="00" max="99" class="input-fecha" required>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="boton-continuar">Continuar</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Modal de éxito -->
+        <div id="modal-exito" class="modal-exito oculto">
+            <div class="contenido-modal">
+                <div class="icono-exito">
+                    <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
+                        <circle cx="30" cy="30" r="30" fill="#4CAF50"/>
+                        <path d="M25 30L28 33L35 26" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <h3 class="mensaje-exito">Usuario registrado con éxito</h3>
+                <button class="boton-aceptar" onclick="cerrarModal()">Aceptar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function cerrarModal() {
+            document.getElementById('modal-exito').classList.add('oculto');
+            window.location.href = 'login.html';
+        }
+
+        document.querySelector('.form-registro').addEventListener('submit', function(e) {
+            e.preventDefault();
+            document.getElementById('modal-exito').classList.remove('oculto');
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="estilos-login.css" />
+</head>
+
+<body>
+    <div class="contenedor-login">
+        <!-- Encabezado -->
+        <div class="encabezado-login">
+            <a href="inicio.html" class="boton-regresar">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </a>
+            <h1 class="titulo-login">CAFETERIA JAGUARES</h1>
+            <img class="decorativo-encabezado" src="imagenes-inicio/logoupv.png" alt="Logotipo UPV" />
+        </div>
+
+        <!-- Contenido principal -->
+        <div class="contenido-login">
+            <!-- Imagen del jaguar -->
+            <div class="contenedor-imagen-jaguar">
+                <img src="imagenes-inicio/jaguar.png" alt="Jaguar Cafetería" class="imagen-jaguar">
+            </div>
+
+            <!-- Formulario de inicio de sesión -->
+            <div class="formulario-login">
+                <form class="form-sesion">
+                    <div class="campo-usuario">
+                        <input type="text" id="usuario" name="usuario" placeholder="Usuario" class="input-usuario" required>
+                    </div>
+                    
+                    <div class="campo-contrasena">
+                        <input type="password" id="contrasena" name="contrasena" placeholder="Contraseña" class="input-contrasena" required>
+                    </div>
+                    
+                    <button type="submit" class="boton-iniciar-sesion">Iniciar sesión</button>
+                    
+                    <a href="registro.html" class="enlace-registrarse">Registrarse</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,350 @@
+@import url("https://fonts.googleapis.com/css2?family=Koulen&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inclusive+Sans:ital@0;1&display=swap");
+
+/* Reset básico */
+* {
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    background: #faf0e2;
+    color: #111;
+    font-family: "Inclusive Sans", Helvetica, sans-serif;
+    line-height: 1.45;
+    width: 100%;
+    overflow-x: hidden;
+}
+
+/* Contenedor principal */
+.contenedor-contacto {
+    width: 100vw;
+    min-height: 100vh;
+    background: #faf0e2;
+    padding: 0;
+    margin: 0;
+}
+
+/* Encabezado */
+.encabezado-contacto {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 3%;
+    background: #faf0e2;
+    position: relative;
+}
+
+.boton-regresar {
+    background: #d0d0d0;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+    color: #333;
+}
+
+.boton-regresar:hover {
+    background: #c0c0c0;
+    text-decoration: none;
+}
+
+.titulo-contacto {
+    font-family: "Koulen", Helvetica, sans-serif;
+    font-size: 48px;
+    font-weight: 400;
+    margin: 0;
+    color: #000;
+    letter-spacing: 3px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.decorativo-encabezado {
+    width: 300px;
+    height: 105px;
+}
+
+/* Contenido principal */
+.contenido-contacto {
+    padding: 40px 5%;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+}
+
+/* Sección WhatsApp */
+.seccion-whatsapp {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #fff;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    border: 1px solid #e0e0e0;
+}
+
+.informacion-whatsapp {
+    flex: 1;
+}
+
+.titulo-whatsapp {
+    font-family: "Koulen", Helvetica, sans-serif;
+    font-size: 32px;
+    font-weight: 400;
+    color: #000;
+    margin: 0 0 15px 0;
+    letter-spacing: 2px;
+}
+
+.descripcion-whatsapp {
+    font-family: "Inclusive Sans", Helvetica, sans-serif;
+    font-size: 18px;
+    color: #333;
+    margin: 0 0 10px 0;
+    line-height: 1.4;
+}
+
+.numero-whatsapp {
+    font-family: "Inclusive Sans", Helvetica, sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: #25d366;
+    margin: 0;
+}
+
+.icono-whatsapp {
+    margin-left: 30px;
+}
+
+.imagen-whatsapp {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+}
+
+/* Sección Instagram */
+.seccion-instagram {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #fff;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    border: 1px solid #e0e0e0;
+}
+
+.informacion-instagram {
+    flex: 1;
+}
+
+.titulo-instagram {
+    font-family: "Koulen", Helvetica, sans-serif;
+    font-size: 32px;
+    font-weight: 400;
+    color: #000;
+    margin: 0 0 15px 0;
+    letter-spacing: 2px;
+}
+
+.usuario-instagram {
+    font-family: "Inclusive Sans", Helvetica, sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: #e4405f;
+    margin: 0;
+}
+
+.icono-instagram {
+    margin-left: 30px;
+}
+
+.imagen-instagram {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+}
+
+/* Contenedor imagen jaguar */
+.contenedor-imagen-jaguar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 30px;
+}
+
+.imagen-jaguar {
+    max-width: 100%;
+    height: auto;
+    max-height: 400px;
+    object-fit: contain;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .titulo-contacto {
+        font-size: 42px;
+    }
+    
+    .decorativo-encabezado {
+        width: 250px;
+        height: auto;
+    }
+    
+    .contenido-contacto {
+        gap: 40px;
+    }
+}
+
+@media (max-width: 768px) {
+    .encabezado-contacto {
+        padding: 15px 3%;
+    }
+    
+    .titulo-contacto {
+        font-size: 36px;
+    }
+    
+    .contenido-contacto {
+        padding: 30px 3%;
+        gap: 30px;
+    }
+    
+    .seccion-whatsapp,
+    .seccion-instagram {
+        flex-direction: column;
+        text-align: center;
+        gap: 25px;
+        padding: 30px;
+    }
+    
+    .informacion-whatsapp,
+    .informacion-instagram {
+        flex: none;
+    }
+    
+    .icono-whatsapp,
+    .icono-instagram {
+        margin-left: 0;
+    }
+    
+    .titulo-whatsapp,
+    .titulo-instagram {
+        font-size: 28px;
+    }
+    
+    .descripcion-whatsapp {
+        font-size: 16px;
+    }
+    
+    .numero-whatsapp,
+    .usuario-instagram {
+        font-size: 18px;
+    }
+    
+    .boton-regresar {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .decorativo-encabezado {
+        width: 220px;
+        height: auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .titulo-contacto {
+        font-size: 32px;
+    }
+    
+    .boton-regresar {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .decorativo-encabezado {
+        width: 180px;
+        height: auto;
+    }
+    
+    .contenido-contacto {
+        padding: 20px 3%;
+        gap: 25px;
+    }
+    
+    .seccion-whatsapp,
+    .seccion-instagram {
+        padding: 25px;
+        gap: 20px;
+    }
+    
+    .titulo-whatsapp,
+    .titulo-instagram {
+        font-size: 24px;
+    }
+    
+    .descripcion-whatsapp {
+        font-size: 15px;
+    }
+    
+    .numero-whatsapp,
+    .usuario-instagram {
+        font-size: 16px;
+    }
+    
+    .imagen-whatsapp,
+    .imagen-instagram {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .imagen-jaguar {
+        max-height: 300px;
+    }
+}
+
+/* Animaciones y efectos */
+.seccion-whatsapp:hover,
+.seccion-instagram:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    transition: all 0.3s ease;
+}
+
+.imagen-whatsapp:hover {
+    transform: scale(1.1);
+    transition: transform 0.3s ease;
+}
+
+.imagen-instagram:hover {
+    transform: scale(1.1);
+    transition: transform 0.3s ease;
+}
+
+/* Estados de focus para accesibilidad */
+.boton-regresar:focus {
+    outline: 2px solid #4CAF50;
+    outline-offset: 2px;
+}
+
+/* Cursor pointer para elementos interactivos */
+.seccion-whatsapp,
+.seccion-instagram {
+    cursor: pointer;
+}

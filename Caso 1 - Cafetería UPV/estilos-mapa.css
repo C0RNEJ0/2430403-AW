@@ -1,0 +1,352 @@
+@import url("https://fonts.googleapis.com/css2?family=Koulen&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inclusive+Sans:ital@0;1&display=swap");
+
+/* Reset básico */
+* {
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    background: #faf0e2;
+    color: #111;
+    font-family: "Inclusive Sans", Helvetica, sans-serif;
+    line-height: 1.45;
+    width: 100%;
+    overflow-x: hidden;
+}
+
+/* Contenedor principal */
+.contenedor-mapa {
+    width: 100vw;
+    min-height: 100vh;
+    background: #faf0e2;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Encabezado */
+.encabezado-mapa {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 3%;
+    background: #faf0e2;
+    position: relative;
+}
+
+.boton-regresar {
+    background: #d0d0d0;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+    color: #333;
+}
+
+.boton-regresar:hover {
+    background: #c0c0c0;
+    text-decoration: none;
+}
+
+.titulo-mapa {
+    font-family: "Koulen", Helvetica, sans-serif;
+    font-size: 48px;
+    font-weight: 400;
+    margin: 0;
+    color: #000;
+    letter-spacing: 3px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.decorativo-encabezado {
+    width: 300px;
+    height: 105px;
+}
+
+/* Contenido principal */
+.contenido-mapa {
+    flex: 1;
+    padding: 40px 5%;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* Sección Google Maps */
+.seccion-google-maps {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+}
+
+.titulo-encontranos {
+    font-family: "Inclusive Sans", Helvetica, sans-serif;
+    font-size: 24px;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+    text-align: center;
+}
+
+/* Enlace del mapa */
+.enlace-mapa {
+    background: #fff;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    border: 1px solid #e0e0e0;
+    max-width: 600px;
+    width: 100%;
+}
+
+.url-mapa {
+    font-family: "Inclusive Sans", Helvetica, sans-serif;
+    font-size: 16px;
+    color: #1a73e8;
+    margin: 0;
+    text-align: center;
+    word-break: break-all;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.url-mapa:hover {
+    color: #0d47a1;
+    text-decoration: underline;
+}
+
+/* Contenedor del logo y mapa */
+.contenedor-logo-mapa {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    width: 100%;
+    max-width: 900px;
+    justify-content: center;
+}
+
+/* Logo de Google Maps */
+.logo-google-maps {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.texto-google-maps {
+    max-width: 250px;
+    height: auto;
+    object-fit: contain;
+}
+
+/* Vista previa del mapa */
+.vista-previa-mapa {
+    flex: 1;
+    max-width: 500px;
+}
+
+.imagen-mapa {
+    width: 100%;
+    height: auto;
+    border-radius: 15px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    border: 2px solid #fff;
+    object-fit: cover;
+}
+
+/* Footer */
+.pie-pagina {
+    background: #333;
+    color: #fff;
+    text-align: center;
+    padding: 20px;
+    margin-top: auto;
+}
+
+.texto-copyright {
+    font-family: "Inclusive Sans", Helvetica, sans-serif;
+    font-size: 14px;
+    margin: 0;
+    opacity: 0.9;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .titulo-mapa {
+        font-size: 42px;
+    }
+    
+    .decorativo-encabezado {
+        width: 250px;
+        height: auto;
+    }
+    
+    .contenedor-logo-mapa {
+        gap: 30px;
+    }
+    
+    .texto-google-maps {
+        max-width: 220px;
+    }
+}
+
+@media (max-width: 768px) {
+    .encabezado-mapa {
+        padding: 15px 3%;
+    }
+    
+    .titulo-mapa {
+        font-size: 36px;
+    }
+    
+    .contenido-mapa {
+        padding: 30px 3%;
+    }
+    
+    .contenedor-logo-mapa {
+        flex-direction: column;
+        gap: 25px;
+        align-items: center;
+    }
+    
+    .titulo-encontranos {
+        font-size: 22px;
+    }
+    
+    .enlace-mapa {
+        padding: 15px;
+    }
+    
+    .url-mapa {
+        font-size: 14px;
+    }
+    
+    .boton-regresar {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .decorativo-encabezado {
+        width: 220px;
+        height: auto;
+    }
+    
+    .vista-previa-mapa {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .titulo-mapa {
+        font-size: 32px;
+    }
+    
+    .boton-regresar {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .decorativo-encabezado {
+        width: 180px;
+        height: auto;
+    }
+    
+    .contenido-mapa {
+        padding: 20px 3%;
+    }
+    
+    .seccion-google-maps {
+        gap: 25px;
+    }
+    
+    .titulo-encontranos {
+        font-size: 20px;
+    }
+    
+    .enlace-mapa {
+        padding: 12px;
+    }
+    
+    .url-mapa {
+        font-size: 13px;
+    }
+    
+    .contenedor-logo-mapa {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .texto-google-maps {
+        max-width: 200px;
+    }
+    
+    .vista-previa-mapa {
+        max-width: 100%;
+    }
+    
+    .imagen-mapa {
+        border-radius: 12px;
+    }
+    
+    .pie-pagina {
+        padding: 15px;
+    }
+    
+    .texto-copyright {
+        font-size: 12px;
+    }
+}
+
+/* Animaciones y efectos */
+.imagen-mapa:hover {
+    transform: scale(1.02);
+    transition: transform 0.3s ease;
+}
+
+.enlace-mapa:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+    transition: all 0.3s ease;
+}
+
+/* Estados de focus para accesibilidad */
+.boton-regresar:focus {
+    outline: 2px solid #4CAF50;
+    outline-offset: 2px;
+}
+
+.url-mapa:focus {
+    outline: 2px solid #1a73e8;
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
+/* Animación de entrada */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.contenido-mapa {
+    animation: fadeIn 0.6s ease-in-out;
+}
