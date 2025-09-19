@@ -1,0 +1,68 @@
+/* ==== Paleta de colores y fuentes de leras  ==== */
+@import url("https://fonts.googleapis.com/css2?family=Koulen&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inclusive+Sans:ital@0;1&display=swap");
+
+:root{
+  --bg: #faf0e2;   /* fondo crema */
+  --text: #111111; /* texto */
+  --accent: #111;  /* botones */
+}
+
+/* ==== Base ==== */
+* { box-sizing: border-box; }
+
+html, body{
+  margin: 0; padding: 0;
+
+  background: var(--bg); color: var(--text);
+  
+  font-family: "Inclusive Sans", Helvetica, sans-serif;
+  line-height: 1.35;
+}
+
+/* ==== esto controla el ancho del contenido ==== */
+.wrap { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+/* ==== el encabezado ==== */
+.topbar{
+ 
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; padding: 14px 24px;
+}
+
+.brand{
+  font-family: "Koulen", Helvetica, sans-serif;
+
+  font-size: 36px; letter-spacing: .5px;
+}
+
+@media (max-width:900px){
+  .brand{ font-size: 32px; }
+}
+
+/* ==== Navegación con los botones ==== */
+.navwrap{
+
+  display: flex; gap: 16px; flex-wrap: wrap;
+  justify-content: center; padding: 10px 0;
+}
+.navwrap a, .btn{
+  display: inline-block; text-decoration: none; font-weight: 700;
+  
+  border-radius: 10px; padding: 10px 16px;
+  border: 2px solid var(--accent);
+  background: var(--accent); color: var(--bg);
+}
+
+@media (max-width:640px){
+
+  .navwrap a{ width: 100%; text-align: center; }
+}
+
+/* ==== Secciones y títulos ==== */
+.panel{ padding: 40px 0; }
+.section-title{
+  font-family: "Koulen", Helvetica, sans-serif;
+  text-transform: uppercase; letter-spacing: .5px; font-size: 32px;
+  margin: 8px 0 22px; text-align: center;
+}
