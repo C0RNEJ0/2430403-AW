@@ -10,10 +10,8 @@
 <section data-source-filename="indeex.html" id="indeex">
   <!-- el encabezado  papa -->
   <!-- cosas por hacer 
-   agragar las respuestas a las preguntas 
-   agregar el style.css
-   en duda agregar js para que las preguntas se desplieguen al dar click en duda 
-   quien sabe derato 
+   agragar las respuestas a las preguntas
+   no lo hice
    
 -->
   <header>
@@ -46,38 +44,39 @@
         <h2>Introducción y contexto</h2>
         <ol class="list"> 
         
-          <li>) ¿Que es JavaScript y cuales son sus principales usos en la web?</li>  
+          <li><strong>) ¿Que es JavaScript y cuales son sus principales usos en la web?</strong></li>  
           <p>R= Es un lenguaje de programacion que hace que las paginas web sean dinamicas</p>  
           
-            <li>) ¿En que año y con que proposito se creo JavaScript?</li>
+            <li><strong>) ¿En que año y con que proposito se creo JavaScript?</strong></li>
           <p>R= Fue creado en 1995 se creo para que las paginas sean mas interactivas y creativas</p>
 
-          <li>) ¿Por que JavaScript no es lo mismo que Java?</li>
+          <li><strong>) ¿Por que JavaScript no es lo mismo que Java?</strong></li>
           <p>R= Java es un lenguaje de programacion Orientada a objetos mientras que JavaScript es un lenguaje de scripts 
             Orienta a Objetos</p>
 
-          <li>) ¿Cómo se complementa JavaScript con HTML y CSS?</li>
+          <li><strong>) ¿Cómo se complementa JavaScript con HTML y CSS?</strong></li>
           <p>R= Js añade interactividad en las paginas web puede modificar el contenido de html 
             cambiar los estilos de css</p>
         </ol>
       </section>
   </main>
 
-  <!-- Fundamentos del lenguaje me falta responer las 5 preguntas -->
+  <!-- Fundamentos del lenguaje  -->
   <section id="FundamentosDelLenguaje" class="panel">
     <div class="wrap">
       <h2 class="section-title">Fundamentos del lenguaje</h2>
       <ol class="list" start="5">
        
-        <li>) ¿Cuál es la sintaxis basica de JavaScript y cómo se escriben comentarios?</li>
-        <p>R=  </p>
+        <li><strong>) ¿Cuál es la sintaxis basica de JavaScript y cómo se escriben comentarios?</strong></li>
+        <p>R=  en javaScript se usan let, const o var en los comentarios usan casi lo mismo que java o c++ se representa con 
+          <code > // </code> y para una varias lineas <code> /* texto */ </code></p>
 
-        <li>) ¿Que diferencias hay entre var, let y const?</li>
+        <li><strong>) ¿Que diferencias hay entre var, let y const?</strong></li>
        <p>R= <code>var</code> es una forma antigua de declarar variables
       <code>left</code> es la manera moderna de declarar variables que se pueden cambiar
-    <code>const</code> sirve para declarar constantes son que no cambian ya asgnados </p>
+    <code>const</code> sirve para declarar constantes son que no cambian ya asgnados</p>
         
-       <li>) ¿Cuáles son los tipos de datos primitivos en JavaScript? Da un ejemplo de cada uno.</li>
+       <li><strong>) ¿Cuáles son los tipos de datos primitivos en JavaScript? Da un ejemplo de cada uno.</strong></li>
        <p>R= Los datos primitivos son valores son simples no cambian directamente
         string <code> let nombre = "cornejo"; </code> number <code> let edad = 20;</code>
         <code> let dinero = 0.1; </code> Boolean <code> let esMayor = true; </code>
@@ -85,86 +84,134 @@
       Null <code> let coche = null; </code> Symbol <code> let id = Symbol("meIdentifico"); </code>
       BigInt <code>let numerote = 99999999999999999999999999999999n;</code> </p> 
         
-       <li>) ¿Qué diferencia hay entre un array y un objeto en JavaScript?</li>
+       <li><strong>) ¿Qué diferencia hay entre un array y un objeto en JavaScript?</strong></li>
        <p>R= Usar un <code> objeto </code>  que describe con sus caracteristicas como una pelicula 
-        Ahora los <code>array</code> guarda una lista de lo que pongamos en orden 
-       </p>
+        Ahora los <code>array</code> guarda una lista de lo que pongamos en orden</p>
         
-       <li>) ¿Que son y como se usan los operadores aritmeticos, logicos y relacionales?</li>
-      <p>R= Los Operadores aritmeticos sirven para operaciones matematicas / Los Operadores logicos   </p>
+       <li><strong>) ¿Que son y como se usan los operadores aritmeticos, logicos y relacionales?</strong></li>
+      <p>R= Los Operadores aritmeticos sirven para operaciones matematicas / Los Operadores logicos sirven para combinar 
+        condicciones y obtener un resultado falso o verdadero</p>
       </ol>
     </div>
   </section>
 
-  <!-- Control de flujo  me falta responer las 3 preguntas -->
+  <!-- Control de flujo   -->
   <section id="ControlDeFlujo" class="panel">
     <div class="wrap">
       <h2 class="section-title">Control de flujo</h2>
       <ol class="list" start="10">
         
-        <li>) ¿Cómo funcionan las sentencias condicionales "if", "else" y "switch"?</li>
-        
-        <li>) ¿Cuáles son las diferencias entre los bucles "for", "while" y "do...while"</code>?</li>
-       
-        <li>) ¿Para qué sirven las palabras clave "break" y "continue"?</li>
+        <li><strong>) ¿Cómo funcionan las sentencias condicionales "if", "else" y "switch"?</strong></li>
+          <p>R= El <code>IF</code> el programa revisa si es correcta y si es correcta hace una accion
+        En el <code>else</code> si la condicion no se cumple entonces hace otra cosa y por ultimo el <code>switch</code> se compara 
+      un mismo valor con varias opciones y se ejecuta la que coincida</p>
+
+        <li><strong>) ¿Cuáles son las diferencias entre los bucles "for", "while" y "do...while"</code>?</strong></li>
+       <p>R= El <code>for</code> se usa cuando sabemos cuantas veces quieres repetir Algo, el <code>while</code> repite una accion mientras mientras la 
+        condicion sea verdadera pero puede que no se ejecute nunca y por ultimo <code> do..while </code> hace la misma accion que <code> while </code> 
+      repite mientras una condicion sea verdadera, pero se ejecuta al menos una vez, aunque la condicion sea falsa desde el principio</p>
+
+
+        <li><strong>) ¿Para qué sirven las palabras clave "break" y "continue"?</strong></li>
+        <p>R= El <code> break </code> detiene el ciclo por completo aunque todavia no haya terminado
+        y por <code> continue </code> salta a la siguiente vuelta del ciclo sin ejecutar el resto de instrucciones</p>
       </ol>
     </div>
   </section>
 
-  <!-- Funciones me falta responer las 4 preguntas -->
+  <!-- Funciones -->
   <section id="Funciones" class="panel">
     <div class="wrap">
       <h2 class="section-title">Funciones</h2>
       <ol class="list" start="13">
         
-        <li>) ¿Cómo se declara una función y cómo se llama en JavaScript?</li>
+        <li><strong>) ¿Cómo se declara una función y cómo se llama en JavaScript?</strong></li>
+        <p>R= se declara asi <code>function saludar() {console.log("Holis!"); }
+</code> Para usarla, simplemente escribes su nombre seguido de parentesis</p>
         
-        <li>) ¿Qué significa que una función tenga parámetros y un valor de retorno?</li>
-        
-        <li>) ¿Qué son las funciones flecha "=&gt" y qué ventajas tienen?</li>
-       
-        <li>) ¿Qué es el scope en JavaScript y cómo afecta a las variables?</li>
+<li><strong>) ¿Qué significa que una función tenga parámetros y un valor de retorno?</strong></li>
+       <P>R= Los parametros son como entradas que recibe la funcion para trabajar son los datos que necesita y 
+        y valor de retorno es el resultado que la funcion devuelve despues de hacer su trabajo</P> 
+
+        <li><strong>) ¿Qué son las funciones flecha "=&gt" y qué ventajas tienen?</strong></li>
+          <p>R= Las funciones flecha en JavaScript son una forma mas corta de escribir funciones, usando la sintaxis ()=>{}
+           son una forma compacta de escribir funciones</p>
+
+  <li><strong>) ¿Qué es el scope en JavaScript y cómo afecta a las variables?</strong></li>
+<p>R=
+R = El <code>scope</code> en JavaScript es el alcance de una variable, 
+o sea dónde puede usarse. Puede ser global (en todo el programa), 
+de función (solo dentro de una función) o de bloque 
+(con <code>let</code> y <code>const</code>). 
+Esto afecta a las variables porque define si son visibles en todo el código o solo en una parte.
+</p>
       </ol>
     </div>
   </section>
 
-  <!-- Objetos y colecciones me falta responder las 3 preguntas -->
+  <!-- Objetos y colecciones -->
   <section id="ObjetosColecciones" class="panel">
 
     <div class="wrap">
       <h2 class="section-title">Objetos y colecciones</h2>
       <ol class="list" start="17">
   
-        <li>) ¿Cómo se declara un objeto y como se accede a sus propiedades?</li>
-        
-        <li>) ¿Qué diferencia hay entre una propiedad y un método en un objeto?</li>
+        <li><strong>) ¿Cómo se declara un objeto y como se accede a sus propiedades?</strong></li>
+        <p>R= un objeto se declara usando llaves "{ }" con pares clave: valor (<code>let perro = {
+  nombre: "cheis", edad: 1, nacimiento: "abasolo tam " };</code>) y como se acceden alas propiedades <code>console.log(perro.nombre);</code>
+        </p>
+        <li><strong>) ¿Qué diferencia hay entre una propiedad y un método en un objeto?</strong></li>
+         <p>R= una propiedad es como un dato que describe un objeto y un metodo es como una accion que el puede hacer</p>
+
+        <li><strong>) Menciona al menos 3 métodos básicos de los arrays (push, pop, map, etc.) y explica cómo funcionan.</strong></li>
+      <p>R= 
+      (<code> let frutas = ["manzana", "plátano"]; frutas.push("sandía");  </code>) el push agrega un elemeto al final del array
+      (<code>let mascotas = ["perro", "gato", "mamut"]; animales.pop(); </code>) el pop elimina el ultimo elemento del array y lo devuelve
+      (<code> let numeros = [1, 2, 3]; let dobles = numeros.map(n => n * 2); </code>) y por ultimo el map crea un nuevo array aplicando una funcion a cada elemento
+      </p>
       
-        <li>) Menciona al menos 3 métodos básicos de los arrays (push, pop, map, etc.) y explica cómo funcionan.</li>
+      
       </ol>
     </div>
   </section>
 
-  <!-- Otros temas básicos me falta responder las 4 preguntas -->
+  <!-- Otros temas básicos-->
   <section id="OtrosTemasBasicos" class="panel">
     <div class="wrap">
       <h2 class="section-title">Otros temas básicos</h2>
       <ol class="list" start="20">
         
-        <li>) ¿Que es el DOM y por que es importante en el uso de JavaScript 
-          en paginas web?</li>
-        <li>) ¿Qué es un evento en JavaScript y menciona al menos 3 ejemplos comunes?</li>
-       
-        <li>) ¿Cuál es la diferencia entre "alert", "prompt" y "console.log"?</li>
-        <li>) ¿Como se abre la consola del navegador y qué ventajas tiene usarla 
-          para depurar código?</li>
-      </ol>
+        <li><strong>) ¿Que es el DOM y por que es importante en el uso de JavaScript 
+          en paginas web?</strong></li> 
+          <p>R= El Dom es como un esqueleto de una pagina web donde van los (titulos imagenes botones) donde esta todo
+            organizado y ¿y por que es importante en el uso de JavaScript? pues js lo usa para como comunicarse con la pagina puede cambiar 
+          textos y colores imagenes pues gracias DOM las paginas no son staticas</p>
+
+        <li><strong>) ¿Qué es un evento en JavaScript y menciona al menos 3 ejemplos comunes?</strong></li>
+        <p>R= Un evento en js es algo que sucede en nuestra pagina web y que el navegador detecta (como una interaccion o un cambio en la pagina)
+          (ejemplo1 <code>click</code> cuando el usuario hace clic en un boton o enlace) (ejemplo2 <code>keyup</code> cuando se levanta una tecla del teclado)
+          (ejemplo3 <code>mouseover</code> cuando el cursor pasa por encima de un elemento) 
+        </p>
+        
+        <li><strong>) ¿Cuál es la diferencia entre "alert", "prompt" y "console.log"?</strong></li>
+        <p>R= (En <code> alert() </code> muestra un mensaje de alerta solo informa no hace nada <code> alert("aqui puras chivas"); </code>)
+        (En el <code>prompt()</code> muestra una ventana emergente con un cuadro de texto para que el usuario escriba algo <code>  let tralaeros = prompt("¿cuantos tralaeros tienes?"); alert("Hola " + tralaleros);
+          ( y por ultimo <code>console.log()</code> escribe mensajes en la consola del navegador no lo ve el usuario solo el programador <code>console.log("soy fan de Luis Romo") </code>    </code>)  </p>    
+ 
+ 
+          <li><strong>) ¿Como se abre la consola del navegador y qué ventajas tiene usarla 
+          para depurar código?</strong></li>
+          <p>R= con f12 o le das inspecionar y te vas ala pestaña "consola"  cuales son las ventajas ( pudes ver los mensajes de la console.log() para saber que esta pasando con 
+            el codigo, muestra errores en tiempo real, ayuda a seguir con el flujo del programa y saber donde falla ) </p>
+      
+        </ol>
     </div>
   </section>
 
  
  
   <footer>
-    <div class="wrap">© 2025 Algo de JavaScript - UPV BIS</div> <!-- se acabó  mi pagina    -->
+    <div class="wrap">© 2025 Algo de JavaScript - UPV BIS</div> <!-- se acabó  mi pagina   muchas gracias por ver mi pagina  -->
   </footer>
 </section>
 </body>

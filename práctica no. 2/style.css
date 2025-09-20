@@ -59,10 +59,15 @@ html, body{
   .navwrap a{ width: 100%; text-align: center; }
 }
 
-/* ==== Secciones y títulos ==== */
+/* ==== encabezados de los temas  ==== */
 .panel{ padding: 40px 0; }
-.section-title{
+
+.panel h2, .section-title{
   font-family: "Koulen", Helvetica, sans-serif;
-  text-transform: uppercase; letter-spacing: .5px; font-size: 32px;
-  margin: 8px 0 22px; text-align: center;
+  text-transform: uppercase;
+  letter-spacing: .5px; 
+  font-size: 32px;
+  margin: 8px 0 22px;
+  text-align: center;
 }
+
