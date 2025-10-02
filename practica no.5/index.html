@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Practica No.5</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-light d-flex align-items-center justify-content-center vh-100">
+
+    <div id="login-container-box" class="login-container card shadow p-4" style="max-width: 400px; width:100%;"> 
+        <h2 class="text-center mb-4">Iniciar Sesión</h2>
+        <!-- Formulario de Login -->
+        <form id="formatologin">
+            <div class="mb-3">
+                <label for="username" class="form-label">Correo electrónico:</label>
+                <input type="email" id="username" name="username" class="form-control" required>
+            </div>
+            <!-- Contraseña -->
+            <div class="mb-3">
+                <label for="password" class="form-label">Contraseña:</label>
+                <input type="password" id="password" name="password" class="form-control" required> 
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Ingresar</button> <!-- Botón de Ingresar -->
+            <p id="error-message" class="text-danger small mt-2"></p>
+        </form>
+        
+        <p class="text-center mt-3">
+            ¿No tienes cuenta? <a href="registro.html">Regístrate aquí</a>
+        </p>
+    </div>
+
+    <div id="dashboard-container" style="display: none; max-width: 900px; width:100%;" class="card shadow p-4">
+        
+        <h1 class="mb-4">Dashboard de Asignación de Tareas</h1>
+        <p id="dashboard-message" class="fs-5 mb-4 text-muted">Sesión activa para: [correo]</p>
+        
+        <h3 class="mb-3">Nueva Tarea</h3>
+        <form id="task-form" class="mb-4 row g-3">
+            <div class="col-md-4">
+                <input type="text" id="task-name" class="form-control" placeholder="Nombre de la Tarea" required>
+            </div>
+            <div class="col-md-6">
+                <input type="text" id="task-description" class="form-control" placeholder="Descripción breve" required>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">Agregar</button>
+            </div>
+        </form>
+
+        <h3 class="mt-4 mb-3">Tareas Asignadas</h3>
+        <div id="tasks-list" class="list-group">
+            <p class="text-muted">Cargando tareas...</p>
+        </div>
+        
+        <button id="cerrar-sesion" class="btn btn-danger mt-3">Cerrar Sesión</button>
+    </div>
+    <!-- Modal de Bienvenida -->
+    <div class="modal fade" id="modalBienvenida" tabindex="-1" aria-labelledby="etiquetaModalBienvenida" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="etiquetaModalBienvenida">Acceso Concedido</h5>
+                </div>
+                <div class="modal-body"> <!-- Mensaje de bienvenida dinámico -->
+                    <p id="cuerpoMensajeModal">¡Bienvenido!</p> 
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-bs-dismiss="modal" id="botonContinuarDashboard">Continuar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+        
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
