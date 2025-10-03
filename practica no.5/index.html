@@ -16,7 +16,7 @@
         <form id="formatologin">
             <div class="mb-3">
                 <label for="username" class="form-label">Correo electrónico:</label>
-                <input type="email" id="username" name="username" class="form-control" required>
+                <input type="gmail" id="username" name="username" class="form-control" required>
             </div>
             <!-- Contraseña -->
             <div class="mb-3">
@@ -38,8 +38,19 @@
         <p id="dashboard-message" class="fs-5 mb-4 text-muted">Sesión activa para: [correo]</p>
         
         <h3 class="mb-3">Nueva Tarea</h3>
+         <h3 class="mb-3">Nuevo Proyecto</h3>
+              <form id="project-formulario" class="mb-4 row g-3">
+                  <div class="col-md-10">
+                        <input type="text" id="project-nombre" class="form-control" placeholder="Nombre del Proyecto" required>
+                             </div>
+                    <div class="col-md-2">
+                     <button type="submit" class="btn btn-secondary w-100">Crear</button>
+                    </div>
+                    </form>
+
         <form id="task-form" class="mb-4 row g-3">
             <div class="col-md-4">
+                <h3 class =""
                 <input type="text" id="task-name" class="form-control" placeholder="Nombre de la Tarea" required>
             </div>
             <div class="col-md-6">
