@@ -1,7 +1,7 @@
-// Variables Globales ---                                             
+
 // Usuarios por defecto (Si no hay usuarios registrados, se usa esta lista)
 const USUARIOS_POR_DEFECTO = [
-    { correo: "chivista@gmail.com", contrasena: "1234" }, // Usuario de prueba creo que no jala 
+    { correo: "chivista@gmail.com", contrasena: "1234" }, // Usuario de prueba
 ];
 let usuariosRegistrados = JSON.parse(localStorage.getItem("users")) || USUARIOS_POR_DEFECTO; // Lista de usuarios registrados
 
@@ -69,25 +69,25 @@ if (formatologin) { // Verifica que el formulario de login exista
     formatologin.addEventListener("submit", function(event) { // Maneja el evento de envío del formulario
         event.preventDefault(); // Previene el envío por defecto del formulario
 
-        const usuarioEmail = document.getElementById("username").value.trim(); // Obtiene y limpia el valor del correo
+        const usuariogmail = document.getElementById("username").value.trim(); // Obtiene y limpia el valor del correo
         const contrasena = document.getElementById("password").value; // Obtiene el valor de la contraseña
-
-        if (!validarCorreo(usuarioEmail))  { // Valida el formato del correo
+ 
+        if (!validarCorreo(usuariogmail))  { // Valida el formato del correo
              errorMessageLogin.textContent = "favor de ingresar un correo valido"; // Mensaje de error si no es un correo valido
             return;
         }
 
         const usuarioEncontrado = usuariosRegistrados.find(user =>  // Busca el usuario en la lista
-            user.correo === usuarioEmail && user.contrasena === contrasena // Verifica correo y contraseña
+            user.correo === usuariogmail && user.contrasena === contrasena // Verifica correo y contraseña
         );
 
         if (usuarioEncontrado) { 
             // Inicia sesión y muestra el modal
-            localStorage.setItem("usuarioLogueado", usuarioEmail); // Guarda el usuario logueado en localStorage
+            localStorage.setItem("usuarioLogueado", usuariogmail); // Guarda el usuario logueado en localStorage
             
             errorMessageLogin.textContent = "Inicio de sesión exitoso"; // Mensaje de éxito
             
-            cuerpoMensajeModal.textContent = `Bienvenido, ${usuarioEmail}!`; // Mensaje de bienvenido al usuario
+            cuerpoMensajeModal.textContent = `Bienvenido, ${usuariogmail}!`; // Mensaje de bienvenido al usuario
             modalBienvenida.show(); 
 
         } else { // Si no se encuentra el usuario
