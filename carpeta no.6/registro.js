@@ -10,7 +10,7 @@ let usuariosRegistrados = JSON.parse(localStorage.getItem("users")) || USUARIOS_
 const formularioRegistro = document.getElementById("formularioRegistro"); // Formulario de registro
 const inputCorreo = document.getElementById("inputCorreoRegistro"); // Campo de correo
 const inputContrasena = document.getElementById("inputContrasenaRegistro"); // Campo de contraseña
-const mensajeError = document.getElementById("mensajeErrorRegistro"); //mo  strar mensajes d e error
+const mensajeError = document.getElementById("mensajeErrorRegistro"); //mostrar mensajes d e error
 
 
 
