@@ -10,76 +10,169 @@
 </head>
 <body class="bg-light d-flex align-items-center justify-content-center vh-100">
 
-    <div id="login-container-box" class="login-container card shadow p-4" style="max-width: 400px; width:100%;"> 
-        <h2 class="text-center mb-4">Iniciar Sesión</h2>
-        <!-- Formulario de Login -->
-        <form id="formatologin">
-            <div class="mb-3">
-                <label for="username" class="form-label">Correo electrónico:</label>
-                <input type="gmail" id="username" name="username" class="form-control" required>
-            </div>
-            <!-- Contraseña -->
-            <div class="mb-3">
-                <label for="password" class="form-label">Contraseña:</label>
-                <input type="password" id="password" name="password" class="form-control" required> 
-            </div>
-            <button type="submit" class="btn btn-primary w-100">Ingresar</button> <!-- Botón de Ingresar -->
-            <p id="error-message" class="text-danger small mt-2"></p>
-        </form>
-        
-        <p class="text-center mt-3">
-            ¿No tienes cuenta? <a href="registro.html">Regístrate aquí</a>
-        </p>
-    </div>
-
-    <div id="dashboard-container" style="display: none; max-width: 900px; width:100%;" class="card shadow p-4">
-        
-        <h1 class="mb-4">Dashboard de Asignación de Tareas</h1>
-        <p id="dashboard-message" class="fs-5 mb-4 text-muted">Sesión activa para: [correo]</p>
-        
-        <h3 class="mb-3">Nueva Tarea</h3>
-         <h3 class="mb-3">Nuevo Proyecto</h3>
-              <form id="project-formulario" class="mb-4 row g-3">
-                  <div class="col-md-10">
-                        <input type="text" id="project-nombre" class="form-control" placeholder="Nombre del Proyecto" required>
-                             </div>
-                    <div class="col-md-2">
-                     <button type="submit" class="btn btn-secondary w-100">Crear</button>
-                    </div>
-                    </form>
-
-        <form id="task-form" class="mb-4 row g-3">
-            <div class="col-md-4">
-                <h3 class =""
-                <input type="text" id="task-name" class="form-control" placeholder="Nombre de la Tarea" required>
-            </div>
-            <div class="col-md-6">
-                <input type="text" id="task-description" class="form-control" placeholder="Descripción breve" required>
-            </div>
-            <div class="col-md-2">
-                <button type="submit" class="btn btn-primary w-100">Agregar</button>
-            </div>
-        </form>
-
-        <h3 class="mt-4 mb-3">Tareas Asignadas</h3>
-        <div id="tasks-list" class="list-group">
-            <p class="text-muted">Cargando tareas...</p>
+    <div style="width: 100%;">
+  <!-- EL LOGIN-->
+        <div id="login-container-box" class="login-container card shadow p-4" style="max-width: 400px; margin: auto;"> 
+            <h2 class="text-center mb-4">Iniciar Sesión</h2>
+            <form id="formatologin">
+                <div class="mb-3">
+                    <label for="username" class="form-label">Correo electrónico:</label>
+                    <input type="email" id="username" name="username" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Contraseña:</label>
+                    <input type="password" id="password" name="password" class="form-control" required> 
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Ingresar</button>
+                <p id="error-message" class="text-danger small mt-2 text-center"></p>
+                <p class="text-center mt-3">
+                    ¿No tienes cuenta? <a href="registro.html">Regístrate aquí</a>  <!-- si no tienes cuentas ya sabes-->
+                </p>
+            </form>
         </div>
         
-        <button id="cerrar-sesion" class="btn btn-danger mt-3">Cerrar Sesión</button>
-    </div>
-    <!-- Modal de Bienvenida -->
+        <div id="dashboard-container" style="display: none; max-width: 1200px; width:100%; margin: auto;" class="card shadow p-4">
+                                                   
+            <div class="d-flex justify-content-between align-items-start mb-4">
+                <h1 class="mb-0">Tareas y Proyectos</h1>
+                <button class="btn btn-danger" id="cerrar-sesion">Cerrar Sesión</button>
+            </div>
+            
+            <p id="dashboard-message" class="fs-5 mb-4 text-muted">Sesión activa para:</p>
+
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="tasks-tab" data-bs-toggle="tab" data-bs-target="#tasks-pane" type="button" role="tab" aria-controls="tasks-pane" aria-selected="true">Tareas</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="projects-tab" data-bs-toggle="tab" data-bs-target="#projects-pane" type="button" role="tab" aria-controls="projects-pane" aria-selected="false">Proyectos</button>
+                </li>
+            </ul>
+
+            <div class="tab-content mt-3" id="myTabContent">
+                
+                <div class="tab-pane fade show active" id="tasks-pane" role="tabpanel" aria-labelledby="tasks-tab" tabindex="0">
+                    
+                    <h4 class="mt-4 mb-3">Agregar Nueva Tarea</h4>
+                    <form id="task-form" class="row g-3 mb-5">
+                        <div class="col-md-4">
+                            <label for="task-name" class="form-label">Nombre</label>
+                            <input type="text" id="task-name" class="form-control" placeholder="Nombre de la Tarea" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="task-asignado" class="form-label">Asignado a</label>
+                            <input type="text" id="task-asignado" class="form-control" placeholder="Nombre de la Persona" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="task-vencimiento" class="form-label">Fecha de Vencimiento</label>
+                            <input type="date" id="task-vencimiento" class="form-control" required>
+                        </div>
+                        <div class="col-md-8">
+                            <label for="task-description" class="form-label">Descripción Breve</label>
+                            <input type="text" id="task-description" class="form-control" placeholder="Descripción breve" required>
+                        </div>
+                        <div class="col-md-2">
+                            <label for="task-prioridad" class="form-label">Prioridad</label>
+                            <select id="task-prioridad" class="form-select" required>
+                                <option value="Alta">Alta</option>
+                                <option value="Media">Media</option>
+                                <option value="Baja">Baja</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2 d-grid">
+                            <label class="form-label text-white">.</label>
+                            <button type="submit" class="btn btn-primary w-100">Agregar Tarea</button>
+                        </div>
+                    </form>
+
+                    <h3 class="mt-4 mb-3">Panel de Tareas (Drag & Drop)</h3>
+                    <div class="row" id="task-board">
+                        <div class="col-md-4">
+                            <div class="card bg-light mb-3">
+                                <div class="card-header bg-danger text-white">Pendiente</div>
+                                <div id="status-Pendiente" 
+                                    class="card-body list-group"
+                                    ondragover="allowDrop(event)" 
+                                    ondrop="drop(event)">
+                                    </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="card bg-light mb-3">
+                                <div class="card-header bg-warning text-dark">En Proceso</div>
+                                <div id="status-En Proceso" 
+                                    class="card-body list-group"
+                                    ondragover="allowDrop(event)" 
+                                    ondrop="drop(event)">
+                                    </div>
+                            </div>
+                        </div>  
+                        <div class="col-md-4">
+                            <div class="card bg-light mb-3">
+                                <div class="card-header bg-success text-white">Hecha</div>
+                                <div id="status-Hecha" 
+                                    class="card-body list-group"
+                                    ondragover="allowDrop(event)" 
+                                    ondrop="drop(event)">
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="projects-pane" role="tabpanel" aria-labelledby="projects-tab" tabindex="0">
+                    
+                    <h4 class="mt-4 mb-3">Agregar Nuevo Proyecto</h4>
+                    <form id="proyect-formulario" class="row g-3 align-items-end mb-5">
+                        <div class="col-md-4">
+                            <label for="proyect-nombre" class="form-label">Nombre</label>
+                            <input type="text" id="proyect-nombre" class="form-control" placeholder="Nombre del Proyecto" required>
+                        </div>
+                        <div class="col-md-8">
+                            <label for="proyect-descripcion" class="form-label">Descripción Breve</label>
+                            <input type="text" id="proyect-descripcion" class="form-control" placeholder="Objetivo del proyecto" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="proyect-inicio" class="form-label">Fecha de Inicio</label>
+                            <input type="date" id="proyect-inicio" class="form-control" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="proyect-fin" class="form-label">Fecha de Finalización</label>
+                            <input type="date" id="proyect-fin" class="form-control">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="proyect-estado" class="form-label">Estado</label>
+                            <select id="proyect-estado" class="form-select" required>
+                                <option value="Activo">Activo</option>
+                                <option value="Pendiente">Pendiente</option>
+                                <option value="Completado">Completado</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2 d-grid">
+                            <button type="submit" class="btn btn-success w-100">Crear Proyecto</button>
+                        </div>
+                    </form>
+                    <h3 class="mt-4 mb-3">Lista de Proyectos</h3>
+                    <div id="proyects-list-container" class="list-group">
+                        <p class="text-muted">No hay proyectos creados.</p>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div> 
+
     <div class="modal fade" id="modalBienvenida" tabindex="-1" aria-labelledby="etiquetaModalBienvenida" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="etiquetaModalBienvenida">Acceso Concedido</h5>
+                    <h5 class="modal-title" id="etiquetaModalBienvenida">¡Inicio de Sesión Exitoso!</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body"> <!-- Mensaje de bienvenida dinámico -->
-                    <p id="cuerpoMensajeModal">¡Bienvenido!</p> 
+                <div class="modal-body">
+                    <p id="cuerpoMensajeModal">Bienvenido!</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-success" data-bs-dismiss="modal" id="botonContinuarDashboard">Continuar</button>
+                    <button type="button" class="btn btn-primary" id="botonContinuarDashboard" data-bs-dismiss="modal">Continuar al Dashboard</button>
                 </div>
             </div>
         </div>
