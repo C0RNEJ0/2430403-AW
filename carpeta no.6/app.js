@@ -31,13 +31,13 @@ const taskVencimientoInput = document.getElementById("task-vencimiento"); // Inp
 const taskPrioridadInput = document.getElementById("task-prioridad"); // Input de la prioridad de la tarea
 const taskAsignadoInput = document.getElementById("task-asignado"); // Input de la persona asignada a la tarea
 
-// Referencias de Proyectos (CORREGIDAS Y FINALIZADAS)
+// Referencias de Proyectos 
 const proyectsListContainer = document.getElementById("proyects-list-container"); // Contenedor de la lista de proyectos
 const proyectForm = document.getElementById("proyect-formulario");
 const projectNameInput = document.getElementById("proyect-nombre"); 
 const projectDescriptionInput = document.getElementById("proyect-descripcion"); 
 const proyectInicioInput = document.getElementById("proyect-inicio"); 
-const proyectFinInput = document.getElementById("proyect-fin"); // ¡ERROR CRÍTICO RESUELTO!
+const proyectFinInput = document.getElementById("proyect-fin"); 
 const proyectEstadoInput = document.getElementById("proyect-estado"); 
 
 
