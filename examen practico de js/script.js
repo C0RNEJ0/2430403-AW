@@ -2,7 +2,7 @@ function registrar() {
   let nombre = document.getElementById("nombre").value;
   let correo = document.getElementById("correo").value;
   let contrasena = document.getElementById("contrasena").value;
-  let confirmar = document.getElementById("confirmar-contrasena").value;
+  let confirmar = document.getElementById("confirmar").value;
   let mensaje = document.getElementById("mensaje");
 
   if (!nombre || !correo || !contrasena || !confirmar) {
