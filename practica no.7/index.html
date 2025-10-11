@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Practica No.5</title>
+    <title>Practica No.7</title>
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
@@ -16,7 +16,7 @@
             <form id="formatologin">
                 <div class="mb-3">
                     <label for="username" class="form-label">Correo electrónico:</label>
-                    <input type="email" id="username" name="username" class="form-control" required>
+                    <input type="text" id="username" name="username" class="form-control" required>
                 </div>
                 <div class="mb-3">
                     <label for="password" class="form-label">Contraseña:</label>
@@ -26,6 +26,12 @@
                 <p id="error-message" class="text-danger small mt-2 text-center"></p>
                 <p class="text-center mt-3">
                     ¿No tienes cuenta? <a href="registro.html">Regístrate aquí</a>  </p>
+                
+                
+                <p class="text-center mt-2 small text-muted border-top pt-2">
+                    Cuenta Admin para Mariodev: <br>
+                    Usuario: <b>rebanosagrado</b> | Contraseña: <b>123</b>
+                </p>
             </form>
         </div>
         
@@ -162,11 +168,19 @@
                 <div class="tab-pane fade" id="notes-pane" role="tabpanel" aria-labelledby="notes-tab" tabindex="0">
                     <h4 class="mt-4 mb-3">Crear Nueva Nota</h4>
                     <form id="note-form" class="row g-3 mb-5">
-                        <div class="col-md-5">
+                        <div class="col-md-4">
                             <label for="note-title" class="form-label">Título</label>
                             <input type="text" id="note-title" class="form-control" placeholder="Título de la Nota" required>
                         </div>
-                        <div class="col-md-5">
+                        <div class="col-md-4">
+                            <label for="note-time" class="form-label">Hora (Ej: 14:30)</label>
+                            <input type="text" id="note-time" class="form-control" placeholder="HH:MM" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="note-date" class="form-label">Fecha (Ej: 15/Mayo)</label>
+                            <input type="text" id="note-date" class="form-control" placeholder="Día/Mes/Año" required>
+                        </div>
+                        <div class="col-md-10">
                             <label for="note-content" class="form-label">Contenido</label>
                             <textarea id="note-content" class="form-control" rows="1" placeholder="Cuerpo de la nota" required></textarea>
                         </div>
@@ -206,3 +220,4 @@
     <script src="app.js"></script>
 </body>
 </html>
+
