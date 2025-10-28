@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+</head>
+<body>
+  <h1>Calculadora PracticaN8</h1>
+  <p> si saca menos 70 tronado</p>
+ <!-- el nombre del alumno y numero de materias -->
+  <div>
+    <label>Nombre del alumno:
+      <input id="alumno" placeholder="Nombre completo">
+    </label>
+  </div>
+
+  <div> <!--  el numero de materias -->
+    <label>Número de materias:
+      <input id="numMaterias" type="number" min="1" value="1">
+    </label>
+    <button id="crear">Crear materias</button> <!-- Boton para crear las materias -->
+  </div>
+          <!--contendor de las materias-->
+  <div id="contenedorMaterias"></div>
+
+  <div>     
+    <button id="calcular">Calcular</button>
+  </div>
+            <!-- contenedor de los resultados -->
+  <h2 id="tituloResultados" style="display:none"></h2>
+  <div id="resultado"></div> <!-- pues los resultados -->
+  <script src="app.js"></script>
+</body>
+</html>
