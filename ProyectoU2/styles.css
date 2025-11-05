@@ -1,0 +1,637 @@
+* {
+    margin: 0;                 /* VOY A PONER UN COMENTARIO DONDE NO QUIERO QUE LE MUEVAS ALVARO  OSEA NO LE MUEVAS A NADA */ 
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+}
+
+/* Icon images ( DE login / carrito) */ 
+.icon-img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    display: inline-block;
+}
+
+.icon:hover .icon-img {
+    transform: scale(1.08);
+}
+
+/* Barra superior verde */
+.top-bar {
+    background-color: #7ca673;
+    color: #2c3e2f;
+    text-align: center;
+    padding: 8px;
+    font-size: 14px;
+}
+
+/* Header */
+header {
+    background-color: #d9d9d9;
+    padding: 15px 0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+}
+
+.logo {
+    width: 60px;
+    height: 60px;
+    background-color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo img {
+    width: 80%;
+    height: 80%;
+    object-fit: contain;
+}
+
+/* Navegación */
+nav {
+    display: flex;
+    gap: 60px;
+    flex: 1;
+    justify-content: center;
+    margin-left: 100px;
+}
+
+.nav-link {
+    color: black;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.nav-link:hover {
+    color: #555;
+}
+
+/* Header derecha */
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.link-small {
+    color: black;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.link-small:hover {
+    text-decoration: underline;
+}
+
+/* Buscador */
+.search-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-box input {
+    width: 200px;
+    padding: 8px 35px 8px 12px;
+    border: none;
+    border-radius: 5px;
+    background-color: #b8b8b8;
+    color: #333;
+}
+
+.search-box input::placeholder {
+    color: #666;
+}
+
+.search-btn {
+    position: absolute;
+    right: 8px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+/* Iconos */
+.icons {
+    display: flex;
+    gap: 15px;
+}
+
+.icon {
+    font-size: 24px;
+    text-decoration: none;
+    color: black;
+}
+
+.icon:hover {
+    transform: scale(1.1);
+}
+
+/* Secciones de productos */
+.products-section {
+    max-width: 1400px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.products-section h2 {
+    text-align: center;
+    font-size: 28px;
+    margin-bottom: 30px;
+    color: #333;
+}
+
+/*   Grid de productos */
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 24px;
+    margin-bottom: 30px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+}
+
+.products-grid::-webkit-scrollbar {
+    height: 8px;
+}
+
+.products-grid::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.products-grid::-webkit-scrollbar-thumb {   
+    background: #888;
+    border-radius: 10px;
+}
+
+.products-grid::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* producto */
+.product-card {
+    background-color: #d4d4d4;
+    border-radius: 20px;
+    padding: 30px;
+    position: relative;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.product-image { /* Imagen del producto */
+    width: 100%;
+    height: 180px;
+    background-color: #c0c0c0;
+    border-radius: 15px;
+    margin-bottom: 16px;
+    overflow: hidden;
+}
+
+.product-info {
+    text-align: left;
+}
+
+.price {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.size { /* Tamaño del producto */
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+ 
+.name { /* Nombre del producto */
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.gender {
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.shipping { /* "futuro "envío gratis */
+    font-size: 14px;
+    color: #4a7c4a;
+    font-weight: 500;
+}
+
+
+
+
+
+main {
+    background-color: #f5f5f5;
+    min-height: calc(100vh - 120px);
+    padding: 20px;
+}
+
+/* Controles de administrador */
+.admin-controls {
+    max-width: 1400px;
+    margin: 0 auto 20px;
+    text-align: right;
+    padding: 0 20px;
+}
+
+.btn-admin {
+    padding: 12px 30px;
+    background-color: #7ca673;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    /*  */
+    font-weight: 600;
+}
+
+.btn-admin:hover {
+    background-color: #6a9261;
+}
+
+/* Contador del carrito */
+.cart-count {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: #e74c3c;
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+.icon {
+    position: relative;
+}
+
+/* Modales */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    align-items: center;
+    justify-content: center;
+    overflow-y: auto;
+}
+
+.modal.show {
+    display: flex;
+}
+
+.modal-content {
+    background-color: #ffffff; /* fondo blanco */
+    padding: 22px;
+    border-radius: 12px;
+    max-width: 520px;
+    width: 92%;
+    max-height: 85vh;
+    overflow-y: auto;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+    border: 1px solid rgba(0,0,0,0.08);
+    font-family: Arial, sans-serif;
+    position: relative;
+}
+
+.modal-content.modal-large {
+    max-width: 1000px;
+}
+
+.modal-content.modal-small {
+    max-width: 400px;
+}
+
+.close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    font-size: 20px;
+    font-weight: normal;
+    color: #444;
+    cursor: pointer;
+    background: #fffbf0;
+    border: 1px solid #eee;
+    padding: 2px 6px;
+    border-radius: 6px;
+}
+
+.close:hover {
+    background: #fff2d6;
+}
+
+.modal-content h2 {
+    text-align: center;
+    margin: 0 0 18px 0;
+    color: #ffffff;
+    background-color: #7ca673; /* verde principal */
+    padding: 12px 16px;
+    border-radius: 8px 8px 0 0;
+}
+
+.modal-content form {
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-content label {   /* Etiquetas de formulario */
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: #333;
+    font-weight: 500;
+}
+
+.modal-content input[type="text"],
+.modal-content input[type="password"],
+.modal-content input[type="number"],
+.modal-content select {
+    padding: 12px 15px;
+    margin-bottom: 20px;
+    border: 1px solid #999;
+    border-radius: 8px;
+    font-size: 14px;
+    background-color: white;
+}
+
+.modal-content input:focus,
+.modal-content select:focus {
+    outline: none;
+    border-color: #7ca673;
+}
+
+.btn-modal {  /* Botones dentro del modal */
+    padding: 8px 18px;
+    background-color: #f0c987;
+    color: #333;
+    border: 1px solid #e6b86b;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    margin-top: 10px;
+    font-weight: 600;
+}
+
+.btn-modal:hover { /* Botones dentro del modal */
+    background-color: #ffd89a;
+}
+
+.btn-secondary { /* Botón secundario */
+    background-color: #999;
+}
+
+.btn-secondary:hover { /* Botón secundario */
+    background-color: #777;
+}
+
+.modal-buttons { /* Contenedor de botones en modales */
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.register-link {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 13px;
+    color: #333;
+}
+
+.register-link a {
+    color: #4a7c4a;
+    text-decoration: underline;
+}
+
+/* Modal de producto */
+.producto-modal-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-top: 20px;
+}
+
+.producto-preview-section h3 {
+    font-size: 18px;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.preview-box {
+    background-color: #e8e8e8;
+    padding: 30px;
+    border-radius: 15px;
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.preview-box img {
+    max-width: 100%;
+    max-height: 300px;
+    object-fit: contain;
+    border-radius: 10px;
+}
+
+.placeholder {
+    color: #999;
+    font-size: 16px;
+    text-align: center;
+}
+
+/* Carrito modal */
+.carrito-vacio {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+}
+
+.carrito-tabla-container {
+    overflow-x: auto;
+    margin-bottom: 20px;
+}
+
+.carrito-tabla {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.carrito-tabla th {
+    background-color: #7ca673;
+    color: white;
+    padding: 15px;
+    text-align: left;
+    font-weight: 600;
+}
+
+.carrito-tabla td {
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
+}
+
+.carrito-tabla tr:last-child td {
+    border-bottom: none;
+}
+
+.producto-info-carrito {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.producto-img-carrito {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 8px;
+    background-color: #f0f0f0;
+}
+
+.cantidad-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn-cantidad {
+    width: 30px;
+    height: 30px;
+    border: none;
+    background-color: #7ca673;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-cantidad:hover {
+    background-color: #6a9261;
+}
+
+.btn-eliminar-item {
+    padding: 8px 15px;
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.btn-eliminar-item:hover {
+    background-color: #c0392b;
+}
+
+.carrito-total {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: right;
+}
+
+.carrito-total h3 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.btn-pagar {
+    font-size: 18px;
+    padding: 15px 40px;
+}
+
+/* Tarjetas de producto con botón de agregar */
+.product-card {
+    position: relative;
+}
+
+.btn-agregar-carrito {
+    width: 100%;
+    padding: 12px;
+    background-color: #7ca673;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    margin-top: 10px;
+    font-weight: 600;
+}
+
+.btn-agregar-carrito:hover {
+    background-color: #6a9261;
+}
+
+.product-controls {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.btn-edit, .btn-delete { /* Botones de editar y eliminar producto */
+    flex: 1;
+    padding: 8px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.btn-edit { /* Botón de editar */
+    background-color: #3498db;
+    color: white;
+}
+
+.btn-edit:hover {
+    background-color: #2980b9;
+}
+
+.btn-delete {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.btn-delete:hover {
+    background-color: #c0392b;
+}
+
+

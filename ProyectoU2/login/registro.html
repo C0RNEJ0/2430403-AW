@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro - Tienda</title>
+    <link rel="stylesheet" href="login-style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="page-title">Registro</div>
+    
+    <div class="container">
+        <div class="logo-section">
+            <div class="logo-wrapper">
+                <img src="../img/CS.png" alt="Logo CS" class="logo">
+            </div>
+        </div>
+
+        <div class="login-section">
+            <div class="login-box">
+                <h2>Crear Cuenta</h2>
+                
+                <form id="form_registrar">
+                    <label for="correo_reg">Correo</label>
+                    <input type="email" id="correo_reg" name="email" required>
+                    
+                    <label for="contrasena_reg">Contrasena</label>
+                    <input type="password" id="contrasena_reg" name="password" required>
+                    
+                    <label for="confirmar_contrasena">Confirmar Contrasena</label>
+                    <input type="password" id="confirmar_contrasena" name="confirm" required>
+                    
+                    <button type="submit" class="btn-login">Registrar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- contenedor de alertas Bootstrap -->
+    <div id="contenedor_alertas" class="position-fixed top-0 end-0 p-3" style="z-index:1055;"></div>
+
+    <!-- Modal de Cuenta Creada (solo botón ir a tienda) -->
+    <div id="modal_exito" class="modal">
+        <div class="modal-content">
+            <h2>Cuenta creada</h2>
+            <p style="margin:10px 0 18px 0; color:#2b4b3a;">Tu cuenta se creó correctamente.</p>
+            <button id="boton_ir_login" class="btn">ir al login</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="login.js"></script>
+</body>
+</html>

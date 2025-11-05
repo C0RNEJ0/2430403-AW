@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Ventas</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="top-bar">
+    Usa algo que lleve tu espiritu
+  </div>
+
+  <header>
+    <div class="container">
+      <div class="logo">
+        <img src="img/CS.png" alt="Logo">
+      </div>
+      <!--  toda la sección de navegación -->
+      <nav>
+  <a href="index.html" class="nav-link">MENU</a>
+  <a id="nav_ventas" href="ventas.html" class="nav-link">VENTAS</a>
+        <a href="mis_pedidos.html" class="nav-link">MIS PEDIDOS</a>
+      </nav>
+
+      <div class="header-right">
+        <div class="search-box">
+          <input type="text" id="buscador" placeholder="Buscar">
+        </div>
+            
+        <div class="icons">
+          <a href="#" id="icono_usuario" class="icon" title="Iniciar Sesion">
+            <img src="img/Login.png" alt="Login" class="icon-img">
+          </a>
+          <a href="#" id="icono_carrito" class="icon" title="Carrito">
+            <img src="img/carrito.png" alt="Carrito" class="icon-img">
+            <span id="contador_carrito" class="cart-count">0</span>
+          </a>
+          <span id="usuario_email" style="margin-left:8px; font-size:0.9rem; color:#fff;"></span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="products-section">
+    <h2 style="text-align:left">Ventas</h2>
+
+    <button><a href="index.html" class="nav-link">REGRESAR</a></button>
+             // Botón para regresar al menú principal
+                                    
+  <div id="bloque_no_admin" style="display:none; padding:16px; background:#ffe4e4; border-radius:8px; margin-bottom:16px;">
+      Unicamente los administradoes pueden ver las ventas realizadas
+    </div> // Mensaje para usuarios no administradores
+
+  <div id="bloque_ventas" style="display:none;">
+      <div class="dashboard-grid" style="display:flex; gap:20px; flex-wrap:wrap; margin-bottom:16px;">
+        <div style="flex:1 1 480px; min-width:320px;">
+          <h3>Productos más vendidos</h3>
+          <canvas id="grafica_productos" width="400" height="240"></canvas>
+        </div>
+
+        <div style="flex:1 1 480px; min-width:320px;">
+          <h3>Ingresos</h3>
+          <div style="display:flex; gap:8px; align-items:center; margin-bottom:8px;">
+            <label for="modoIngresos">Agrupar por:</label>
+            <select id="modo_ingresos">
+              <option value="dia">Día</option>
+              <option value="categoria">Categoría</option>
+            </select>
+            <button id="btn_actualizar_grafica" class="btn-modal">Actualizar</button>
+          </div>
+          <canvas id="grafica_ingresos" width="400" height="240"></canvas>
+        </div>
+      </div>
+   <!--   esto hace  a la sección de ingresos y productos más vendidos      -->
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+        <div>
+          <button id="exportar_csv" class="btn-modal">Exportar CSV (ventas)</button>
+          <button id="exportar_xlsx" class="btn-modal">Exportar XLSX (ventas y productos_vendidos)</button>
+        </div>
+  <div id="filtro-ventas" style="font-size:0.9rem; color:#333">Total de registros: <span id="ventas_contador">0</span></div>
+      </div>
+
+      <div class="carrito-tabla-container">
+        <table class="carrito-tabla">
+          <thead>
+            <tr>
+              <th>ID Venta</th>
+              <th>Folio</th>
+              <th>Cliente</th>
+              <th>Fecha</th>
+              <th>Monto</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="ventas_body"></tbody>
+        </table>
+      </div>
+
+  <div class="carrito-total" id="ventas_totales"></div>
+
+      <!-- Modal de detalles de venta -->
+      <div id="modal_detalles_venta" class="modal">
+        <div class="modal-content modal-large">
+          <span class="close">&times;</span>
+          <h3>Detalles de la venta</h3>
+          <div id="detalles_contenido">
+            <p>Folio: <strong id="detalles_folio">-</strong></p>
+            <p>Cliente: <strong id="detalles_cliente">-</strong></p>
+            <p>Fecha: <strong id="detalles_fecha">-</strong></p>
+            <div style="margin-top:8px;">
+              <table style="width:100%; border-collapse:collapse;">
+                <thead>
+                  <tr><th>Producto</th><th style="text-align:right">Cantidad</th><th style="text-align:right">Precio</th></tr>
+                </thead>
+                <tbody id="detalles_items"></tbody>
+              </table>
+            </div>
+            <p style="text-align:right; margin-top:12px;">Subtotal: <strong id="detalles_subtotal">$0.00</strong></p>
+            <p style="text-align:right; margin-top:4px;">IVA: <strong id="detalles_iva">$0.00</strong></p>
+            <h3 style="text-align:right;">Total: <strong id="detalles_total">$0.00</strong></h3>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <script src="auth.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+  <script src="ventas.js"></script>
+</body>
+</html>

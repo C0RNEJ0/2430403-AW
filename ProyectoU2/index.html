@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tienda CS</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Barra superior verde -->
+    <div class="top-bar">
+        Usa algo que lleve tu espiritu
+    </div>
+
+    <!-- Header con navegación -->
+    <header>
+        <div class="container">
+            <div class="logo">
+                <img src="img/CS.png" alt="Logo">
+            </div>
+            
+            <nav>
+                <a href="#" class="nav-link">MENU</a>
+                <a id="nav_ventas" href="ventas.html" class="nav-link">VENTAS</a>
+                <a href="mis_pedidos.html" class="nav-link">MIS PEDIDOS</a>
+            </nav>
+
+            <div class="header-right">
+                <div class="search-box">
+                    <input type="text" id="buscador" placeholder="Buscar">
+                </div>
+
+                <div class="icons">
+                    <a href="#" id="icono_usuario" class="icon" title="Iniciar Sesion">
+                        <img src="img/Login.png" alt="Login" class="icon-img">
+                    </a>
+                    <a href="#" id="icono_carrito" class="icon" title="Carrito">
+                        <img src="img/carrito.png" alt="Carrito" class="icon-img">
+                        <span id="contador_carrito" class="cart-count">0</span>
+                    </a>
+                    <span id="usuario_email" style="margin-left:8px; font-size:0.9rem; color:#fff;"></span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Contenido principal -->
+    <main>
+        <!-- Botón agregar producto esto solo lo verá el admin  NO FUNCIONA ARREGLAR-->
+        <div class="admin-controls" id="controles_administrador" style="display: none;">
+            <button id="boton_agregar_producto" class="btn-admin">+ Agregar Producto</button>
+        </div>
+
+        <!-- Sección de productos -->
+        <section class="products-section">
+            <h2>Catalogo</h2>
+            <div class="products-grid" id="products_container">
+                <!-- Los productos se cargarán aquí dinámicamente -->
+            </div>
+        </section>
+    </main>
+
+
+    <!-- Modal Agregar/Editar Producto -->
+    <div id="modal_producto" class="modal">
+        <div class="modal-content modal-large">
+            <span class="close">&times;</span>
+                <h2 id="titulo_modal_producto">Agregar Producto</h2>
+            
+            <div class="producto-modal-grid">
+                <div class="producto-form-section">
+        <form id="formulario_producto">
+                    <input type="hidden" id="producto_id">
+                        
+                        <label for="nombre">Nombre</label>
+            <input type="text" id="p_nombre" required>
+                        
+                        <label for="categoria">Categoria</label>
+                        <select id="categoria" required>
+                            <option value="">Seleccionar categoria</option>
+                            <option value="Calzado">Calzado</option>
+                            <option value="Playeras">Playeras</option>
+                        </select>
+                        
+                        <label for="p_precio">Precio</label>
+                        <input type="number" id="p_precio" min="0" step="0.01" required>
+                        
+                        <label for="p_stock">Stock Disponible</label>
+                        <input type="number" id="p_stock" min="0" required>
+                        
+                        <label for="p_imagen">URL de Imagen</label>
+                            <input type="text" id="p_imagen" required>
+                        
+                        <button type="submit" class="btn-modal">Guardar Producto</button>
+                    </form>
+                </div>
+
+                <div class="producto-preview-section">
+                    <h3>Vista Previa</h3>
+                    <div class="preview-box">
+                        <img id="imagen_preview" src="" alt="Vista previa" style="display: none;">
+                        <div id="texto_placeholder" class="placeholder">
+                            No hay imagen seleccionada
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Carrito -->
+    <div id="modal_carrito" class="modal">
+        <div class="modal-content modal-large">
+            <span class="close">&times;</span>
+            <h2>Tu Carrito</h2>
+            
+            <div id="carrito_vacio" class="carrito-vacio">
+                <p>Tu carrito esta vacio</p>
+            </div>
+
+            <div id="carrito_contenido" style="display: none;">
+                <div class="carrito-tabla-container">
+                    <table class="carrito-tabla">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Precio</th>
+                                <th>Cantidad</th>
+                                <th>Subtotal</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="carrito_items">
+                            <!-- Los items se cargarán aquí -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="carrito-total">
+                    <p style="margin:0;">Subtotal (sin IVA): <strong id="carrito_subtotal">$0.00</strong></p>
+                    <p style="margin:0;">IVA (16%): <strong id="carrito_iva">$0.00</strong></p>
+                    <h3 style="margin:8px 0 8px 0;">Total: <span id="carrito_total">$0.00</span> MXN</h3>
+                    <button id="boton_pagar" class="btn-modal btn-pagar">Pagar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Confirmación -->
+    <div id="modal_confirmacion" class="modal">
+        <div class="modal-content modal-small">
+        <h2 id="titulo_confirmacion">Operacion Exitosa</h2>
+        <p id="mensaje_confirmacion">La operacion se realizo correctamente</p>
+        <button id="boton_confirmar_aceptar" class="btn-modal">Aceptar</button>
+        </div>
+    </div>
+
+    <!-- Modal Confirmación Eliminar Producto -->
+    <div id="modal_confirmar_eliminar" class="modal">
+        <div class="modal-content modal-small">
+            <h2>Confirmar Eliminacion</h2>
+        <p id="mensaje_confirmar_eliminar">¿Estas seguro que deseas eliminar este producto?</p>
+            <div class="modal-buttons">
+            <button id="boton_eliminar_si" class="btn-modal">Si eliminar</button>
+            <button id="boton_eliminar_no" class="btn-modal btn-secondary">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Confirmación Cerrar Sesión -->
+    <div id="modal_logout" class="modal">
+        <div class="modal-content modal-small">
+            <h2>¿Cerrar sesión?</h2>
+            <p>¿Estás seguro que quieres cerrar sesión?</p>
+            <div class="modal-buttons">
+                <button id="boton_cerrar_sesion" class="btn-modal">Si, cerrar</button>
+                <button id="boton_cancelar_cerrar_sesion" class="btn-modal btn-secondary">No</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Resumen del Pedido -->
+    <div id="modal_resumen_pedido" class="modal">
+        <div class="modal-content modal-large">
+            <span class="close">&times;</span>
+            <h2>Resumen del Pedido</h2>
+            <div id="resumen_contenido">
+                <p>Folio: <strong id="resumen_folio">-</strong></p>
+                <p>Fecha: <strong id="resumen_fecha">-</strong></p>
+                <div id="resumen_items_container">
+                    <table style="width:100%; border-collapse: collapse;">
+                        <thead>
+                            <tr>
+                                <th style="text-align:left; padding:6px;">Producto</th>
+                                <th style="text-align:right; padding:6px;">Cantidad</th>
+                                <th style="text-align:right; padding:6px;">Precio</th>
+                            </tr>
+                        </thead>
+                        <tbody id="resumen_items">
+                        </tbody>
+                    </table>
+                </div>
+                <div style="text-align:right; margin-top:12px;">
+                    <p style="margin:0;">Subtotal (sin IVA): <strong id="resumen_subtotal">$0.00</strong></p>
+                    <p style="margin:0;">IVA (16%): <strong id="resumen_iva">$0.00</strong></p>
+                    <h3 style="margin:8px 0 0 0;">Total: <span id="resumen_total">$0.00</span></h3>
+                </div>
+                <div style="text-align:center; margin-top:18px;">
+                    <button id="resumen_confirmar" class="btn-modal">Confirmar y Pagar</button>
+                    <button id="resumen_cancelar" class="btn-modal btn-secondary">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
+    <script src="carito.js"></script>
+    <script src="productos.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>

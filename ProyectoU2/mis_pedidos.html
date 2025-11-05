@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <title>Mis Pedidos</title>
+  <link rel="stylesheet" href="styles.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+<body>
+  <div class="top-bar">
+    Usa algo que lleve tu espiritu
+  </div>
+
+  <header>
+    <div class="container">
+      <div class="logo">
+        <img src="img/CS.png" alt="Logo">
+      </div>
+      
+      <nav>
+      
+  <a href="index.html" class="nav-link">MENU</a>
+  <a id="nav_ventas" href="ventas.html" class="nav-link">VENTAS</a>
+        <a href="mis_pedidos.html" class="nav-link">MIS PEDIDOS</a>
+      </nav>
+
+      <div class="header-right">
+        <div class="search-box">
+          <input type="text" id="buscador" placeholder="Buscar">
+        </div>
+
+        <div class="icons">
+          <a href="#" id="icono_usuario" class="icon" title="Iniciar Sesion">
+            <img src="img/Login.png" alt="Login" class="icon-img">
+          </a>
+            <a href="#" id="icono_carrito" class="icon" title="Carrito">
+            <img src="img/carrito.png" alt="Carrito" class="icon-img">
+            <span id="contador_carrito" class="cart-count">0</span>
+          </a>
+          <span id="usuario_email" style="margin-left:12px; font-size:10px; color:#000000;"></span>
+        </div>
+      </div>
+    </div>
+  </header>
+  
+
+  <main style="padding:16px;">
+    <h2>Mis Pedidos</h2>
+    <p id="mensaje_no_login" style="color:#c0392b; display:none;">Debes iniciar sesión para ver tus pedidos. <a href="login/login.html">Iniciar sesión</a></p>
+
+  <div id="mis_pedidos_container" style="display:none;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+        <div>
+          <button id="exportMisPedidosCsv" class="btn-modal">Exportar mis pedidos (CSV)</button>
+        </div>
+  <div id="mis_pedidos_contador">Total de pedidos: <strong>0</strong></div>
+      </div>
+
+      <div class="carrito-tabla-container">
+        <table class="carrito-tabla">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Folio</th>
+              <th>Fecha</th>
+              <th>Monto</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="mis_pedidos_cuerpo"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Modal detalles pedido -->
+  <div id="modal_detalle_mi_pedido" class="modal">
+      <div class="modal-content modal-large">
+        <span class="close">&times;</span>
+        <h3>Detalle del pedido</h3>
+        <p>Folio: <strong id="mp_folio">-</strong></p>
+        <p>Fecha: <strong id="mp_fecha">-</strong></p>
+        <div>
+          <table style="width:100%; border-collapse:collapse; margin-top:8px;">
+            <thead><tr><th>Producto</th><th style="text-align:right">Cantidad</th><th style="text-align:right">Precio</th></tr></thead>
+            <tbody id="mp_items"></tbody>
+          </table>
+        </div>
+        <p style="text-align:right; margin-top:8px;">Subtotal: <strong id="mp_subtotal">$0.00</strong></p>
+        <p style="text-align:right;">IVA: <strong id="mp_iva">$0.00</strong></p>
+        <h3 style="text-align:right;">Total: <strong id="mp_total">$0.00</strong></h3>
+      </div>
+    </div>
+  </main>
+
+  <script src="auth.js"></script>
+  <script src="mis_pedidos.js"></script>
+</body>
+</html>
