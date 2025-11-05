@@ -1,0 +1,596 @@
+* {
+    margin: 0;                 /* VOY A PONER UN COMENTARIO DONDE NO QUIERO QUE LE MUEVAS ALVARO  OSEA NO LE MUEVAS A NADA */ 
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+}
+
+/* Icon images ( DE login / carrito) */ 
+.icon-img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    display: inline-block;
+}
+
+.icon:hover .icon-img {
+    transform: scale(1.08);
+}
+
+/* Barra superior verde */
+.top-bar {
+    background-color: #7ca673;
+    color: #2c3e2f;
+    text-align: center;
+    padding: 8px;
+    font-size: 14px;
+}
+
+/* Header */
+header {
+    background-color: #d9d9d9;
+    padding: 15px 0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+}
+
+.logo {
+    width: 60px;
+    height: 60px;
+    background-color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo img {
+    width: 80%;
+    height: 80%;
+    object-fit: contain;
+}
+
+/* Navegación */
+nav {
+    display: flex;
+    gap: 60px;
+    flex: 1;
+    justify-content: center;
+    margin-left: 100px;
+}
+
+.nav-link {
+    color: black;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.nav-link:hover {
+    color: #555;
+}
+
+/* Header derecha */
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.link-small {
+    color: black;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.link-small:hover {
+    text-decoration: underline;
+}
+
+/* Buscador */
+.search-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-box input {
+    width: 200px;
+    padding: 8px 35px 8px 12px;
+    border: none;
+    border-radius: 5px;
+    background-color: #b8b8b8;
+    color: #333;
+}
+
+.search-box input::placeholder {
+    color: #666;
+}
+
+.search-btn {
+    position: absolute;
+    right: 8px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+/* Iconos */
+.icons {
+    display: flex;
+    gap: 15px;
+}
+
+.icon {
+    font-size: 24px;
+    text-decoration: none;
+    color: black;
+}
+
+.icon:hover {
+    transform: scale(1.1);
+}
+
+/* Secciones de productos */
+.products-section {
+    max-width: 1400px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.products-section h2 {
+    text-align: center;
+    font-size: 28px;
+    margin-bottom: 30px;
+    color: #333;
+}
+
+/*   Grid de productos */
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 24px;
+    margin-bottom: 30px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+}
+
+.products-grid::-webkit-scrollbar {
+    height: 8px;
+}
+
+.products-grid::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.products-grid::-webkit-scrollbar-thumb {   
+    background: #888;
+    border-radius: 10px;
+}
+
+.products-grid::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* producto */
+.product-card {
+    background-color: #d4d4d4;
+    border-radius: 20px;
+    padding: 30px;
+    position: relative;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.product-image { /* Imagen del producto */
+    width: 100%;
+    height: 180px;
+    background-color: #c0c0c0;
+    border-radius: 15px;
+    margin-bottom: 16px;
+    overflow: hidden;
+}
+
+.product-info {
+    text-align: left;
+}
+
+.price {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.size { /* Tamaño del producto */
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+ 
+.name { /* Nombre del producto */
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.gender {
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.shipping { /* "futuro "envío gratis */
+    font-size: 14px;
+    color: #4a7c4a;
+    font-weight: 500;
+}
+
+
+
+
+
+main {
+    background-color: #f5f5f5;
+    min-height: calc(100vh - 120px);
+    padding: 20px;
+}
+
+/* Controles de administrador */
+.admin-controls {
+    max-width: 1400px;
+    margin: 0 auto 20px;
+    text-align: right;
+    padding: 0 20px;
+}
+
+.btn-admin {
+    padding: 12px 30px;
+    background-color: #7ca673;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    /*  */
+    font-weight: 600;
+}
+
+.btn-admin:hover {
+    background-color: #6a9261;
+}
+
+/* Contador del carrito */
+
+
+/* Modales */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    align-items: center;
+    justify-content: center;
+    overflow-y: auto;
+}
+
+.modal.show {
+    display: flex;
+}
+
+.modal-content {
+    background-color: #ffffff; /* fondo blanco */
+    padding: 22px;
+    border-radius: 12px;
+    max-width: 520px;
+    width: 92%;
+    max-height: 85vh;
+    overflow-y: auto;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+    border: 1px solid rgba(0,0,0,0.08);
+    font-family: Arial, sans-serif;
+    position: relative;
+}
+
+.modal-content.modal-large {
+    max-width: 1000px;
+}
+
+.modal-content.modal-small {
+    max-width: 400px;
+}
+
+.close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    font-size: 20px;
+    font-weight: normal;
+    color: #444;
+    cursor: pointer;
+    background: #fffbf0;
+    border: 1px solid #eee;
+    padding: 2px 6px;
+    border-radius: 6px;
+}
+
+.close:hover {
+    background: #fff2d6;
+}
+
+.modal-content h2 {
+    text-align: center;
+    margin: 0 0 18px 0;
+    color: #ffffff;
+    background-color: #7ca673; /* verde principal */
+    padding: 12px 16px;
+    border-radius: 8px 8px 0 0;
+}
+
+.modal-content form {
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-content label {   /* Etiquetas de formulario */
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: #333;
+    font-weight: 500;
+}
+
+.modal-content input[type="text"],
+.modal-content input[type="password"],
+.modal-content input[type="number"],
+.modal-content select {
+    padding: 12px 15px;
+    margin-bottom: 20px;
+    border: 1px solid #999;
+    border-radius: 8px;
+    font-size: 14px;
+    background-color: white;
+}
+
+.modal-content input:focus,
+.modal-content select:focus {
+    outline: none;
+    border-color: #7ca673;
+}
+
+.btn-modal {  /* Botones dentro del modal */
+    padding: 8px 18px;
+    background-color: #f0c987;
+    color: #333;
+    border: 1px solid #e6b86b;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    margin-top: 10px;
+    font-weight: 600;
+}
+
+.btn-modal:hover { /* Botones dentro del modal */
+    background-color: #ffd89a;
+}
+
+.btn-secondary { /* Botón secundario */
+    background-color: #999;
+}
+
+.btn-secondary:hover { /* Botón secundario */
+    background-color: #777;
+}
+
+.modal-buttons { /* Contenedor de botones en modales */
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.register-link {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 13px;
+    color: #333;
+}
+
+.register-link a {
+    color: #4a7c4a;
+    text-decoration: underline;
+}
+
+/* Modal de producto */
+.producto-modal-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-top: 20px;
+}
+
+.producto-preview-section h3 {
+    font-size: 18px;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.preview-box {
+    background-color: #e8e8e8;
+    padding: 30px;
+    border-radius: 15px;
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.preview-box img {
+    max-width: 100%;
+    max-height: 300px;
+    object-fit: contain;
+    border-radius: 10px;
+}
+
+.placeholder {
+    color: #999;
+    font-size: 16px;
+    text-align: center;
+}
+
+
+
+/* Tarjetas de producto con botón de agregar */
+.product-card {
+    position: relative;
+}
+
+
+
+.product-controls {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.btn-edit, .btn-delete { /* Botones de editar y eliminar producto */
+    flex: 1;
+    padding: 8px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.btn-edit { /* Botón de editar */
+    background-color: #3498db;
+    color: white;
+}
+
+.btn-edit:hover {
+    background-color: #2980b9;
+}
+
+.btn-delete {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.btn-delete:hover {
+    background-color: #c0392b;
+}
+
+/* Sidebar izquierdo */
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    width: 240px;
+    background: linear-gradient(180deg, #2f7a5f 0%, #387a62 100%);
+    color: #fff;
+    padding: 20px 12px;
+    box-shadow: 2px 0 8px rgba(0,0,0,0.12);
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    transition: width 0.25s ease, transform 0.25s ease;
+    z-index: 1200;
+}
+
+.sidebar .brand {
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.sidebar .brand img{ width:55px; height:55px; border-radius:12px; background:white; padding:4px } 
+
+.sidebar nav { display:flex; flex-direction:column; gap:18px; margin-top:8px; align-items:stretch; padding: 0 1%; }
+.sidebar a {
+    display:flex;
+    align-items:center;
+    justify-content:center; /* centrar horizontalmente */
+    width:100%; /* ocupa todo el ancho disponible dentro del nav */
+    min-width:0; 
+    color: #fff;
+    text-decoration: none; 
+    padding: 12px 14px; 
+    border-radius: 10px;
+    font-weight:700; 
+    background: rgba(0,0,0,0.06);
+    background-color: #2f6b53; /* base verde oscuro */
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    white-space: normal; 
+    box-sizing: border-box;
+    gap: 8px; /* espacio reducido entre icono y label */
+}
+.sidebar a:hover { background-color: #23523f }
+.sidebar a .icon { display:inline-block; margin-right:8px; }
+.sidebar a .label { text-align:center; display:inline-block; width:100%; word-break: break-word; white-space: normal; }
+
+.sidebar .spacer { flex:1 }
+.sidebar .toggle-btn {
+    background: rgba(255,255,255,0.06);
+    border: none;
+    color: #fff;
+    padding: 8px 10px;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:600;
+}
+
+/* Estado colapsado */
+.sidebar-collapsed .sidebar { width:72px }
+.sidebar-collapsed .sidebar a { justify-content:center; width:48px; padding:10px }
+.sidebar-collapsed .sidebar a span.label { display:none }
+.sidebar-collapsed .sidebar a .icon { display:none }
+.sidebar-collapsed .sidebar nav { overflow: hidden; }
+.sidebar-collapsed .sidebar .brand div { display:none; }
+.sidebar-collapsed .page-content { margin-left:72px }
+
+.page-content { margin-left:240px; transition: margin-left 0.25s ease; padding:20px }
+
+/* Responsive: en pantallas pequeñas la sidebar se oculta y se muestra como overlay */
+@media (max-width: 800px) {
+    .sidebar { transform: translateX(-110%); position: fixed; }
+    .sidebar.open { transform: translateX(0%); }
+    .page-content { margin-left:0 }
+}
+
+/* Horas del calendario */
+.hora-slot {
+    padding: 8px 6px;
+    border: 1px solid #ddd;
+    background: #f7f7f7;
+    border-radius: 6px;
+    cursor: pointer;
+}
+.hora-slot.unavailable {
+    background: #f28b82; /* rojo claro */
+    color: #fff;
+}
+.hora-slot.selected {
+    background: #77dd77; /* verde claro para seleccionado */
+    color: #fff;
+    border-color: #4caf50;
+}
+
+
+

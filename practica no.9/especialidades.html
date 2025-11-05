@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Especialidades Médicas</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>body{padding:20px}</style>
+</head>
+<body>
+  <div class="top-bar">
+    La vida es el Prioridad ante todo
+  </div>
+  <div id="aplicacion">
+    <aside class="sidebar" id="barra_lateral">
+      <div class="brand">
+        <img src="img/CS.png" alt="CS">
+        <div>
+          <div style="font-weight:800;">CS Clínica</div>
+          <small style="opacity:0.9">Panel</small>
+        </div>
+      </div>
+  <nav>
+        <a href="dashboard.html"><span class="label">Dashboard</span></a>
+        <a href="pacientes.html"><span class="label">Pacientes</span></a>
+        <a href="agenda.html"><span class="label">Agenda</span></a>
+        <a href="medicos.html"><span class="label">Médicos</span></a>
+        <a href="reportes.html"><span class="label">Reportes</span></a>
+        <a href="pagos.html"><span class="label">Pagos</span></a>
+        <a href="tarifas.html"><span class="label">Tarifas</span></a>
+        <a href="bitacoras.html"><span class="label">Bitácoras</span></a>
+        <a href="especialidades.html"><span class="label">Especialidades</span></a>
+  <a href="#" data-modal-target="#modal_logout"><span class="label">Cerrar Sesión</span></a>
+      </nav>
+      <div class="spacer"></div>
+  <button class="toggle-btn" id="boton_colapsar">Colapsar</button>
+    </aside>
+
+    <!-- Header superior con buscador y iconos -->
+  <div class="page-content" id="contenido_pagina">
+      <header>
+        <div class="container">
+          <div class="logo">
+            <img src="img/CS.png" alt="Logo">
+          </div>
+          <div style="flex:1"></div>
+          <div class="header-right">
+            <div class="search-box">
+              <input type="text" id="buscador" placeholder="Buscar">
+            </div>
+            <div class="icons">
+              <a href="#" id="icono_usuario" class="icon" title="Iniciar Sesion">
+                <img src="img/Login.png" alt="Login" class="icon-img">
+              </a>
+              <span id="usuario_email" style="margin-left:8px; font-size:0.9rem; color:#333;"></span>
+            </div>
+          </div>
+        </div>
+      </header>
+      <h1>Especialidades Médicas</h1>
+      <p>Lista y gestión de especialidades (placeholder).</p>
+      <p><a href="dashboard.html">Volver al inicio</a></p>
+    </div>
+  </div>
+  <!-- Modal Confirmación Cerrar Sesión -->
+  <div id="modal_logout" class="modal">
+    <div class="modal-content modal-small">
+      <h2>¿Cerrar sesión?</h2>
+      <p>¿Estás seguro que quieres cerrar sesión?</p>
+      <div class="modal-buttons">
+        <button id="boton_cerrar_sesion" class="btn-modal">Si, cerrar</button>
+        <button id="boton_cancelar_cerrar_sesion" class="btn-modal btn-secondary" data-modal-close>No</button>
+      </div>
+    </div>
+  </div>
+  <script src="sidebar.js"></script>
+</body>
+</html>

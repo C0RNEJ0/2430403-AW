@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tienda CS</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+        <!-- Barra superior verde -->
+        <div class="top-bar">
+                La vida es la Prioridad ante todo
+        </div>
+
+        <!-- Sidebar + contenido -->
+        <div id="aplicacion" class="">
+            <aside class="sidebar" id="barra_lateral">
+                <div class="brand">
+                    <img src="img/CS.png" alt="CS">
+                    <div>
+                        <div style="font-weight:800;">CS Clínica</div>
+                        <small style="opacity:0.9">Panel</small>
+                    </div>
+                </div>
+
+                <nav>
+                      <a href="dashboard.html"><span class="label">Dashboard</span></a>
+                      <a href="pacientes.html"><span class="label">Pacientes</span></a>
+                      <a href="agenda.html"><span class="label">Agenda</span></a>
+                      <a href="medicos.html"><span class="label">Médicos</span></a>
+                      <a href="reportes.html"><span class="label">Reportes</span></a>
+                      <a href="pagos.html"><span class="label">Pagos</span></a>
+                      <a href="tarifas.html"><span class="label">Tarifas</span></a>
+                      <a href="bitacoras.html"><span class="label">Bitácoras</span></a>
+                      <a href="especialidades.html"><span class="label">Especialidades</span></a>
+                      <!-- Enlace de cerrar sesión que abre el modal de confirmación -->
+                      <a href="#" data-modal-target="#modal_logout"><span class="label">Cerrar Sesión</span></a>
+                </nav>
+
+                <div class="spacer"></div>
+                <button class="toggle-btn" id="boton_colapsar">Esconder</button>
+            </aside>
+
+            <div class="page-content" id="contenido_pagina">
+                <header>
+                    <div class="container">
+                        <div class="logo">
+                                <img src="img/CS.png" alt="Logo">
+                        </div>
+                        <div style="flex:1"></div>
+                        <div class="header-right">
+                                <div class="search-box">
+                                        <input type="text" id="buscador" placeholder="Buscar">
+                                </div>
+
+                                <div class="icons">
+                                        <a href="#" id="icono_usuario" class="icon" title="Iniciar Sesion">
+                                                <img src="img/Login.png" alt="Login" class="icon-img">
+                                        </a>
+                                        <span id="usuario_email" style="margin-left:8px; font-size:0.9rem; color:#333;"></span>
+                                </div>
+                        </div>
+                    </div>
+                </header>
+
+
+    <!-- Contenido principal -->
+    <main>
+        <!-- Botón agregar producto esto solo lo verá el admin  NO FUNCIONA ARREGLAR-->
+        <div class="admin-controls" id="controles_administrador" style="display: none;">
+            <button id="boton_agregar_producto" class="btn-admin">+ Agregar Producto</button>
+        </div>
+
+        <!-- Sección de productos -->
+        <section class="products-section">
+            <h2>Catalogo</h2>
+            <div class="products-grid" id="contenedor_productos">
+                <!-- Los productos se cargarán aquí dinámicamente -->
+            </div>
+        </section>
+    </main>
+
+
+    <!-- Modal Agregar/Editar Producto -->
+    <div id="modal_producto" class="modal">
+        <div class="modal-content modal-large">
+            <span class="close">&times;</span>
+                <h2 id="titulo_modal_producto">Agregar Paciente</h2>
+            
+            <div class="producto-modal-grid">
+                <div class="producto-form-section">
+        <form id="formulario_producto">
+                    <input type="hidden" id="producto_id">
+                        
+                        <label for="nombre">Nombre</label>
+            <input type="text" id="p_nombre" required>
+                        
+                        <label for="categoria">Categoria</label>
+                        <select id="categoria" required>
+                            <option value="">Paciente Genero</option>
+                            <option value="Calzado">Femenino</option>
+                            <option value="Playeras">Masculino</option>
+                        </select>
+                        
+                        <label for="p_precio">Costo de consulta</label>
+                        <input type="number" id="p_precio" min="0" step="0.01" required>
+                        
+                        <label for="p_stock">Stock Disponible</label>
+                        <input type="number" id="p_stock" min="0" required>
+                        
+                        <label for="p_imagen">URL de Imagen del pacientes</label>
+                            <input type="text" id="p_imagen" required>
+                        
+                        <button type="submit" class="btn-modal">Guardar paciente</button>
+                    </form>
+                </div>
+
+                <div class="producto-preview-section">
+                    <h3>Vista Previa</h3>
+                    <div class="preview-box">
+                        <img id="imagen_preview" src="" alt="Vista previa" style="display: none;">
+                        <div id="texto_placeholder" class="placeholder">
+                            No hay imagen seleccionada
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- Modal Confirmación -->
+    <div id="modal_confirmacion" class="modal">
+        <div class="modal-content modal-small">
+        <h2 id="titulo_confirmacion">Operacion Exitosa</h2>
+        <p id="mensaje_confirmacion">La operacion se realizo correctamente</p>
+        <button id="boton_confirmar_aceptar" class="btn-modal">Aceptar</button>
+        </div>
+    </div>
+
+    <!-- Modal Confirmación Eliminar Producto -->
+    <div id="modal_confirmar_eliminar" class="modal">
+        <div class="modal-content modal-small">
+            <h2>Confirmar Eliminacion</h2>
+        <p id="mensaje_confirmar_eliminar">¿Estas seguro que deseas eliminar este producto?</p>
+            <div class="modal-buttons">
+            <button id="boton_eliminar_si" class="btn-modal">Si eliminar</button>
+            <button id="boton_eliminar_no" class="btn-modal btn-secondary">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Confirmación Cerrar Sesión -->
+    <div id="modal_logout" class="modal">
+        <div class="modal-content modal-small">
+            <h2>¿Cerrar sesión?</h2>
+            <p>¿Estás seguro que quieres cerrar sesión?</p>
+            <div class="modal-buttons">
+                <button id="boton_cerrar_sesion" class="btn-modal">Si, cerrar</button>
+                <button id="boton_cancelar_cerrar_sesion" class="btn-modal btn-secondary">No</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Resumen del Pedido -->
+    <div id="modal_resumen_pedido" class="modal">
+        <div class="modal-content modal-large">
+            <span class="close">&times;</span>
+            <h2>Resumen del Pedido</h2>
+            <div id="resumen_contenido">
+                <p>Folio: <strong id="resumen_folio">-</strong></p>
+                <p>Fecha: <strong id="resumen_fecha">-</strong></p>
+                <div id="resumen_items_container">
+                    <table style="width:100%; border-collapse: collapse;">
+                        <thead>
+                            <tr>
+                                <th style="text-align:left; padding:6px;">Producto</th>
+                                <th style="text-align:right; padding:6px;">Cantidad</th>
+                                <th style="text-align:right; padding:6px;">Precio</th>
+                            </tr>
+                        </thead>
+                        <tbody id="resumen_items">
+                        </tbody>
+                    </table>
+                </div>
+                <div style="text-align:right; margin-top:12px;">
+                    <p style="margin:0;">Subtotal (sin IVA): <strong id="resumen_subtotal">$0.00</strong></p>
+                    <p style="margin:0;">IVA (16%): <strong id="resumen_iva">$0.00</strong></p>
+                    <h3 style="margin:8px 0 0 0;">Total: <span id="resumen_total">$0.00</span></h3>
+                </div>
+                <div style="text-align:center; margin-top:18px;">
+                    <button id="resumen_confirmar" class="btn-modal">Confirmar y Pagar</button>
+                    <button id="resumen_cancelar" class="btn-modal btn-secondary">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="sidebar.js"></script>
+    <script src="auth.js"></script>
+    <script src="productos.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>
