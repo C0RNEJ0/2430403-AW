@@ -35,23 +35,23 @@ const showAlert = (title, text, icon) => {
         }, 3000);
 };
 
-// Validaciones simples
+// Validaciones sencillas version mas casual
 const isGmail = (email) => /^[a-zA-Z0-9._%+-]+@gmail\.com$/.test(email);
 const isValidUrl = (u) => /^https?:\/\/.+/i.test(u);
 const isPositive = (n) => Number.isFinite(n) && n > 0;
 const isNonNegativeInt = (n) => Number.isInteger(n) && n >= 0;
 
-// Estado en memoria
+// Estado en memoria usuarios y productos
 let users = loadArray(USUARIOS_LS);
 let products = loadArray(PRODUCTOS_LS);
 
-// Asegurar usuario admin por defecto
+// Aseguro que exista un admin por defecto
 if (!users.some(u => u.email && u.email.toLowerCase() === 'admin@gmail.com')) {
     users.push({ email: 'admin@gmail.com', pass: '123456', role: 'admin' });
     saveArray(USUARIOS_LS, users);
 }
 
-// Elementos 
+// Elementos del DOM
 const formulario_inicio_sesion = document.getElementById('form_inicio_sesion') || document.getElementById('form-inicio-sesion');
 const formulario_registrar = document.getElementById('form_registrar') || document.getElementById('form-registrar');
 const boton_cerrar_sesion = document.getElementById('logout');
@@ -59,7 +59,7 @@ const vista_login = document.getElementById('login');
 const vista_registro = document.getElementById('registro');
 const vista_apartado = document.getElementById('apartado');
 
-// Render de los productos ¿si existen?
+// Render de productos si hay
 function renderProducts() {
     const container = document.getElementById('contenedor_productos');
     if (!container) return;
@@ -88,7 +88,7 @@ function renderProducts() {
     });
 }
 
-// Registro de usuario
+// Registro de usuario form de registro
 if (formulario_registrar) {
     formulario_registrar.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -104,7 +104,7 @@ if (formulario_registrar) {
         users.push({ email, pass: password });
         saveArray(USUARIOS_LS, users);
 
-        // mostrar modal de éxito si existe
+    // mostrar modal de exito si existe
     const modal = document.getElementById('modal_exito') || document.getElementById('modal-exito');
         if (modal) {
         modal.classList.add('show');
@@ -123,7 +123,7 @@ if (formulario_registrar) {
     });
 }
 
-// Si existe el botón del modal de registro, redirigir al login cuando se pulse
+// Si hay boton para ir al login lo enlazo
 const boton_ir_login_global = document.getElementById('boton_ir_login') || document.getElementById('boton-ir-login');
 if (boton_ir_login_global) {
     boton_ir_login_global.addEventListener('click', () => {
@@ -132,7 +132,7 @@ if (boton_ir_login_global) {
     });
 }
 
-// Login
+// Login formulario
 if (formulario_inicio_sesion) {
     formulario_inicio_sesion.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -148,7 +148,7 @@ if (formulario_inicio_sesion) {
             vista_apartado.classList.remove('d-none');
             renderProducts();
         } else {
-            // si no hay área de administrador en esta página, mostrar solo el modal de bienvenida
+            // si no hay area de administrador en esta pagina mostrar solo el modal de bienvenida
             try {
                         const modal = document.querySelector('#modal_bienvenida, #modal-bienvenida');
                 if (modal) {
@@ -165,7 +165,8 @@ if (formulario_inicio_sesion) {
                     if (boton_ir_tienda) {
                         boton_ir_tienda.onclick = () => {
                             try { modal.classList.remove('show'); } catch(_){ }
-                            window.location.href = '../index.html';
+                            // Redirigir al dashboard en vez del index cuando el usuario inicia sesión
+                            window.location.href = '../dashboard.html';
                         };
                     }
                 }
@@ -176,7 +177,7 @@ if (formulario_inicio_sesion) {
     });
 }
 
-// Logout
+// Logout cerrar sesion
 if (boton_cerrar_sesion) {
     boton_cerrar_sesion.addEventListener('click', () => {
         clearLogged();
@@ -185,7 +186,7 @@ if (boton_cerrar_sesion) {
     });
 }
 
-// Formulario de producto 
+// Formulario para anadir producto
 const formulario_producto = document.getElementById('productForm') || document.getElementById('formulario_producto');
 if (formulario_producto) {
     formulario_producto.addEventListener('submit', (e) => {
@@ -219,7 +220,7 @@ if (formulario_producto) {
     });
 }
 
-// Restaurar sesión si existía
+// Restaurar sesión si había usuario guardado
 window.addEventListener('DOMContentLoaded', () => {
     users = loadArray(USUARIOS_LS);
     products = loadArray(PRODUCTOS_LS);

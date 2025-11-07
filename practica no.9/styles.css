@@ -289,6 +289,7 @@ main {
     align-items: center;
     justify-content: center;
     overflow-y: auto;
+    pointer-events: auto !important; /* forzar interacción incluso si otra librería la deshabilita */
 }
 
 .modal.show {
@@ -405,6 +406,74 @@ main {
     margin-top: 20px;
 }
 
+/* Estilos específicos para la lista de pacientes (tarjetas) */
+.patient-card {
+    background: linear-gradient(180deg, #ffffff 0%, #f7f7f7 100%);
+    border-radius: 14px;
+    padding: 18px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+    display: flex;
+    flex-direction: column;
+}
+.patient-card:hover { transform: translateY(-6px); box-shadow: 0 12px 26px rgba(0,0,0,0.12); }
+.patient-card .product-image { height:140px; border-radius:12px; background-color:#e6e6e6; }
+.patient-card .product-info { padding-top:12px; display:flex; flex-direction:column; gap:8px; }
+.patient-card .name { font-size:16px; font-weight:700; color:#233; }
+.patient-card .size, .patient-card .price, .patient-card .shipping { font-size:13px; color:#555; }
+.product-controls { display:flex; gap:8px; margin-top:8px; }
+.patient-card .btn-admin { padding:8px 12px; font-size:13px; border-radius:8px; }
+.patient-card .btn-edit { background:#4da6ff; color:#fff; border:none; }
+.patient-card .btn-delete { background:#ff6b6b; color:#fff; border:none; }
+.patient-card .btn-admin:hover, .patient-card .btn-edit:hover, .patient-card .btn-delete:hover { opacity:0.95; }
+
+/* Imagen como fondo con fallback para mostrar una silueta */
+.patient-card .product-image[style="background-image: url('')"] { background-image: none; display:flex; align-items:center; justify-content:center; color:#aaa; font-weight:600; }
+
+/* Tarjetas de médicos */
+.doctor-card { background: linear-gradient(180deg,#fff,#fbfbfb); border-radius:14px; padding:14px; box-shadow:0 8px 20px rgba(0,0,0,0.06); transition:transform .16s ease; }
+.doctor-card:hover{ transform:translateY(-6px); }
+.doctor-card .product-image{ height:130px; border-radius:12px; background-color:#e9e9e9 }
+.doctor-card .product-info{ padding-top:10px }
+.doctor-card .name{ font-size:16px; font-weight:800; color:#1f3a2d }
+.doctor-card .size{ font-size:13px; color:#556 }
+.doctor-card .product-controls{ display:flex; gap:8px; margin-top:10px }
+.doctor-card .btn-delete{ background:#ff6b6b; color:#fff; border:none }
+.doctor-card .btn-edit{ background:#3aa0ff; color:#fff; border:none }
+
+.doctor-card.inactive { opacity:0.6; filter:grayscale(0.35); }
+
+.doctor-card .documents { margin-top:8px; font-size:13px; }
+.doctor-card .documents a { color:#2b6b9a; text-decoration:underline; display:block; }
+
+/* Formulario de médico */
+#form_medico input[type="file"] { border:1px solid #ddd; padding:6px; border-radius:6px; }
+
+/* Modal horarios  */
+.modal-horarios .day-row { display:flex; gap:8px; align-items:center; margin-bottom:8px }
+.modal-horarios input[type="time"]{ padding:6px; border-radius:6px; border:1px solid #ccc }
+
+/* Estado activo o inactivo */
+.estado-badge { padding:6px 8px; border-radius:6px; font-size:12px; font-weight:700; }
+.estado-badge.activo { background:#77dd77; color:#064; }
+.estado-badge.inactivo { background:#ffd4d4; color:#a00; }
+
+
+/* Franja horaria  */
+.hora-slot { padding:8px 6px; border:1px solid #ddd; background:#f7f7f7; border-radius:6px; cursor:pointer; }
+.hora-slot.unavailable { background:#f39c12; color:#fff; }
+.hora-slot.occupied { background:#e74c3c; color:#fff; cursor:default; opacity:0.95; }
+.hora-slot.available { background:#77dd77; color:#fff; }
+
+/* Leyenda para el calendario */
+.cal-legend { display:flex; gap:12px; align-items:center; margin:8px 0; }
+.cal-legend .item { display:flex; gap:6px; align-items:center; }
+.cal-legend .swatch { width:14px; height:14px; border-radius:3px; display:inline-block; }
+.cal-legend .swatch.available{ background:#77dd77 }
+.cal-legend .swatch.occupied{ background:#e74c3c }
+.cal-legend .swatch.unavailable{ background:#f39c12 }
+
+
 .register-link {
     text-align: center;
     margin-top: 20px;
@@ -496,7 +565,7 @@ main {
     background-color: #c0392b;
 }
 
-/* Sidebar izquierdo */
+/* Sidebar */
 .sidebar {
     position: fixed;
     left: 0;
@@ -535,7 +604,7 @@ main {
     border-radius: 10px;
     font-weight:700; 
     background: rgba(0,0,0,0.06);
-    background-color: #2f6b53; /* base verde oscuro */
+    background-color: #2f6b53; 
     box-shadow: 0 2px 6px rgba(0,0,0,0.08);
     white-space: normal; 
     box-sizing: border-box;
@@ -583,14 +652,65 @@ main {
     cursor: pointer;
 }
 .hora-slot.unavailable {
-    background: #f28b82; /* rojo claro */
+    background: #f28b82; 
     color: #fff;
 }
 .hora-slot.selected {
-    background: #77dd77; /* verde claro para seleccionado */
+    background: #77dd77; 
     color: #fff;
     border-color: #4caf50;
 }
+
+/* ----- Estilos adicionales sencillos (no tocar los bloques arriba) ----- */
+.simple-btn { display:inline-block; padding:8px 12px; border-radius:8px; background:#4a9a6a; color:#fff; border:none; cursor:pointer; font-weight:600; font-size:14px }
+.simple-btn.secondary { background:#6c757d }
+
+/* Botón personalizado para agregar especialidad */
+.btn-agregar-especialidad {
+    background: linear-gradient(90deg,#4a9a6a,#72c08f);
+    color: #fff;
+    border: none;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-weight: 700;
+    box-shadow: 0 6px 14px rgba(74,154,106,0.18);
+}
+.btn-agregar-especialidad:hover{ transform: translateY(-2px); box-shadow: 0 10px 20px rgba(74,154,106,0.2); }
+
+/* Botón propio para Registrar médico */
+.btn-registrar-medico {
+    background: linear-gradient(90deg, #3aa0ff 0%, #4a9a6a 100%);
+    color: #fff;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 12px;
+    font-weight: 800;
+    font-size: 15px;
+    box-shadow: 0 8px 20px rgba(58,160,255,0.18);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+.btn-registrar-medico:hover{ transform: translateY(-3px); box-shadow: 0 14px 30px rgba(58,160,255,0.2); }
+.btn-registrar-medico:active{ transform: translateY(-1px); }
+.btn-registrar-medico .ico { width:18px; height:18px; display:inline-block; }
+
+/* Tablas limpias para DataTable simple */
+.simple-table { width:100%; border-collapse:collapse; background:#fff; border-radius:8px; overflow:hidden; box-shadow:0 6px 18px rgba(0,0,0,0.04) }
+.simple-table thead { background:#f1f3f2 }
+.simple-table th, .simple-table td { padding:10px 12px; text-align:left; border-bottom:1px solid #eef1f0; font-size:13px }
+.simple-table tbody tr:hover { background:#fbfbfb }
+
+/* Tarjetas compactas para listados */
+.card-compact { background:#fff; border-radius:10px; padding:12px; box-shadow:0 6px 18px rgba(0,0,0,0.04); display:flex; gap:12px; align-items:center }
+.card-compact .avatar { width:48px; height:48px; border-radius:8px; background:#e9ecef; display:flex; align-items:center; justify-content:center }
+.card-compact .meta { display:flex; flex-direction:column }
+.card-compact .meta .title { font-weight:700; color:#213; font-size:14px }
+.card-compact .meta .subtitle { font-size:12px; color:#556 }
+
+/* Footer pequeño para dar sensación de proyecto académico */
+.page-footer { text-align:center; padding:18px 10px; color:#666; font-size:13px }
 
 
 

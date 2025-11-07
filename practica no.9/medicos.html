@@ -1,122 +1,124 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Control de Médicos</title>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Médicos</title>
   <link rel="stylesheet" href="styles.css">
-  <style>body{padding:20px}</style>
-</head>
-<body>
-  <div class="top-bar">
-    La vida es el Prioridad ante todo
-  </div>
-  <div id="aplicacion">
-    <aside class="sidebar" id="barra_lateral">
-      <div class="brand">
-        <img src="img/CS.png" alt="CS">
-        <div>
-          <div style="font-weight:800;">CS Clínica</div>
-          <small style="opacity:0.9">Panel</small>
-        </div>
-      </div>
-  <nav>
-        <a href="dashboard.html"><span class="label">Dashboard</span></a>
-        <a href="pacientes.html"><span class="label">Pacientes</span></a>
-        <a href="agenda.html"><span class="label">Agenda</span></a>
-        <a href="medicos.html"><span class="label">Médicos</span></a>
-        <a href="reportes.html"><span class="label">Reportes</span></a>
-        <a href="pagos.html"><span class="label">Pagos</span></a>
-        <a href="tarifas.html"><span class="label">Tarifas</span></a>
-        <a href="bitacoras.html"><span class="label">Bitácoras</span></a>
-        <a href="especialidades.html"><span class="label">Especialidades</span></a>
-  <a href="#" data-modal-target="#modal_logout"><span class="label">Cerrar Sesión</span></a>
-      </nav>
-      <div class="spacer"></div>
-  <button class="toggle-btn" id="boton_colapsar">Colapsar</button>
-    </aside>
-
-    <!-- Header superior con buscador y iconos -->
-  <div class="page-content" id="contenido_pagina">
-      <header>
-        <div class="container">
-          <div class="logo">
-            <img src="img/CS.png" alt="Logo">
-          </div>
-          <div style="flex:1"></div>
-          <div class="header-right">
-            <div class="search-box">
-              <input type="text" id="buscador" placeholder="Buscar">
-            </div>
-            <div class="icons">
-              <a href="#" id="icono_usuario" class="icon" title="Iniciar Sesion">
-                <img src="img/Login.png" alt="Login" class="icon-img">
-              </a>
-              <span id="usuario_email" style="margin-left:8px; font-size:0.9rem; color:#333;"></span>
-            </div>
+  <!-- Bootstrap CSS para estilos en tabla y botones -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+  </head>
+  <body>
+    <div class="top-bar">
+      La vida es la Prioridad ante todo
+    </div>
+    <div id="aplicacion">
+      <aside class="sidebar" id="barra_lateral">
+        <div class="brand">
+          <img src="img/CS.png" alt="CS">
+          <div>
+            <div style="font-weight:800;">Clínica Cornejo</div>
+            <small style="opacity:0.9">Panel</small>
           </div>
         </div>
-      </header>
-      <h1>Control de Médicos</h1>
-      <p>Registro y lista de médicos (placeholder).</p>
-      <form id="form_medico" style="max-width:400px;">
-        <label>Nombre</label><input id="m_nombre" type="text" required><br>
-        <label>Especialidad</label>
-        <select id="m_especialidad" required>
-          <option value="">Seleccione</option>
-          <option>Urgencias</option>
-          <option>Cardiología</option>
-          <option>Pediatría</option>
-        </select><br>
-        <label>Días disponibles</label>
-        <div style="display:flex; gap:6px; flex-wrap:wrap; max-width:400px;">
-          <label><input type="checkbox" name="m_dia" value="Lunes"> Lun</label>
-          <label><input type="checkbox" name="m_dia" value="Martes"> Mar</label>
-          <label><input type="checkbox" name="m_dia" value="Miercoles"> Mie</label>
-          <label><input type="checkbox" name="m_dia" value="Jueves"> Jue</label>
-          <label><input type="checkbox" name="m_dia" value="Viernes"> Vie</label>
-          <label><input type="checkbox" name="m_dia" value="Sabado"> Sab</label>
-          <label><input type="checkbox" name="m_dia" value="Domingo"> Dom</label>
-        </div>
-        <button>Agregar</button>
-      </form>
+        <nav>
+          <a href="dashboard.html"><span class="label">Dashboard</span></a>
+          <a href="pacientes.html"><span class="label">Pacientes</span></a>
+          <a href="agenda.html"><span class="label">Agenda</span></a>
+          <a href="medicos.html"><span class="label">Médicos</span></a>
+          <a href="reportes.html"><span class="label">Reportes</span></a>
+          <a href="pagos.html"><span class="label">Pagos</span></a>
+          <a href="tarifas.html"><span class="label">Tarifas</span></a>
+          <a href="bitacoras.html"><span class="label">Bitácoras</span></a>
+          <a href="especialidades.html"><span class="label">Especialidades</span></a>
+          <a href="#" data-modal-target="#modal_logout"><span class="label">Cerrar Sesión</span></a>
+        </nav>
+        <div class="spacer"></div>
+        <button class="toggle-btn" id="boton_colapsar">Esconder</button>
+      </aside>
 
-      <h3>Lista de Médicos</h3>
-      <table border="1" style="width:100%; max-width:700px; border-collapse:collapse;">
-        <thead><tr><th>ID</th><th>Nombre</th><th>Especialidad</th><th>Días</th><th>Acciones</th></tr></thead>
-        <tbody id="lista_medicos"></tbody>
-      </table>
+      <!-- Header superior con buscador y iconos -->
+      <div class="page-content" id="contenido_pagina">
+        <header>
+          <div class="container">
+            <div style="flex:1"></div>
+            <div class="header-right">
+              <div class="search-box">
+                <input type="text" id="buscador" placeholder="Buscar">
+              </div>
+              <div class="icons">
+                <a href="#" id="icono_usuario" class="icon" title="Iniciar Sesion">
+                  <img src="img/Login.png" alt="Login" class="icon-img">
+                </a>
+                <span id="usuario_email" style="margin-left:8px; font-size:0.9rem; color:#333;"></span>
+              </div>
+            </div>
+          </div>
+        </header>
 
-      <h3>Calendario de Médicos</h3>
-      <div style="max-width:700px;">
-        <label for="cal_medico">Seleccione Médico</label>
-        <select id="cal_medico">
-          <option value="">-- selecciona --</option>
-        </select>
-        <label for="cal_fecha">Fecha</label>
-        <input type="date" id="cal_fecha">
-        <div id="cal_horas" style="margin-top:10px; display:grid; grid-template-columns:repeat(4,1fr); gap:8px;">
-          <!-- franjas horarias generadas aquí -->
-        </div>
-        <div style="margin-top:12px;">
-          <button id="btn_confirmar_medico" class="btn-admin">Confirmar Médico</button>
-        </div>
-      </div>
-      <p><a href="dashboard.html">Volver al inicio</a></p>
-    </div>
-  </div>
-  <!-- Modal Confirmación Cerrar Sesión -->
-  <div id="modal_logout" class="modal">
-    <div class="modal-content modal-small">
-      <h2>¿Cerrar sesión?</h2>
-      <p>¿Estás seguro que quieres cerrar sesión?</p>
-      <div class="modal-buttons">
-        <button id="boton_cerrar_sesion" class="btn-modal">Si, cerrar</button>
-        <button id="boton_cancelar_cerrar_sesion" class="btn-modal btn-secondary" data-modal-close>No</button>
+        <main>
+          <h1>Médicos</h1>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin:12px 0;">
+            <div>
+                <button id="btn_nuevo_medico" class="btn btn-primary">Agregar médico</button>
+              </div>
+          </div>
+
+          <table id="medicosTable" class="table table-striped" style="width:100%">
+            <thead>
+              <tr>
+                <th>Médico</th>
+                <th>Especialidad</th>
+                <th>Horario</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </main>
       </div>
     </div>
-  </div>
+
+    <!-- Modal Bootstrap para crear/editar médico -->
+    <div class="modal fade" id="modal_medico" tabindex="-1" aria-labelledby="modal_title" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modal_title">Registrar médico</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          </div>
+          <div class="modal-body">
+            <form id="form_modal_medico">
+              <input type="hidden" id="m_id" />
+              <div class="mb-3"><label class="form-label">Nombre</label><input id="m_nombre" required class="form-control" /></div>
+              <div class="mb-3 row">
+                <div class="col-6">
+                  <label class="form-label">Especialidad</label>
+                  <select id="m_especialidad" required class="form-select">
+                    <option value="">-- Selecciona --</option>
+                  </select>
+                </div>
+                <div class="col-6" id="especialidad-otra-wrap" style="display:none;">
+                  <label class="form-label">Otra especialidad</label>
+                  <input id="m_especialidad_other" placeholder="Escribe la especialidad" class="form-control" />
+                </div>
+              </div>
+              <div class="mb-3"><label class="form-label">Horario</label><input id="m_horario" required class="form-control" placeholder="Ej: Lun-Vie 09:00-14:00" /></div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="modal_cancel" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" form="form_modal_medico" id="modal_save" class="btn btn-primary">Guardar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script src="sidebar.js"></script>
   <script src="medicos.js"></script>
-</body>
+  </body>
 </html>
