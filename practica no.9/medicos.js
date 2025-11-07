@@ -70,8 +70,8 @@
         <td>${escapeHtml(m.especialidad)}</td>
         <td>${escapeHtml(m.horario)}</td>
         <td class="actions-row">
-          <button class="btn btn-sm btn-primary btn-edit" data-id="${m.id}">Editar</button>
-          <button class="btn btn-sm btn-danger btn-delete" data-id="${m.id}">Eliminar</button>
+          <button class="btn-edit" data-id="${m.id}">Editar</button>
+          <button class="btn-delete" data-id="${m.id}">Eliminar</button>
         </td>`;
       tbody.appendChild(tr);
     });

@@ -14,7 +14,7 @@ const clearLogged = () => localStorage.removeItem(USUARIO_LOGUEADO_LS);
 const showAlert = (title, text, icon) => {
         if (window.Swal && typeof Swal.fire === 'function') return Swal.fire(title, text, icon);
 
-    // Si  un alert simple o crear un div en la página
+        // Fallback: usar alert nativo o contenedor de alertas
     const container = document.getElementById('contenedor_alertas') || document.getElementById('contenedor-alertas');
         if (!container) return alert(`${title}: ${text}`);
 
@@ -29,29 +29,29 @@ const showAlert = (title, text, icon) => {
         `;
         container.appendChild(wrapper);
 
-        // auto cierre en 3s
+    // auto cierre en 3s
         setTimeout(() => {
             try { const el = document.getElementById(id); if (el) el.remove(); } catch(_){}
         }, 3000);
 };
 
-// Validaciones sencillas version mas casual
+// Validaciones sencillas
 const isGmail = (email) => /^[a-zA-Z0-9._%+-]+@gmail\.com$/.test(email);
 const isValidUrl = (u) => /^https?:\/\/.+/i.test(u);
 const isPositive = (n) => Number.isFinite(n) && n > 0;
 const isNonNegativeInt = (n) => Number.isInteger(n) && n >= 0;
 
-// Estado en memoria usuarios y productos
+// Estado en memoria: usuarios y productos
 let users = loadArray(USUARIOS_LS);
 let products = loadArray(PRODUCTOS_LS);
 
-// Aseguro que exista un admin por defecto
+// Asegurar usuario admin por defecto
 if (!users.some(u => u.email && u.email.toLowerCase() === 'admin@gmail.com')) {
     users.push({ email: 'admin@gmail.com', pass: '123456', role: 'admin' });
     saveArray(USUARIOS_LS, users);
 }
 
-// Elementos del DOM
+// Selección de elementos del DOM
 const formulario_inicio_sesion = document.getElementById('form_inicio_sesion') || document.getElementById('form-inicio-sesion');
 const formulario_registrar = document.getElementById('form_registrar') || document.getElementById('form-registrar');
 const boton_cerrar_sesion = document.getElementById('logout');
@@ -59,7 +59,7 @@ const vista_login = document.getElementById('login');
 const vista_registro = document.getElementById('registro');
 const vista_apartado = document.getElementById('apartado');
 
-// Render de productos si hay
+// Render de productos (si existen)
 function renderProducts() {
     const container = document.getElementById('contenedor_productos');
     if (!container) return;
@@ -88,7 +88,7 @@ function renderProducts() {
     });
 }
 
-// Registro de usuario form de registro
+// Registro de usuario
 if (formulario_registrar) {
     formulario_registrar.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -123,7 +123,7 @@ if (formulario_registrar) {
     });
 }
 
-// Si hay boton para ir al login lo enlazo
+// Enlace hacia login desde registro
 const boton_ir_login_global = document.getElementById('boton_ir_login') || document.getElementById('boton-ir-login');
 if (boton_ir_login_global) {
     boton_ir_login_global.addEventListener('click', () => {
@@ -132,7 +132,7 @@ if (boton_ir_login_global) {
     });
 }
 
-// Login formulario
+// Manejo del formulario de inicio de sesión
 if (formulario_inicio_sesion) {
     formulario_inicio_sesion.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -153,14 +153,14 @@ if (formulario_inicio_sesion) {
                         const modal = document.querySelector('#modal_bienvenida, #modal-bienvenida');
                 if (modal) {
                     modal.classList.add('show');
-                    // permitir cerrar el modal al hacer clic fuera
+                            // permitir cerrar el modal al hacer clic fuera
                     modal.addEventListener('click', function handler(e) {
                         if (e.target === modal) {
                             modal.classList.remove('show');
                             modal.removeEventListener('click', handler);
                         }
                     });
-                    // botón ir a la tienda: cerrar modal y redirigir
+                    // botón: cerrar modal y redirigir
                     const boton_ir_tienda = document.getElementById('boton_ir_tienda') || document.getElementById('boton-ir-tienda');
                     if (boton_ir_tienda) {
                         boton_ir_tienda.onclick = () => {
@@ -170,14 +170,14 @@ if (formulario_inicio_sesion) {
                         };
                     }
                 }
-            } catch (e) {
-                // fallback: nada
+                } catch (e) {
+                // fallback: sin acción
             }
         }
     });
 }
 
-// Logout cerrar sesion
+// Logout: cerrar sesión
 if (boton_cerrar_sesion) {
     boton_cerrar_sesion.addEventListener('click', () => {
         clearLogged();
@@ -186,7 +186,7 @@ if (boton_cerrar_sesion) {
     });
 }
 
-// Formulario para anadir producto
+// Formulario para añadir producto
 const formulario_producto = document.getElementById('productForm') || document.getElementById('formulario_producto');
 if (formulario_producto) {
     formulario_producto.addEventListener('submit', (e) => {

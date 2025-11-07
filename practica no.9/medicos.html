@@ -61,11 +61,13 @@
           <h1>Médicos</h1>
           <div style="display:flex; justify-content:space-between; align-items:center; margin:12px 0;">
             <div>
-                <button id="btn_nuevo_medico" class="btn btn-primary">Agregar médico</button>
+                <button id="btn_nuevo_medico" class="btn-registrar-medico">Agregar médico</button>
               </div>
           </div>
 
-          <table id="medicosTable" class="table table-striped" style="width:100%">
+          <div class="card shadow-sm" style="padding:14px;">
+            <div class="table-responsive">
+              <table id="medicosTable" class="simple-table" style="width:100%">
             <thead>
               <tr>
                 <th>Médico</th>

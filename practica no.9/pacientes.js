@@ -15,10 +15,20 @@
   let medicos = load(CLAVES_ALMACEN.medicos);
   let citas = load(CLAVES_ALMACEN.citas);
 
-  // Prioridades permitidas y su orden 0 mayor
+  // Seed inicial: precarga de ejemplo cuando no hay pacientes
+  if(!Array.isArray(pacientes) || pacientes.length === 0){
+    pacientes = [
+      { id: 1, nombre: 'Karely Ruiz', curp: 'RZKR901010HDFLLR05', edad: 28, prioridad: 'No urgente', especialidad: 'Ginecología', medicoAsignado: '' },
+      { id: 2, nombre: 'Luis Fernández', curp: 'FNLU800202HDFRRL09', edad: 45, prioridad: 'Urgente', especialidad: 'Cardiología', medicoAsignado: '' },
+      { id: 3, nombre: 'María Gómez', curp: 'GOMM850505MDFGRR03', edad: 36, prioridad: 'No urgente', especialidad: 'Dermatología', medicoAsignado: '' }
+    ];
+    try{ save(CLAVES_ALMACEN.pacientes, pacientes); }catch(e){ console.error('Error guardando seed de pacientes', e); }
+  }
+
+  // Prioridades permitidas (orden de mayor a menor prioridad)
   const PRIORIDADES = ['Emergencia','Urgente','No urgente'];
 
-  // Helpers sencillos
+  // Helpers
   function q(selector, root=document){ return root.querySelector(selector); }
 
   // Render de tarjetas de pacientes
@@ -32,7 +42,7 @@
     const text = (filterText||'').toLowerCase().trim();
 
     pacientes.forEach(p=>{
-  // filtro por nombre curp o medico asignado
+  // filtro por nombre, CURP o médico asignado
       if(text){
         const hay = (p.nombre||'').toLowerCase().includes(text) || (p.curp||'').toLowerCase().includes(text) || (p.medicoAsignado||'').toLowerCase().includes(text);
         if(!hay) return;
@@ -70,7 +80,7 @@
     });
   }
 
-  // helpers para id
+  // Helpers para IDs
   function nextId(list){
     try{
       if(!Array.isArray(list) || list.length===0) return 1;
@@ -87,10 +97,10 @@
   }
   function closeModal(){ const m=document.getElementById('modal_producto'); if(m) m.classList.remove('show'); }
 
-  // Guardar desde formulario
+  // Guardar paciente desde formulario
   function handleSave(evt){
     evt.preventDefault && evt.preventDefault();
-    // recoger campos con proteccion si faltan elementos
+  // recoger campos con protección si faltan elementos
     const idRaw = (q('#producto_id') && q('#producto_id').value) || '';
     const id = parseInt(idRaw||'0',10) || 0;
     const nombre = (q('#p_nombre') && String(q('#p_nombre').value).trim()) || '';
@@ -118,7 +128,7 @@
     closeModal();
   }
 
-  // Eliminar paciente si no tiene cita
+  // Eliminar paciente (si no tiene cita)
   function handleEliminar(id){
     const tieneCita = citas.some(c=>c.pacienteId===id);
     if(tieneCita){ alert('No se puede eliminar: el paciente tiene una cita'); return; }
@@ -128,16 +138,16 @@
     renderPacientes();
   }
 
-  // Agendar abrir modal y preparar formulario
+  // Abrir modal de agendamiento y preparar formulario
   function openAgendarModal(id){
     const paciente = pacientes.find(p=>p.id===id);
     if(!paciente){ alert('Paciente no encontrado'); return; }
-    // rellenar campos
+  // rellenar campos del formulario
     q('#ag_paciente_id').value = paciente.id;
     q('#ag_especialidad').value = paciente.especialidad || '';
     q('#ag_fecha').value = '';
     q('#ag_hora').value = '';
-    // cargar medicos disponibles de la especialidad
+  // cargar médicos disponibles según especialidad
     const select = q('#ag_medico_select');
     select.innerHTML = '<option value="">Selecciona un médico</option>';
     const candidatos = medicos.filter(m=>m.especialidad=== (paciente.especialidad||''));
@@ -145,9 +155,9 @@
   const opt = document.createElement('option'); opt.value = m.id; opt.textContent = m.nombre + ' ('+ (Array.isArray(m.diasDisponibles)?m.diasDisponibles.join(', '):m.diasDisponibles||'') +')';
       select.appendChild(opt);
     });
-    // mostrar modal
+  // mostrar modal
     const modal = document.getElementById('modal_agendar'); if(modal) modal.classList.add('show');
-    // bind fecha/hora change para filtrar medicos
+  // enlazar cambios de fecha/hora para filtrar médicos
     const fechaInput = q('#ag_fecha');
     const horaInput = q('#ag_hora');
     function filtrarMedicos(){
@@ -171,7 +181,7 @@
     }
     if(q('#ag_fecha')) q('#ag_fecha').addEventListener('change', filtrarMedicos);
     if(q('#ag_hora')) q('#ag_hora').addEventListener('change', filtrarMedicos);
-  // Si hay una pending agenda en sessionStorage veniente de la pantalla de medicos preseleccionar
+  // Si existe una agenda pendiente en sessionStorage, preseleccionar datos
     try{
       const pending = sessionStorage.getItem('cs_pending_agenda');
       if(pending){
@@ -192,7 +202,7 @@
 
   function closeAgendarModal(){ const m=document.getElementById('modal_agendar'); if(m) m.classList.remove('show'); }
 
-  // Submit de agendamiento
+  // Envío del formulario de agendamiento
   function handleAgendarSubmit(e){
     e.preventDefault();
     const pacienteId = parseInt(q('#ag_paciente_id').value,10);
@@ -212,7 +222,7 @@
     closeAgendarModal(); renderPacientes(); alert('Cita creada con ' + (medico?medico.nombre:''));
   }
 
-  // Editar
+  // Editar paciente
   function handleEditar(id){
     const idNum = Number(id);
     console.log('handleEditar llamado', { id, idNum });
@@ -232,10 +242,9 @@
     openModal();
   }
 
-  // Listeners
-  // Inicializacion se puede llamar ahora 
+  // Listeners e inicialización
   function init(){
-    // Bind formulario si existe
+  // Asignar listener al formulario principal
     const form = document.getElementById('formulario_producto');
     if(form && !form._bound) { form.addEventListener('submit', handleSave); form._bound = true; }
 
@@ -256,7 +265,7 @@
       btnAdd._bound = true;
     }
 
-    // Delegación de botones en el grid de tarjetas
+  // Delegación de botones en el grid de tarjetas
     const grid = document.querySelector('#pacientes_grid');
     if(grid && !grid._bound){
       grid.addEventListener('click', (e)=>{
@@ -269,14 +278,14 @@
       grid._bound = true;
     }
 
-    // Cargar datos iniciales
+  // Cargar datos iniciales y renderizar
     renderPacientes();
 
-    // bind agendar submit
+  // bind del formulario de agendamiento
     const formAg = document.getElementById('form_agendar');
     if(formAg && !formAg._bound){ formAg.addEventListener('submit', handleAgendarSubmit); formAg._bound = true; }
 
-  // si existe una pending agenda desde medicos mover a sessionStorage
+  // mover pending agenda de localStorage a sessionStorage si existe
     const pending = localStorage.getItem('cs_pending_agenda');
     if(pending){
       try{

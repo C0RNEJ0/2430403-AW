@@ -1,6 +1,6 @@
-// Manejo del estado de la barra lateral y modales
+// Control del estado de la barra lateral y modales
 (function(){
-  // soy un dev junior, aqui manejo la barra y guardo en localStorage
+  // Gestión de la barra lateral y persistencia en localStorage
   const aplicacion = document.getElementById('aplicacion');
   const barra_lateral = document.getElementById('barra_lateral');
   const body = document.body;
@@ -25,28 +25,56 @@
     aplicarEstado();
   }
 
-  // cuando el DOM esté listo hago cosas
+  // inicialización al cargar el DOM
   document.addEventListener('DOMContentLoaded', function(){
-    aplicarEstado();
-    // delego clicks para botones dinamicos
-    document.addEventListener('click', function(e){
+    // aplicar estado guardado en desktop; en móvil forzar comportamiento consistente
+    if(window.innerWidth <= 800){
+      try{ localStorage.setItem(CLAVE_BARRA_COLAPSADA, '0'); }catch(_){ }
+      body.classList.remove('sidebar-collapsed');
+      barra_lateral && barra_lateral.classList.remove('open');
+    } else {
+      aplicarEstado();
+    }
+  // delegación de clicks para elementos interactivos
+  document.addEventListener('click', function(e){
       const target = e.target;
-      // toggle, acepto click en boton o en elementos dentro
+  // toggle: botón de colapsar
       if(target.closest && target.closest('#boton_colapsar')){ e.preventDefault(); alternarBarra(); return; }
-      // si tocan la brand en movil, abro/cierro
+  // si se pulsa la marca en móvil, abrir/cerrar sidebar
       if(target.closest && target.closest('.sidebar .brand')){
         if(window.innerWidth <= 800){ barra_lateral && barra_lateral.classList.toggle('open'); }
       }
-      // abrir modales por atributos data-modal-target / data-modal-open
+  // abrir modales por atributos data-modal-target / data-modal-open
       const openBtn = target.closest && (target.closest('[data-modal-target]') || target.closest('[data-modal-open]'));
       if(openBtn){ e.preventDefault(); const targetId = (openBtn.getAttribute('data-modal-target') || openBtn.getAttribute('data-modal-open') || '').replace(/^#/, ''); if(targetId) abrirModalPorId(targetId); }
-      // cerrar modal si clic en overlay
+  // cerrar modal si se hace clic en el overlay
       if(target.classList && target.classList.contains('modal')){ cerrarModal(target); }
       const closeBtn = target.closest && (target.closest('[data-modal-close]') || target.closest('.close'));
       if(closeBtn){ e.preventDefault(); const modal = closeBtn.closest('.modal'); modal && cerrarModal(modal); }
-      // boton cerrar sesion
+  // botón cerrar sesión
       const cerrarBtn = target.closest && target.closest('#boton_cerrar_sesion');
       if(cerrarBtn){ e.preventDefault(); try{ sessionStorage.clear(); }catch(_){}; try{ localStorage.removeItem(CLAVE_BARRA_COLAPSADA); }catch(_){}; try{ localStorage.removeItem('auth_token'); localStorage.removeItem('user'); }catch(_){}; window.location.href = 'Login/login.html'; }
+    // si en móvil se pulsa un enlace del nav, cerrar el overlay de la sidebar
+      try{
+        const navLink = target.closest && target.closest('.sidebar nav a');
+        if(navLink){
+      // si es móvil, cerrar overlay
+          if(window.innerWidth <= 800){ barra_lateral && barra_lateral.classList.remove('open'); }
+      // evitar que al navegar se aplique el modo "colapsado" por accidente
+          try{ localStorage.setItem(CLAVE_BARRA_COLAPSADA, '0'); }catch(_){ }
+          try{ body.classList.remove('sidebar-collapsed'); }catch(_){ }
+        }
+      }catch(_){ }
+    });
+    // al cambiar el tamaño, aseguramos consistencia: en móvil reset, en desktop aplicar preferencia
+    window.addEventListener('resize', function(){
+      if(window.innerWidth <= 800){
+        try{ localStorage.setItem(CLAVE_BARRA_COLAPSADA, '0'); }catch(_){ }
+        body.classList.remove('sidebar-collapsed');
+        barra_lateral && barra_lateral.classList.remove('open');
+      } else {
+        aplicarEstado();
+      }
     });
   });
 })();

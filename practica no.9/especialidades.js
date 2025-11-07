@@ -4,6 +4,15 @@
   function save(data){ localStorage.setItem(KEY, JSON.stringify(data)); }
  // cargo datos iniciales
   let items = load();
+  // seed inicial si no hay datos
+  if(!items || items.length===0){
+    items = [
+      { id: '1', nombre: 'Pediatría', descripcion: 'Atención a niños y adolescentes' },
+      { id: '2', nombre: 'Cardiología', descripcion: 'Enfermedades del corazón' },
+      { id: '3', nombre: 'Dermatología', descripcion: 'Cuidado de la piel' }
+    ];
+    save(items);
+  }
  //
   function q(sel,root=document){ return root.querySelector(sel); }
     // Escapar valores para HTML
@@ -26,16 +35,10 @@
     });
   } //
 
-  // usamos Bootstrap modal
-  let bsModal = null;
-  function initModal(){
-    const modalEl = q('#modalEspecialidad');
-    if(!modalEl) return;
-    try{ bsModal = new bootstrap.Modal(modalEl, { keyboard: true }); }catch(e){ bsModal = null; }
-  }
+  // modal
   function openModal(editId){
     const modalEl = q('#modalEspecialidad'); if(!modalEl) return alert('Modal no encontrado');
-    // reset rapido
+  // reseteo rápido del formulario
     q('#esp_id').value = '';
     q('#esp_nombre').value = '';
     q('#esp_descripcion').value = '';
@@ -44,9 +47,10 @@
       const it = items.find(x=> String(x.id)===String(editId));
       if(it){ q('#esp_id').value = it.id; q('#esp_nombre').value = it.nombre; q('#esp_descripcion').value = it.descripcion||''; q('#modalEspecialidadLabel').textContent = 'Editar especialidad'; }
     }
-    if(bsModal && typeof bsModal.show === 'function'){ bsModal.show(); } else { modalEl.classList.add('show'); }
+    modalEl.classList.add('show');
   }
-  function closeModal(){ const modalEl = q('#modalEspecialidad'); if(!modalEl) return; if(bsModal && typeof bsModal.hide === 'function'){ bsModal.hide(); } else { modalEl.classList.remove('show'); } }
+
+  function closeModal(){ const modalEl = q('#modalEspecialidad'); if(modalEl) modalEl.classList.remove('show'); }
 
   function saveFromForm(){
     const id = q('#esp_id').value || ('esp_' + Date.now());
@@ -66,11 +70,11 @@
     if(e.target && e.target.classList && e.target.classList.contains('eliminar')){
       const id = e.target.dataset.id; if(!confirm('Borrar especialidad?')) return; items = items.filter(x=> String(x.id)!==String(id)); save(items); render();
     }
+    if(e.target && e.target.id==='esp_cancel'){ closeModal(); }
   });
 
-  // bind submit del formulario y init modal
+  // bind submit del formulario
   document.addEventListener('DOMContentLoaded', ()=>{
-    initModal();
     const form = q('#formEspecialidad'); if(form) form.addEventListener('submit', function(ev){ ev.preventDefault(); saveFromForm(); });
     render();
   });

@@ -1,12 +1,28 @@
-* {
-    margin: 0;                 /* VOY A PONER UN COMENTARIO DONDE NO QUIERO QUE LE MUEVAS ALVARO  OSEA NO LE MUEVAS A NADA */ 
-    padding: 0;
-    box-sizing: border-box;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
+
+:root{
+    --bg: #f6faf5;
+    --panel: #ffffff;
+    --accent: #2f8b63;
+    --accent-2: #4fb37a;
+    --muted: #6c757d;
+    --danger: #e45757;
+.search-box input {
+    width: 220px;
+    padding: 10px 36px 10px 14px;
+    border: 1px solid rgba(30,30,30,0.06);
+    border-radius: 10px;
+    background-color: var(--panel);
+    color: #222;
+    box-shadow: 0 6px 18px rgba(20,40,30,0.03);
 }
 
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f5f5f5;
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+    background-color: var(--bg);
+    color: #233;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
 }
 
 /* Icon images ( DE login / carrito) */ 
@@ -21,20 +37,22 @@ body {
     transform: scale(1.08);
 }
 
-/* Barra superior verde */
+/* Barra superior personalizada */
 .top-bar {
-    background-color: #7ca673;
-    color: #2c3e2f;
+    background: linear-gradient(90deg,var(--accent), var(--accent-2));
+    color: white;
     text-align: center;
-    padding: 8px;
-    font-size: 14px;
+    padding: 10px 12px;
+    font-size: 13px;
+    font-weight:600;
 }
 
 /* Header */
 header {
-    background-color: #d9d9d9;
-    padding: 15px 0;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    background: linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.8));
+    padding: 18px 0;
+    box-shadow: 0 6px 18px rgba(20,40,30,0.04);
+    backdrop-filter: blur(4px);
 }
 
 .container {
@@ -47,13 +65,14 @@ header {
 }
 
 .logo {
-    width: 60px;
-    height: 60px;
-    background-color: white;
-    border-radius: 50%;
+    width: 64px;
+    height: 64px;
+    background: var(--panel);
+    border-radius: 14px;
     display: flex;
     align-items: center;
     justify-content: center;
+    box-shadow: var(--card-shadow);
 }
 
 .logo img {
@@ -71,15 +90,25 @@ nav {
     margin-left: 100px;
 }
 
-.nav-link {
-    color: black;
-    text-decoration: none;
-    font-size: 18px;
-    font-weight: 500;
+.product-card {
+    background-color: var(--panel);
+    border-radius: 16px;
+    padding: 22px;
+    position: relative;
+    box-shadow: var(--card-shadow);
+}
+
+.product-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 18px 40px rgba(10,30,20,0.08);
+}
+    font-weight: 600;
+    padding: 8px 12px;
+    border-radius: 8px;
 }
 
 .nav-link:hover {
-    color: #555;
+    background: rgba(47,139,99,0.08);
 }
 
 /* Header derecha */
@@ -106,6 +135,19 @@ nav {
     align-items: center;
 }
 
+    .modal-content {
+        background-color: var(--panel); /* fondo blanco */
+        padding: 22px;
+        border-radius: 12px;
+        max-width: 520px;
+        width: 92%;
+        max-height: 85vh;
+        overflow-y: auto;
+        box-shadow: 0 18px 40px rgba(10,30,20,0.06);
+        border: 1px solid rgba(30,30,30,0.04);
+        font-family: inherit;
+        position: relative;
+    }
 .search-box input {
     width: 200px;
     padding: 8px 35px 8px 12px;
@@ -116,14 +158,14 @@ nav {
 }
 
 .search-box input::placeholder {
-    color: #666;
-}
-
-.search-btn {
-    position: absolute;
-    right: 8px;
-    background: none;
-    border: none;
+    .modal-content h2 {
+        text-align: center;
+        margin: 0 0 12px 0;
+        color: white;
+        background: linear-gradient(90deg,var(--accent),var(--accent-2));
+        padding: 12px 16px;
+        border-radius: 8px 8px 0 0;
+    }
     cursor: pointer;
     font-size: 16px;
 }
@@ -153,9 +195,19 @@ nav {
 
 .products-section h2 {
     text-align: center;
-    font-size: 28px;
-    margin-bottom: 30px;
-    color: #333;
+    .btn-admin {
+        padding: 10px 20px;
+        background: linear-gradient(90deg,var(--accent),var(--accent-2));
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 15px;
+        cursor: pointer;
+        font-weight: 800;
+        box-shadow: 0 10px 26px rgba(20,40,30,0.08);
+    }
+
+    .btn-admin:hover { transform: translateY(-2px) }
 }
 
 /*   Grid de productos */
@@ -408,24 +460,24 @@ main {
 
 /* Estilos específicos para la lista de pacientes (tarjetas) */
 .patient-card {
-    background: linear-gradient(180deg, #ffffff 0%, #f7f7f7 100%);
+    background: linear-gradient(180deg, var(--panel) 0%, #fbfffb 100%);
     border-radius: 14px;
-    padding: 18px;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+    padding: 16px;
+    box-shadow: 0 10px 30px rgba(20,40,30,0.04);
     transition: transform 0.18s ease, box-shadow 0.18s ease;
     display: flex;
     flex-direction: column;
 }
-.patient-card:hover { transform: translateY(-6px); box-shadow: 0 12px 26px rgba(0,0,0,0.12); }
-.patient-card .product-image { height:140px; border-radius:12px; background-color:#e6e6e6; }
+.patient-card:hover { transform: translateY(-6px); box-shadow: 0 20px 40px rgba(10,30,20,0.08); }
+.patient-card .product-image { height:140px; border-radius:12px; background-color:#eff6ef; display:flex; align-items:center; justify-content:center }
 .patient-card .product-info { padding-top:12px; display:flex; flex-direction:column; gap:8px; }
-.patient-card .name { font-size:16px; font-weight:700; color:#233; }
-.patient-card .size, .patient-card .price, .patient-card .shipping { font-size:13px; color:#555; }
+.patient-card .name { font-size:16px; font-weight:800; color:#13331f; }
+.patient-card .size, .patient-card .price, .patient-card .shipping { font-size:13px; color:var(--muted); }
 .product-controls { display:flex; gap:8px; margin-top:8px; }
-.patient-card .btn-admin { padding:8px 12px; font-size:13px; border-radius:8px; }
-.patient-card .btn-edit { background:#4da6ff; color:#fff; border:none; }
-.patient-card .btn-delete { background:#ff6b6b; color:#fff; border:none; }
-.patient-card .btn-admin:hover, .patient-card .btn-edit:hover, .patient-card .btn-delete:hover { opacity:0.95; }
+.patient-card .btn-admin { padding:8px 12px; font-size:13px; border-radius:10px; }
+.patient-card .btn-edit { background: linear-gradient(90deg,#2fa7ff,#4a9aff); color:#fff; border:none; box-shadow:0 8px 20px rgba(46,125,195,0.12); }
+.patient-card .btn-delete { background: linear-gradient(90deg,#ff7b7b,#e45757); color:#fff; border:none; box-shadow:0 8px 20px rgba(228,90,90,0.12); }
+.patient-card .btn-admin:hover, .patient-card .btn-edit:hover, .patient-card .btn-delete:hover { opacity:0.98; transform: translateY(-2px) }
 
 /* Imagen como fondo con fallback para mostrar una silueta */
 .patient-card .product-image[style="background-image: url('')"] { background-image: none; display:flex; align-items:center; justify-content:center; color:#aaa; font-weight:600; }
@@ -661,7 +713,6 @@ main {
     border-color: #4caf50;
 }
 
-/* ----- Estilos adicionales sencillos (no tocar los bloques arriba) ----- */
 .simple-btn { display:inline-block; padding:8px 12px; border-radius:8px; background:#4a9a6a; color:#fff; border:none; cursor:pointer; font-weight:600; font-size:14px }
 .simple-btn.secondary { background:#6c757d }
 
@@ -679,20 +730,20 @@ main {
 
 /* Botón propio para Registrar médico */
 .btn-registrar-medico {
-    background: linear-gradient(90deg, #3aa0ff 0%, #4a9a6a 100%);
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
     color: #fff;
     border: none;
     padding: 10px 16px;
     border-radius: 12px;
     font-weight: 800;
     font-size: 15px;
-    box-shadow: 0 8px 20px rgba(58,160,255,0.18);
+    box-shadow: 0 10px 26px rgba(20,40,30,0.12);
     cursor: pointer;
     display: inline-flex;
     align-items: center;
     gap: 8px;
 }
-.btn-registrar-medico:hover{ transform: translateY(-3px); box-shadow: 0 14px 30px rgba(58,160,255,0.2); }
+.btn-registrar-medico:hover{ transform: translateY(-3px); box-shadow: 0 18px 40px rgba(20,40,30,0.14); }
 .btn-registrar-medico:active{ transform: translateY(-1px); }
 .btn-registrar-medico .ico { width:18px; height:18px; display:inline-block; }
 
