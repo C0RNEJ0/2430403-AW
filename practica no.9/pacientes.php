@@ -1,10 +1,10 @@
 <?php
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   // --- DATOS DE CONEXIÓN (servidor local) ---
-  $servidor   = '165.227.25.15';  // forzamos TCP local para evitar socket
+  $servidor   = 'localhost';  // forzamos TCP local para evitar socket
   $puerto     = 3306;
   $basedatos  = 'clinica_cornejo';
-  $usuario    = 'root';
+  $usuario    = 'admin';
   $contrasena = 'e8d0055b61beef5a1681ee280703da98497636b40340afca'; // pon aquí la contraseña real antes de probar
 
   try {
