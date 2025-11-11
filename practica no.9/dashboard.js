@@ -1,5 +1,4 @@
 (function(){
-  // Dashboard simple: seed y visualización con Chart.js
   const CL_PAC = 'cs_pacientes_v1';
   const CL_MED = 'medicos';
   const CL_CITAS = 'citas';
