@@ -110,12 +110,98 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <h1>Control de Pacientes</h1>
       <p>Lista de pacientes </p>
       <div style="max-width:900px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center; gap:12px;">
-        <button id="btn_agregar_paciente" class="btn-admin">+ Agregar Paciente</button>
+        <a href="pacientes.php?action=nuevo" class="btn-admin">+ Agregar Paciente</a>
       </div>
 
+      <?php
+        // mostrar mensajes si vienen del POST
+        if(!empty(
+          isset(
+            $mensaje_exito
+          )
+        ) && isset($mensaje_exito)){
+          echo '<div class="notice ok" style="margin-bottom:12px; color:green;">'.htmlspecialchars($mensaje_exito).'</div>';
+        }
+        if(isset($mensaje_error)){
+          echo '<div class="notice err" style="margin-bottom:12px; color:red;">'.htmlspecialchars($mensaje_error).'</div>';
+        }
+
+        // si la ruta es ?action=nuevo mostramos el  formulario 
+        if(isset($_GET['action']) && $_GET['action'] === 'nuevo'){
+      ?>
+      <section class="form-section" style="max-width:900px;">
+        <h2>Registrar nuevo Paciente</h2>
+        <form method="post" action="pacientes.php">
+          <input type="hidden" name="id" value="">
+          <h4>Información personal</h4>
+          <label>Nombres</label>
+          <input type="text" name="nombres" required>
+          <label>Apellidos</label>
+          <input type="text" name="apellidos" required>
+          <label>Fecha de Nacimiento</label>
+          <input type="date" name="fecha_nacimiento">
+          <label>Género</label>
+          <select name="sexo">
+            <option value="">--</option>
+            <option value="F">Femenino</option>
+            <option value="M">Masculino</option>
+            <option value="O">Otro</option>
+          </select>
+          <h4>Datos de contacto</h4>
+          <label>Teléfono</label>
+          <input type="tel" name="telefono">
+          <label>Email</label>
+          <input type="email" name="email">
+          <label>Contacto de emergencia</label>
+          <input type="text" name="contacto_emergencia">
+          <label>Teléfono de emergencia</label>
+          <input type="tel" name="telefono_emergencia">
+          <h4>Información adicional</h4>
+          <label>Dirección</label>
+          <input type="text" name="direccion">
+          <label>Ciudad</label>
+          <input type="text" name="ciudad">
+          <label>Estado/Provincia</label>
+          <input type="text" name="estado">
+          <label>Código Postal</label>
+          <input type="text" name="cp">
+          <label>Prioridad</label>
+          <select name="prioridad">
+            <option value="Baja">Baja</option>
+            <option value="Media">Media</option>
+            <option value="Alta">Alta</option>
+            <option value="Crítica">Crítica</option>
+          </select>
+          <label>Tipo de sangre</label>
+          <input type="text" name="tipo_sangre">
+          <label>Alergias</label>
+          <textarea name="alergias" rows="2"></textarea>
+          <label>Especialidad requerida</label>
+          <select name="especialidad">
+            <option value="">Seleccione</option>
+            <option value="Urgencias">Urgencias</option>
+            <option value="Cardiologia">Cardiología</option>
+            <option value="Pediatria">Pediatría</option>
+          </select>
+          <label>Médico asignado</label>
+          <input type="text" name="medico_asignado">
+          <label>Notas</label>
+          <textarea name="notas" rows="3"></textarea>
+          <div style="margin-top:10px; text-align:center;">
+            <button type="submit" class="btn-modal">Guardar paciente</button>
+            <a href="pacientes.php" class="btn-modal btn-secondary" style="margin-left:8px;">Cancelar</a>
+          </div>
+        </form>
+      </section>
+      <?php
+        } else {
+      ?>
       <!-- Grid de tarjetas de pacientes -->
       <div id="pacientes_grid" class="products-grid" style="max-width:1000px;">
       </div>
+      <?php
+        }
+      ?>
       
     </div>
   </div>
@@ -131,101 +217,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
   </div>
   <script src="sidebar.js"></script>
-  <!-- Modal Agregar/Editar Paciente -->
-  <div id="modal_producto" class="modal">
-    <div class="modal-content modal-large">
-      <span class="close" data-modal-close>&times;</span>
-      <h2 id="titulo_modal_producto">Agregar Paciente</h2>
-      <div class="producto-modal-grid">
-        <div class="producto-form-section">
-            <form id="formulario_producto" method="post" action="pacientes.php">
-            <input type="hidden" id="producto_id" name="id">
-            <h3>Registrar nuevo Paciente</h3>
-
-            <h4>Información personal</h4>
-            <label for="p_nombres">Nombres:</label>
-            <input type="text" id="p_nombres" name="nombres" placeholder="Nombres" required>
-
-            <label for="p_apellidos">Apellidos:</label>
-            <input type="text" id="p_apellidos" name="apellidos" placeholder="Apellidos" required>
-
-            <label for="p_fecha_nac">Fecha de Nacimiento:</label>
-            <input type="date" id="p_fecha_nac" name="fecha_nacimiento" placeholder="dd/mm/aaaa">
-
-            <label for="p_genero">Género:</label>
-            <select id="p_genero" name="sexo">
-              <option value="">Selecciona un género</option>
-              <option value="F">Femenino</option>
-              <option value="M">Masculino</option>
-              <option value="O">Otro</option>
-            </select>
-
-            <h4>Datos de contacto</h4>
-            <label for="p_telefono">Teléfono:</label>
-            <input type="tel" id="p_telefono" name="telefono" placeholder="Teléfono">
-
-            <label for="p_email">Email:</label>
-            <input type="email" id="p_email" name="email" placeholder="Email">
-
-            <label for="p_contacto_emergencia">Contacto de emergencia:</label>
-            <input type="text" id="p_contacto_emergencia" name="contacto_emergencia" placeholder="Contacto de emergencia">
-
-            <label for="p_telefono_emergencia">Teléfono de emergencia:</label>
-            <input type="tel" id="p_telefono_emergencia" name="telefono_emergencia" placeholder="Teléfono de emergencia">
-
-            <h4>Información adicional</h4>
-            <label for="p_direccion">Dirección:</label>
-            <input type="text" id="p_direccion" name="direccion" placeholder="Dirección">
-
-            <label for="p_ciudad">Ciudad:</label>
-            <input type="text" id="p_ciudad" name="ciudad" placeholder="Ciudad">
-
-            <label for="p_estado">Estado/Provincia:</label>
-            <input type="text" id="p_estado" name="estado" placeholder="Estado">
-
-            <label for="p_cp">Código Postal:</label>
-            <input type="text" id="p_cp" name="cp" placeholder="Código Postal">
-
-            <label for="p_prioridad">Prioridad</label>
-            <select id="p_prioridad" name="prioridad">
-              <option value="Baja">Baja</option>
-              <option value="Media">Media</option>
-              <option value="Alta">Alta</option>
-              <option value="Crítica">Crítica</option>
-            </select>
-
-            <label for="p_tipo_sangre">Tipo de sangre</label>
-            <input type="text" id="p_tipo_sangre" name="tipo_sangre" placeholder="Ej: O+">
-
-            <label for="p_alergias">Alergias:</label>
-            <textarea id="p_alergias" name="alergias" placeholder="Alergias" rows="2"></textarea>
-
-            <label for="p_especialidad">Especialidad requerida</label>
-            <select id="p_especialidad" name="especialidad" required>
-              <option value="">Seleccione</option>
-              <option value="Urgencias">Urgencias</option>
-              <option value="Cardiologia">Cardiología</option>
-              <option value="Pediatria">Pediatría</option>
-            </select>
-
-            <label for="p_medico_asignado">Médico asignado</label>
-            <input type="text" id="p_medico_asignado" name="medico_asignado" placeholder="Nombre del médico responsable">
-
-            <label for="p_notas">Notas</label>
-            <textarea id="p_notas" name="notas" placeholder="Notas adicionales" rows="3"></textarea>
-
-
-            <div style="margin-top:10px; text-align:center;">
-              <button type="submit" class="btn-modal">Guardar paciente</button>
-            </div>
-          </form>
-        </div>
-
-      </div>
-    </div>
-  </div>
-
-  <script src="pacientes.js"></script>
   <!-- Modal Agendamiento -->
   <div id="modal_agendar" class="modal">
     <div class="modal-content modal-small">
