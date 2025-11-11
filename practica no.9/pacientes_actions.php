@@ -1,7 +1,7 @@
 <?php
 
 function obtener_conexion(){
-  $servidor   = '165.227.25.15';
+  $servidor   = '127.0.0.1';
   $puerto     = 3306;
   $basedatos  = 'clinica_cornejo';
   $usuario    = 'admin';
