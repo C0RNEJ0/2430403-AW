@@ -1,5 +1,4 @@
 (function(){
-  // Manejo simple de tarifas en localStorage (clave: 'tarifas')
   const CLAVE = 'tarifas';
   function cargar(){ try{ return JSON.parse(localStorage.getItem(CLAVE)) || []; }catch(e){ return []; } }
   function guardar(data){ try{ localStorage.setItem(CLAVE, JSON.stringify(data)); }catch(e){ console.error('Error guardando tarifas', e); } }
@@ -13,7 +12,7 @@
   const modalEl = () => document.getElementById('modal_tarifa');
   const form = () => document.getElementById('form_tarifa');
 
-  // seed inicial (3 entradas)
+  // seed inicial si no hay datos
   function seedSiVacio(){
     const datos = cargar();
     if(datos.length) return;
@@ -50,7 +49,7 @@
     });
   }
 
-  // abrir modal (bootstrap)
+  // abrir modal 
   function abrirModal(){ try{ const bs = new bootstrap.Modal(modalEl()); bs.show(); }catch(e){ modalEl().style.display='block'; } }
   function cerrarModal(){ try{ const bs = bootstrap.Modal.getInstance(modalEl()); if(bs) bs.hide(); else modalEl().style.display='none'; }catch(e){ try{ modalEl().style.display='none'; }catch(e){} } }
 

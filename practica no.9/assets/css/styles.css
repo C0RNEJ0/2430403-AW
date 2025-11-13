@@ -688,7 +688,6 @@ main {
 
 .page-content { margin-left:240px; transition: margin-left 0.25s ease; padding:20px }
 
-/* Responsive: en pantallas pequeñas la sidebar se oculta y se muestra como overlay */
 @media (max-width: 800px) {
     .sidebar { transform: translateX(-110%); position: fixed; }
     .sidebar.open { transform: translateX(0%); }
@@ -760,7 +759,6 @@ main {
 .card-compact .meta .title { font-weight:700; color:#213; font-size:14px }
 .card-compact .meta .subtitle { font-size:12px; color:#556 }
 
-/* Footer pequeño para dar sensación de proyecto académico */
 .page-footer { text-align:center; padding:18px 10px; color:#666; font-size:13px }
 
 

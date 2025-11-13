@@ -17,9 +17,9 @@ try {
   $mensaje_error = 'Error de conexión: ' . $e->getMessage();
 }
 
-// manejo de formularios (crear/editar/eliminar) usando campo 'accion'
+// manejo de formularios crear editar eliminar 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $conexion) {
-  $accion = $_POST['accion'] ?? 'crear';
+  $accion = $_POST['accion'] ?? 'crear'; // usando este campo
   try {
     if ($accion === 'eliminar') {
       // borrar paciente
@@ -84,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $conexion) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Control de Pacientes</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUa6zY1hY6Y+g2bJk6QZ6Y5E6bQ2K5r5Q5Z6e9q1Q9Q" crossorigin="anonymous">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="../assets/css/styles.css">
   <style>body{padding:20px}</style>
 </head>
 <body>
@@ -94,22 +94,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $conexion) {
   <div id="aplicacion">
     <aside class="sidebar" id="barra_lateral">
       <div class="brand">
-        <img src="img/CS.png" alt="CS">
+        <img src="../assets/images/CS.png" alt="CS">
         <div>
           <div style="font-weight:800;">Clínica Cornejo</div>
           <small style="opacity:0.9">Panel</small>
         </div>
       </div>
   <nav>
-        <a href="dashboard.html"><span class="label">Dashboard</span></a>
+        <a href="../views/dashboard.html"><span class="label">Dashboard</span></a>
   <a href="pacientes.php"><span class="label">Pacientes</span></a>
-        <a href="agenda.html"><span class="label">Agenda</span></a>
-        <a href="medicos.html"><span class="label">Médicos</span></a>
-        <a href="reportes.html"><span class="label">Reportes</span></a>
-        <a href="pagos.html"><span class="label">Pagos</span></a>
-        <a href="tarifas.html"><span class="label">Tarifas</span></a>
-        <a href="bitacoras.html"><span class="label">Bitácoras</span></a>
-        <a href="especialidades.html"><span class="label">Especialidades</span></a>
+        <a href="../views/agenda.html"><span class="label">Agenda</span></a>
+        <a href="../views/medicos.html"><span class="label">Médicos</span></a>
+        <a href="../views/reportes.html"><span class="label">Reportes</span></a>
+        <a href="../views/pagos.html"><span class="label">Pagos</span></a>
+        <a href="../views/tarifas.html"><span class="label">Tarifas</span></a>
+        <a href="../views/bitacoras.html"><span class="label">Bitácoras</span></a>
+        <a href="../views/especialidades.html"><span class="label">Especialidades</span></a>
   <a href="#" data-modal-target="#modal_logout"><span class="label">Cerrar Sesión</span></a>
       </nav>
       <div class="spacer"></div>
@@ -128,7 +128,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $conexion) {
             <div class="icons">
             
               <a href="#" id="icono_usuario" class="icon" title="Iniciar Sesion">
-                <img src="img/Login.png" alt="Login" class="icon-img">
+                <img src="../assets/images/Login.png" alt="Login" class="icon-img">
               </a>
               <span id="usuario_email" style="margin-left:8px; font-size:0.9rem; color:#333;"></span>
             </div>
@@ -143,7 +143,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $conexion) {
       if(isset($resultado_post['mensaje'])) $mensaje_exito = $resultado_post['mensaje'];
       if(isset($resultado_post['error'])) $mensaje_error = $resultado_post['error'];
 
-  // usamos funciones del módulo externo para listar/obtener pacientes
+  // usamos funciones del módulo externo para listar obtener pacientes
   ?>
       <?php if(isset($_GET['action']) && $_GET['action'] === 'nuevo') { ?>
       <section class="form-section" style="max-width:900px;">
@@ -288,7 +288,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $conexion) {
           }
         } else {
       ?>
-      <!-- Tabla de pacientes (servidor) -->
+      <!-- Tabla de pacientes servidor -->
       <div class="table-responsive" style="max-width:1000px;">
         <?php
         $lista = listar_pacientes(200);
@@ -346,7 +346,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $conexion) {
       </div>
     </div>
   </div>
-  <script src="sidebar.js"></script>
+  <script src="../assets/js/sidebar.js"></script>
   <!-- Modal Agendamiento -->
   <div id="modal_agendar" class="modal">
     <div class="modal-content modal-small">

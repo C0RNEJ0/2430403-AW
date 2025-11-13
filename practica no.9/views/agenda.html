@@ -3,9 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bitácoras de Usuarios</title>
-  <link rel="stylesheet" href="styles.css">
-  <!-- Bootstrap minimo para tablas -->
+  <title>Control de Agenda</title>
+  <link rel="stylesheet" href="../assets/css/styles.css">
+
+  <!-- guardar este boostrap para el calendario-->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>body{padding:20px}</style>
 </head>
@@ -16,7 +17,7 @@
   <div id="aplicacion">
     <aside class="sidebar" id="barra_lateral">
       <div class="brand">
-        <img src="img/CS.png" alt="CS">
+        <img src="../assets/images/CS.png" alt="CS">
         <div>
           <div style="font-weight:800;">Clínica Cornejo</div>
           <small style="opacity:0.9">Panel</small>
@@ -24,7 +25,7 @@
       </div>
   <nav>
         <a href="dashboard.html"><span class="label">Dashboard</span></a>
-        <a href="pacientes.html"><span class="label">Pacientes</span></a>
+        <a href="../controllers/pacientes.php"><span class="label">Pacientes</span></a>
         <a href="agenda.html"><span class="label">Agenda</span></a>
         <a href="medicos.html"><span class="label">Médicos</span></a>
         <a href="reportes.html"><span class="label">Reportes</span></a>
@@ -35,7 +36,7 @@
   <a href="#" data-modal-target="#modal_logout"><span class="label">Cerrar Sesión</span></a>
       </nav>
       <div class="spacer"></div>
-  <button class="toggle-btn" id="boton_colapsar">Colapsar</button>
+  <button class="toggle-btn" id="boton_colapsar">Esconder</button>
     </aside>
 
     <!-- Header superior con buscador y iconos -->
@@ -49,35 +50,27 @@
             </div>
             <div class="icons">
             
-              <a href="#" id="icono_usuario" class="icon" title="Iniciar Sesion">
-                <img src="img/Login.png" alt="Login" class="icon-img">
               </a>
               <span id="usuario_email" style="margin-left:8px; font-size:0.9rem; color:#333;"></span>
             </div>
           </div>
         </div>
       </header>
-      <h1>Bitácoras de Usuarios</h1>
-      <p>Listado de acciones de usuarios</p>
-
-      <div class="card mt-3">
+      <h1>Control de Agenda</h1>
+      <p>Calendario y citas programadas.</p>
+      <div id="calendar-root" class="card" style="width:100%; max-width:1000px;">
         <div class="card-body">
-          <div class="table-responsive">
-            <table id="tabla_bitacoras" class="table table-striped table-sm">
-              <thead>
-                <tr>
-                  <th>Usuario</th>
-                  <th>Rol</th>
-                  <th>Fecha</th>
-                  <th>Accion</th>
-                  <th>Modulo</th>
-                </tr>
-              </thead>
-              <tbody>
-                <!-- filas dinamicas -->
-              </tbody>
-            </table>
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+              <button id="cal_prev" class="btn btn-outline-primary btn-sm">Anterior</button>
+              <button id="cal_next" class="btn btn-outline-primary btn-sm">Siguiente</button>
+            </div>
+            <h5 id="cal_title" class="mb-0">Mes Año</h5>
+            <div>
+              <button id="seed_citas" class="btn btn-secondary btn-sm">Seed demo</button>
+            </div>
           </div>
+          <div id="cal_grid" style="min-height:300px;"></div>
         </div>
       </div>
       
@@ -94,7 +87,8 @@
       </div>
     </div>
   </div>
-  <script src="sidebar.js"></script>
-  <script src="bitacoras.js"></script>
+  <script src="../assets/js/agenda.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../assets/js/sidebar.js"></script>
 </body>
 </html>

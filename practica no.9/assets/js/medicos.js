@@ -79,7 +79,7 @@
     try{ if(window.jQuery && $.fn.dataTable){ $(tableSelector).DataTable(); } }catch(e){ /* no pasa nada */ }
   }
 
-  // apertura/cierre de modal 
+  // apertura cierre de modal
   // manejo de modal con Bootstrap si esta disponible
   let bsModal = null;
   function initBootstrapModal(){
@@ -107,7 +107,7 @@
       title.textContent = 'Editar medico';
       document.getElementById('m_nombre').value = m.nombre || '';
       document.getElementById('m_horario').value = m.horario || '';
-      // set especialidad con logica que coloca "Otra" si no coincide
+      // set especialidad con logica que coloca Otra si no coincide
       const sel = document.getElementById('m_especialidad');
       const other = document.getElementById('m_especialidad_other');
       if(sel){

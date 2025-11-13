@@ -1,6 +1,6 @@
 // Control del estado de la barra lateral y modales
 (function(){
-  // Gestión de la barra lateral y persistencia en localStorage
+  // Gestión de la barra lateral  
   const aplicacion = document.getElementById('aplicacion');
   const barra_lateral = document.getElementById('barra_lateral');
   const body = document.body;
@@ -27,7 +27,7 @@
 
   // inicialización al cargar el DOM
   document.addEventListener('DOMContentLoaded', function(){
-    // aplicar estado guardado en desktop; en móvil forzar comportamiento consistente
+    // aplicar estado guardado en compu
     if(window.innerWidth <= 800){
       try{ localStorage.setItem(CLAVE_BARRA_COLAPSADA, '0'); }catch(_){ }
       body.classList.remove('sidebar-collapsed');
@@ -38,9 +38,9 @@
   // delegación de clicks para elementos interactivos
   document.addEventListener('click', function(e){
       const target = e.target;
-  // toggle: botón de colapsar
+  // botón de colapsar <- encoger 
       if(target.closest && target.closest('#boton_colapsar')){ e.preventDefault(); alternarBarra(); return; }
-  // si se pulsa la marca en móvil, abrir/cerrar sidebar
+  // si se pulsa la marca en  que no lo hice funcionar
       if(target.closest && target.closest('.sidebar .brand')){
         if(window.innerWidth <= 800){ barra_lateral && barra_lateral.classList.toggle('open'); }
       }
@@ -53,7 +53,7 @@
       if(closeBtn){ e.preventDefault(); const modal = closeBtn.closest('.modal'); modal && cerrarModal(modal); }
   // botón cerrar sesión
       const cerrarBtn = target.closest && target.closest('#boton_cerrar_sesion');
-      if(cerrarBtn){ e.preventDefault(); try{ sessionStorage.clear(); }catch(_){}; try{ localStorage.removeItem(CLAVE_BARRA_COLAPSADA); }catch(_){}; try{ localStorage.removeItem('auth_token'); localStorage.removeItem('user'); }catch(_){}; window.location.href = 'Login/login.html'; }
+      if(cerrarBtn){ e.preventDefault(); try{ sessionStorage.clear(); }catch(_){}; try{ localStorage.removeItem(CLAVE_BARRA_COLAPSADA); }catch(_){}; try{ localStorage.removeItem('auth_token'); localStorage.removeItem('user'); }catch(_){}; window.location.href = '../views/login/login.html'; }
     // si en móvil se pulsa un enlace del nav, cerrar el overlay de la sidebar
       try{
         const navLink = target.closest && target.closest('.sidebar nav a');

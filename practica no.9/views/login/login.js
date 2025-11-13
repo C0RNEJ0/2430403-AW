@@ -14,7 +14,7 @@ const clearLogged = () => localStorage.removeItem(USUARIO_LOGUEADO_LS);
 const showAlert = (title, text, icon) => {
         if (window.Swal && typeof Swal.fire === 'function') return Swal.fire(title, text, icon);
 
-        // Fallback: usar alert nativo o contenedor de alertas
+        
     const container = document.getElementById('contenedor_alertas') || document.getElementById('contenedor-alertas');
         if (!container) return alert(`${title}: ${text}`);
 
@@ -35,7 +35,7 @@ const showAlert = (title, text, icon) => {
         }, 3000);
 };
 
-// Validaciones sencillas
+// Validacion 
 const isGmail = (email) => /^[a-zA-Z0-9._%+-]+@gmail\.com$/.test(email);
 const isValidUrl = (u) => /^https?:\/\/.+/i.test(u);
 const isPositive = (n) => Number.isFinite(n) && n > 0;
