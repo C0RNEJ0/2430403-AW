@@ -1,5 +1,5 @@
 (function(){
-  // Reportes simples: seed de datos, KPIs y tabla (Export muestra mensaje y no exporta)
+  // reportes de citas, pagos y pacientes 
   const CL_CITAS = 'citas';
   const CL_PAGOS = 'pagos';
   const CL_PAC = 'cs_pacientes_v1';
@@ -7,7 +7,7 @@
   function cargar(cl){ try{ return JSON.parse(localStorage.getItem(cl)) || []; }catch(e){ return []; } }
   function guardar(cl, data){ try{ localStorage.setItem(cl, JSON.stringify(data)); }catch(e){} }
 
-  // seed ejemplo
+  // seed ejemplo de datos pre cargados
   function seed(){
     const citas = cargar(CL_CITAS);
     const pagos = cargar(CL_PAGOS);
@@ -32,7 +32,7 @@
   }
 
   function q(s){ return document.querySelector(s); }
-
+          // que son los kpis son indicadores clave de rendimiento
   function renderKpis(){
     const pagos = cargar(CL_PAGOS);
     const citas = cargar(CL_CITAS);

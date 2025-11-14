@@ -1,4 +1,4 @@
-// Script mínimo: obtiene la lista desde el servidor y renderiza la tabla de especialidades
+// obtiene la lista desde la base de datos y renderiza la tabla de especialidades
 (function(){
   function escapeHtml(s){ return String(s||'').replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[m])); }
   function render(rows){
@@ -10,7 +10,7 @@
       tbody.appendChild(tr);
     });
   }
-
+      // 
   document.addEventListener('DOMContentLoaded', function(){
     fetch('../controllers/especialidades_list.php')
       .then(resp => resp.json())

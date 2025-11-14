@@ -1,4 +1,4 @@
-// Script mínimo: obtiene la lista desde el servidor y renderiza la tabla de médicos
+// esto obtine la lista de la base de datos y renderiza la tabla de medicos
 (function(){
   function escapeHtml(s){ return String(s||'').replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[m])); }
   function render(rows){
@@ -11,7 +11,7 @@
     });
     try{ if(window.jQuery && $.fn.dataTable){ $("#medicosTable").DataTable(); } }catch(e){}
   }
-
+  // carga inicial de médicos
   document.addEventListener('DOMContentLoaded', function(){
     fetch('../controllers/medicos_list.php')
       .then(resp => resp.json())

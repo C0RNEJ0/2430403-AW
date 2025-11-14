@@ -38,7 +38,7 @@
   let chartLine=null, chartPie=null;
   function renderGraficas(){
     const pagos = cargar(CL_PAGOS); const citas = cargar(CL_CITAS);
-    // linea: ingresos por dia (ultimos 7 dias)
+    // linea: ingresos por dia ultimos 7 dias
     const dias = [];
     for(let i=6;i>=0;i--){ const d = new Date(); d.setDate(d.getDate()-i); dias.push(d.toISOString().slice(0,10)); }
     const ingresos = dias.map(d => pagos.filter(p=>p.fecha===d).reduce((s,p)=>s+Number(p.monto||0),0));

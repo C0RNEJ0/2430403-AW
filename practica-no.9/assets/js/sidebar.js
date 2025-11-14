@@ -1,4 +1,3 @@
-// Control del estado de la barra lateral y modales
 (function(){
   // Gestión de la barra lateral  
   const aplicacion = document.getElementById('aplicacion');
