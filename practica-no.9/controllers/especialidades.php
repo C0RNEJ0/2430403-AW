@@ -33,6 +33,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $conexion) {
         header('Location: ../views/especialidades.html?err=' . urlencode($mensaje_error));
         exit;
       }
+      $checkSql = 'SELECT COUNT(*) AS c FROM especialidades WHERE LOWER(nombre) = LOWER(?)' . ($id>0 ? ' AND especialidad_id <> ?' : '');
+      if ($id>0) {
+        $chk = $conexion->prepare($checkSql);
+        $chk->bind_param('si', $nombre, $id);
+      } else {
+        $chk = $conexion->prepare($checkSql);
+        $chk->bind_param('s', $nombre);
+      }
+      $chk->execute();
+      $resChk = $chk->get_result();
+      $rowChk = $resChk->fetch_assoc();
+      $chk->close();
+      if ($rowChk && (int)$rowChk['c'] > 0) {
+        $mensaje_error = 'Error al procesar la petición: especialidad duplicada.';
+        header('Location: ../views/especialidades.html?error=' . urlencode($mensaje_error));
+        exit;
+      }
+
       if ($id > 0) {
         $stmt = $conexion->prepare('UPDATE especialidades SET nombre = ?, descripcion = ? WHERE especialidad_id = ?');
         $stmt->bind_param('ssi', $nombre, $descripcion, $id);
@@ -41,6 +59,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $conexion) {
         $stmt->bind_param('ss', $nombre, $descripcion);
       }
       $stmt->execute();
+      if ($stmt->errno === 1062) {
+        $mensaje_error = 'Error al procesar la petición: especialidad duplicada.';
+        $stmt->close();
+        header('Location: ../views/especialidades.html?error=' . urlencode($mensaje_error));
+        exit;
+      }
       if ($id > 0) $stmt->close(); else $last = $conexion->insert_id;
       $mensaje_exito = $id>0 ? 'Especialidad actualizada.' : 'Especialidad guardada.';
     }

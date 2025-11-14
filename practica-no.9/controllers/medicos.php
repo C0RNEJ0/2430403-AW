@@ -54,18 +54,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $conexion) {
       }
 
       if ($id > 0) {
-        // usamos NULLIF para que una cadena vacía se convierta en NULL y no viole UNIQUE
-        $stmt = $conexion->prepare('UPDATE medicos SET nombre = ?, email = NULLIF(?, \'\'), telefono = NULL, cedula_profesional = NULL, especialidad_id = ?, horario = ? WHERE medico_id = ?');
+        $stmt = $conexion->prepare('UPDATE medicos SET nombre = ?, email = ?, telefono = NULL, cedula_profesional = NULL, especialidad_id = ?, horario = ? WHERE medico_id = ?');
         $stmt->bind_param('ssisi', $nombre, $email, $especialidad_id, $horario, $id);
       } else {
-        // INSERT con NULLIF para email
-        $stmt = $conexion->prepare('INSERT INTO medicos (nombre, email, telefono, cedula_profesional, especialidad_id, horario, activo) VALUES (?, NULLIF(?, \'\'), NULL, NULL, ?, ?, 1)');
+        $stmt = $conexion->prepare('INSERT INTO medicos (nombre, email, telefono, cedula_profesional, especialidad_id, horario, activo) VALUES (?, ?, NULL, NULL, ?, ?, 1)');
         $stmt->bind_param('ssis', $nombre, $email, $especialidad_id, $horario);
       }
       $stmt->execute();
-      // manejar clave duplicada (errno 1062)
       if ($stmt->errno === 1062) {
-        // Si es duplicado en email, dar mensaje claro
         $mensaje_error = 'Error al procesar la petición: email duplicado.';
         $stmt->close();
         header('Location: ../views/medicos.html?error=' . urlencode($mensaje_error));
