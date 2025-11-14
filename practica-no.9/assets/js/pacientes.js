@@ -13,10 +13,9 @@ document.addEventListener('DOMContentLoaded', function(){
       if(params.get('error')){
         var d = document.createElement('div'); d.className='alert alert-danger'; d.textContent = params.get('error'); cont.appendChild(d);
       }
-    } catch(e){ /* silencioso */ }
+    } catch(e){ console.error(e); }
   })();
 
-  // Confirmar eliminación: intercepta formularios con input[name="accion"] == 'eliminar'
   document.querySelectorAll('form').forEach(function(formulario){
     var inAcc = formulario.querySelector('input[name="accion"]');
     if(inAcc && inAcc.value === 'eliminar'){
@@ -28,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function(){
     }
   });
 
-  // Validación ligera de formularios de paciente (si existen)
+  // Validación ligera de formularios de paciente 
   var forms = document.querySelectorAll('form');
   forms.forEach(function(formulario){
     var inAcc = formulario.querySelector('input[name="accion"]');
@@ -50,16 +49,23 @@ document.addEventListener('DOMContentLoaded', function(){
           e.preventDefault();
           return false;
         }
-        // validación rápida de email si existe; si no tiene '@' añadimos @gmail.com
         var email = formulario.querySelector('[name="email"]');
         if(email && email.value.trim() !== ''){
+          // Normalizar espacios
+          email.value = email.value.trim();
           if(email.value.indexOf('@') === -1){
-            // si el usuario escribió solo el usuario, añadimos dominio por defecto
-            email.value = email.value.trim() + '@gmail.com';
+            email.value = email.value + '@gmail.com';
           }
-          var re = /^(([^<>()[\\]\\.,;:\s@\"]+(\\.[^<>()[\\]\\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\\]\\.,;:\s@\"]+\.)+[^<>()[\\]\\.,;:\s@\"]{2,})$/i;
-          if(!re.test(email.value.trim())){
-            alert('Email inválido. Use nombre@dominio (por ejemplo usuario@gmail.com).');
+          var esGmail = /@gmail\.com$/i.test(email.value);
+          if(!esGmail){
+            alert('El email debe ser una dirección de Gmail (terminar en @gmail.com).');
+            email.focus();
+            e.preventDefault();
+            return false;
+          }
+          var reLocal = /^[^\s@]+@gmail\.com$/i;
+          if(!reLocal.test(email.value)){
+            alert('Email inválido. Use (por ejemplo usuario@gmail.com).');
             email.focus();
             e.preventDefault();
             return false;
