@@ -137,9 +137,9 @@ async function cargarPacientes(){
     if(!cont) return;
     cont.innerHTML = '';
     if(j.exito && Array.isArray(j.datos)){
-      if(j.datos.length === 0){ cont.innerHTML = '<div class="alert alert-info">No hay pacientes registrados.</div>'; return; }
-      var table = document.createElement('table'); table.className = 'table table-sm table-striped';
-      var thead = document.createElement('thead'); thead.innerHTML = '<tr><th>Nombre</th><th>Sexo</th><th>Fecha Nac.</th><th>Teléfono</th><th>Email</th><th>Ciudad</th><th>Prioridad</th><th>Acciones</th></tr>';
+  if(j.datos.length === 0){ cont.innerHTML = '<div class="info">No hay pacientes registrados.</div>'; return; }
+  var table = document.createElement('table'); table.className = 'pacientes-table';
+  var thead = document.createElement('thead'); thead.innerHTML = '<tr><th>Nombre</th><th>Sexo</th><th>Fecha Nac.</th><th>Teléfono</th><th>Email</th><th>Ciudad</th><th>Prioridad</th><th>Acciones</th></tr>';
       table.appendChild(thead);
       var tbody = document.createElement('tbody');
       j.datos.forEach(function(r){
@@ -154,13 +154,13 @@ async function cargarPacientes(){
                        '<td>'+escapeHtml(r.prioridad||'')+'</td>';
         var tdAcc = document.createElement('td');
         // Editar enlace
-        var a = document.createElement('a'); a.className='btn btn-sm btn-outline-primary me-1'; a.href='/practica-no.9/views/pacientes.html?action=editar&id='+encodeURIComponent(r.paciente_id); a.textContent='Editar';
+  var a = document.createElement('a'); a.className='accion-editar'; a.href='/practica-no.9/views/pacientes.html?action=editar&id='+encodeURIComponent(r.paciente_id); a.textContent='Editar';
         tdAcc.appendChild(a);
         // Form eliminar
         var f = document.createElement('form'); f.method='post'; f.action='/practica-no.9/controllers/pacientes.php'; f.style.display='inline-block'; f.style.margin='0';
         var inpAcc = document.createElement('input'); inpAcc.type='hidden'; inpAcc.name='accion'; inpAcc.value='eliminar';
         var inpId = document.createElement('input'); inpId.type='hidden'; inpId.name='id'; inpId.value = r.paciente_id;
-        var btn = document.createElement('button'); btn.type='submit'; btn.className='btn btn-sm btn-outline-danger'; btn.textContent='Eliminar';
+  var btn = document.createElement('button'); btn.type='submit'; btn.className='accion-eliminar'; btn.textContent='Eliminar';
         f.appendChild(inpAcc); f.appendChild(inpId); f.appendChild(btn);
         tdAcc.appendChild(f);
         tr.appendChild(tdAcc);
