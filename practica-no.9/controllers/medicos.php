@@ -22,11 +22,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $conexion) {
       $stmt->close();
       $mensaje_exito = 'Médico eliminado.';
     } else {
-      $id = (int)($_POST['id'] ?? 0);
-      $nombre = trim($_POST['nombre'] ?? '');
-      $especialidad_text = trim($_POST['especialidad'] ?? '');
-      $horario = trim($_POST['horario'] ?? '');
-      $email = trim($_POST['email'] ?? '');
+  $id = (int)($_POST['id'] ?? 0);
+  $nombre = trim($_POST['nombre'] ?? '');
+  $especialidad_text = trim($_POST['especialidad'] ?? '');
+  $horario = trim($_POST['horario'] ?? '');
+  $email = trim($_POST['email'] ?? '');
+  $telefono = trim($_POST['telefono'] ?? '');
+  $cedula_profesional = trim($_POST['cedula_profesional'] ?? '');
+  $activo = isset($_POST['activo']) ? 1 : 0;
+  $email_generado = false;
 
       // validaciones servidor
       if ($nombre === '') {
@@ -38,6 +42,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $conexion) {
         $mensaje_error = 'El email del médico no es válido.';
         header('Location: ../views/medicos.html?err=' . urlencode($mensaje_error));
         exit;
+      }
+
+      if ($email === '') {
+        $email = 'sin-email-' . uniqid() . '@noemail.local';
+        $email_generado = true;
       }
 
       // buscar id de especialidad por nombre 
@@ -54,11 +63,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $conexion) {
       }
 
       if ($id > 0) {
-        $stmt = $conexion->prepare('UPDATE medicos SET nombre = ?, email = ?, telefono = NULL, cedula_profesional = NULL, especialidad_id = ?, horario = ? WHERE medico_id = ?');
-        $stmt->bind_param('ssisi', $nombre, $email, $especialidad_id, $horario, $id);
+        $stmt = $conexion->prepare('UPDATE medicos SET nombre = ?, email = ?, telefono = ?, cedula_profesional = ?, especialidad_id = ?, horario = ?, activo = ? WHERE medico_id = ?');
+        $stmt->bind_param('ssssisii', $nombre, $email, $telefono, $cedula_profesional, $especialidad_id, $horario, $activo, $id);
       } else {
-        $stmt = $conexion->prepare('INSERT INTO medicos (nombre, email, telefono, cedula_profesional, especialidad_id, horario, activo) VALUES (?, ?, NULL, NULL, ?, ?, 1)');
-        $stmt->bind_param('ssis', $nombre, $email, $especialidad_id, $horario);
+  $stmt = $conexion->prepare('INSERT INTO medicos (nombre, email, telefono, cedula_profesional, especialidad_id, horario, activo) VALUES (?, ?, ?, ?, ?, ?, ?)');
+  $stmt->bind_param('ssssisi', $nombre, $email, $telefono, $cedula_profesional, $especialidad_id, $horario, $activo);
       }
       $stmt->execute();
       if ($stmt->errno === 1062) {

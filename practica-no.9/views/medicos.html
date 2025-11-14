@@ -75,9 +75,34 @@
           <div id="form_area_medico" style="max-width:700px; margin-bottom:12px;">
             <form id="form_fallback_medico" method="post" action="../controllers/medicos.php">
               <input type="hidden" name="accion" value="crear">
-              <div class="mb-2"><label>Nombre</label><input name="nombre" class="form-control" required></div>
-              <div class="mb-2"><label>Especialidad</label><input name="especialidad" class="form-control"></div>
-              <div class="mb-2"><label>Horario</label><input name="horario" class="form-control" placeholder="Ej: Lun-Vie 09:00-14:00"></div>
+              <div class="mb-2">
+                <label>Nombre</label>
+                <input name="nombre" class="form-control" required>
+              </div>
+              <div class="mb-2">
+                <label>Especialidad</label>
+                <input name="especialidad" class="form-control">
+              </div>
+              <div class="mb-2">
+                <label>Horario</label>
+                <input name="horario" class="form-control" placeholder="Ej: Lun-Vie 09:00-14:00">
+              </div>
+              <div class="mb-2">
+                <label>Email</label>
+                <input type="email" name="email" class="form-control" placeholder="ejemplo@dominio.com">
+              </div>
+              <div class="mb-2">
+                <label>Teléfono</label>
+                <input type="tel" name="telefono" class="form-control" placeholder="(opcional)">
+              </div>
+              <div class="mb-2">
+                <label>Cédula profesional</label>
+                <input name="cedula_profesional" class="form-control" placeholder="(opcional)">
+              </div>
+              <div class="mb-2" style="display:flex; align-items:center; gap:8px;">
+                <input type="checkbox" id="medico_activo" name="activo" value="1" checked>
+                <label for="medico_activo" style="margin:0;">Activo</label>
+              </div>
               <div style="text-align:right;"><button type="submit" class="btn-registrar-medico">Agregar</button></div>
             </form>
           </div>
