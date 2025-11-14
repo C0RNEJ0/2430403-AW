@@ -1,8 +1,4 @@
-// Script mínimo para pacientes
-// - Confirmación antes de eliminar
-// - Validación ligera antes de enviar formulario (campos básicos)
-// - Carga de especialidades y médicos (antes inline en la vista)
-// - Mostrar mensajes desde querystring y controlar apertura del modal
+
 
 document.addEventListener('DOMContentLoaded', function(){
   // Mostrar mensajes desde querystring
@@ -21,10 +17,10 @@ document.addEventListener('DOMContentLoaded', function(){
   })();
 
   // Confirmar eliminación: intercepta formularios con input[name="accion"] == 'eliminar'
-  document.querySelectorAll('form').forEach(function(f){
-    var inAcc = f.querySelector('input[name="accion"]');
+  document.querySelectorAll('form').forEach(function(formulario){
+    var inAcc = formulario.querySelector('input[name="accion"]');
     if(inAcc && inAcc.value === 'eliminar'){
-      f.addEventListener('submit', function(e){
+      formulario.addEventListener('submit', function(e){
         if(!confirm('¿Eliminar paciente?')){
           e.preventDefault();
         }
@@ -34,14 +30,14 @@ document.addEventListener('DOMContentLoaded', function(){
 
   // Validación ligera de formularios de paciente (si existen)
   var forms = document.querySelectorAll('form');
-  forms.forEach(function(f){
-    var inAcc = f.querySelector('input[name="accion"]');
+  forms.forEach(function(formulario){
+    var inAcc = formulario.querySelector('input[name="accion"]');
     if(!inAcc) return;
     var accion = inAcc.value;
     if(accion === 'crear' || accion === 'editar'){
-      f.addEventListener('submit', function(e){
-        var nombre = f.querySelector('[name="nombres"]');
-        var apellidos = f.querySelector('[name="apellidos"]');
+      formulario.addEventListener('submit', function(e){
+        var nombre = formulario.querySelector('[name="nombres"]');
+        var apellidos = formulario.querySelector('[name="apellidos"]');
         if(nombre && nombre.value.trim() === ''){
           alert('El campo Nombres es obligatorio.');
           nombre.focus();
@@ -54,12 +50,16 @@ document.addEventListener('DOMContentLoaded', function(){
           e.preventDefault();
           return false;
         }
-        // validación rápida de email si existe
-        var email = f.querySelector('[name="email"]');
+        // validación rápida de email si existe; si no tiene '@' añadimos @gmail.com
+        var email = formulario.querySelector('[name="email"]');
         if(email && email.value.trim() !== ''){
+          if(email.value.indexOf('@') === -1){
+            // si el usuario escribió solo el usuario, añadimos dominio por defecto
+            email.value = email.value.trim() + '@gmail.com';
+          }
           var re = /^(([^<>()[\\]\\.,;:\s@\"]+(\\.[^<>()[\\]\\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\\]\\.,;:\s@\"]+\.)+[^<>()[\\]\\.,;:\s@\"]{2,})$/i;
           if(!re.test(email.value.trim())){
-            alert('Email inválido.');
+            alert('Email inválido. Use nombre@dominio (por ejemplo usuario@gmail.com).');
             email.focus();
             e.preventDefault();
             return false;
@@ -73,40 +73,40 @@ document.addEventListener('DOMContentLoaded', function(){
   // Funciones para cargar especialidades y medicos
   async function cargarEspecialidades(){
     try{
-      var r = await fetch('/practica-no.9/controllers/especialidades_list.php');
-      var j = await r.json();
-      var sel = document.getElementById('p_especialidad');
-      if(!sel) return;
-      sel.innerHTML='';
-      if(j.exito && Array.isArray(j.datos)){
-        sel.appendChild(new Option('Seleccione',''));
-        j.datos.forEach(function(e){
-          var text = e.nombre_especialidad || e.nombre || '';
-          var val = e.especialidad_id || e.id || '';
-          sel.appendChild(new Option(text, val));
+      var respuesta = await fetch('/practica-no.9/controllers/especialidades_list.php');
+      var json = await respuesta.json();
+      var select = document.getElementById('p_especialidad');
+      if(!select) return;
+      select.innerHTML='';
+      if(json.exito && Array.isArray(json.datos)){
+        select.appendChild(new Option('Seleccione',''));
+        json.datos.forEach(function(e){
+          var texto = e.nombre_especialidad || e.nombre || '';
+          var valor = e.especialidad_id || e.id || '';
+          select.appendChild(new Option(texto, valor));
         });
       } else {
-        sel.appendChild(new Option('No hay especialidades',''));
+        select.appendChild(new Option('No hay especialidades',''));
       }
     }catch(err){ console.error('especialidades:', err); }
   }
 
   async function cargarMedicos(){
     try{
-      var r = await fetch('/practica-no.9/controllers/medicos_list.php');
-      var j = await r.json();
-      var sel = document.getElementById('p_medico_asignado');
-      if(!sel) return;
-      sel.innerHTML='';
-      if(j.exito && Array.isArray(j.datos)){
-        sel.appendChild(new Option('Seleccione',''));
-        j.datos.forEach(function(m){
-          var text = (m.nombres||'') + ' ' + (m.apellidos||'');
-          var val = m.medico_id || m.id || '';
-          sel.appendChild(new Option(text, val));
+      var respuesta = await fetch('/practica-no.9/controllers/medicos_list.php');
+      var json = await respuesta.json();
+      var select = document.getElementById('p_medico_asignado');
+      if(!select) return;
+      select.innerHTML='';
+      if(json.exito && Array.isArray(json.datos)){
+        select.appendChild(new Option('Seleccione',''));
+        json.datos.forEach(function(m){
+          var texto = (m.nombres||'') + ' ' + (m.apellidos||'');
+          var valor = m.medico_id || m.id || '';
+          select.appendChild(new Option(texto, valor));
         });
       } else {
-        sel.appendChild(new Option('No hay médicos',''));
+        select.appendChild(new Option('No hay médicos',''));
       }
     }catch(err){ console.error('medicos:', err); }
   }
@@ -116,13 +116,13 @@ document.addEventListener('DOMContentLoaded', function(){
   setInterval(function(){ cargarEspecialidades(); cargarMedicos(); }, 10000);
 
   // manejar abrir modal en Agregar paciente
-  var btnAgregar = document.getElementById('btn_agregar_paciente');
-  if(btnAgregar){
-    btnAgregar.addEventListener('click', function(){
+  var botonAgregar = document.getElementById('btn_agregar_paciente');
+  if(botonAgregar){
+    botonAgregar.addEventListener('click', function(){
       var acc = document.getElementById('accion_form'); if(acc) acc.value='crear';
-      var pid = document.getElementById('producto_id'); if(pid) pid.value='';
-      var form = document.getElementById('formulario_producto'); if(form) form.reset();
-      var modal = document.getElementById('modal_producto'); if(modal) modal.style.display='block';
+      var pid = document.getElementById('paciente_id'); if(pid) pid.value='';
+      var form = document.getElementById('formulario_paciente'); if(form) form.reset();
+      var modal = document.getElementById('modal_paciente'); if(modal) modal.style.display='block';
     });
   }
 
@@ -131,50 +131,50 @@ document.addEventListener('DOMContentLoaded', function(){
 // Cargar pacientes via API y renderizar en #pacientes_grid
 async function cargarPacientes(){
   try{
-    var r = await fetch('/practica-no.9/controllers/pacientes.php?api=listar');
-    var j = await r.json();
-    var cont = document.getElementById('pacientes_grid');
-    if(!cont) return;
-    cont.innerHTML = '';
-    if(j.exito && Array.isArray(j.datos)){
-  if(j.datos.length === 0){ cont.innerHTML = '<div class="info">No hay pacientes registrados.</div>'; return; }
-  var table = document.createElement('table'); table.className = 'pacientes-table';
-  var thead = document.createElement('thead'); thead.innerHTML = '<tr><th>Nombre</th><th>Sexo</th><th>Fecha Nac.</th><th>Teléfono</th><th>Email</th><th>Ciudad</th><th>Prioridad</th><th>Acciones</th></tr>';
-      table.appendChild(thead);
+    var respuesta = await fetch('/practica-no.9/controllers/pacientes.php?api=listar');
+    var json = await respuesta.json();
+    var contenedor = document.getElementById('pacientes_grid');
+    if(!contenedor) return;
+    contenedor.innerHTML = '';
+    if(json.exito && Array.isArray(json.datos)){
+      if(json.datos.length === 0){ contenedor.innerHTML = '<div class="info">No hay pacientes registrados.</div>'; return; }
+      var tabla = document.createElement('table'); tabla.className = 'pacientes-table';
+      var thead = document.createElement('thead'); thead.innerHTML = '<tr><th>Nombre</th><th>Sexo</th><th>Fecha Nac.</th><th>Teléfono</th><th>Email</th><th>Ciudad</th><th>Prioridad</th><th>Acciones</th></tr>';
+      tabla.appendChild(thead);
       var tbody = document.createElement('tbody');
-      j.datos.forEach(function(r){
+      json.datos.forEach(function(paciente){
         var tr = document.createElement('tr');
-        var nombre = (r.nombres||'') + ' ' + (r.apellidos||'');
-        tr.innerHTML = '<td>'+escapeHtml(nombre)+'</td>'+
-                       '<td>'+escapeHtml(r.sexo||'')+'</td>'+
-                       '<td>'+escapeHtml(r.fecha_nacimiento||'')+'</td>'+
-                       '<td>'+escapeHtml(r.telefono||'')+'</td>'+
-                       '<td>'+escapeHtml(r.email||'')+'</td>'+
-                       '<td>'+escapeHtml(r.ciudad||'')+'</td>'+
-                       '<td>'+escapeHtml(r.prioridad||'')+'</td>';
+        var nombreCompleto = (paciente.nombres||'') + ' ' + (paciente.apellidos||'');
+        tr.innerHTML = '<td>'+escaparHtml(nombreCompleto)+'</td>'+
+                       '<td>'+escaparHtml(paciente.sexo||'')+'</td>'+
+                       '<td>'+escaparHtml(paciente.fecha_nacimiento||'')+'</td>'+
+                       '<td>'+escaparHtml(paciente.telefono||'')+'</td>'+
+                       '<td>'+escaparHtml(paciente.email||'')+'</td>'+
+                       '<td>'+escaparHtml(paciente.ciudad||'')+'</td>'+
+                       '<td>'+escaparHtml(paciente.prioridad||'')+'</td>';
         var tdAcc = document.createElement('td');
         // Editar enlace
-  var a = document.createElement('a'); a.className='accion-editar'; a.href='/practica-no.9/views/pacientes.html?action=editar&id='+encodeURIComponent(r.paciente_id); a.textContent='Editar';
+        var a = document.createElement('a'); a.className='accion-editar'; a.href='/practica-no.9/views/pacientes.html?action=editar&id='+encodeURIComponent(paciente.paciente_id); a.textContent='Editar';
         tdAcc.appendChild(a);
         // Form eliminar
         var f = document.createElement('form'); f.method='post'; f.action='/practica-no.9/controllers/pacientes.php'; f.style.display='inline-block'; f.style.margin='0';
         var inpAcc = document.createElement('input'); inpAcc.type='hidden'; inpAcc.name='accion'; inpAcc.value='eliminar';
-        var inpId = document.createElement('input'); inpId.type='hidden'; inpId.name='id'; inpId.value = r.paciente_id;
-  var btn = document.createElement('button'); btn.type='submit'; btn.className='accion-eliminar'; btn.textContent='Eliminar';
+        var inpId = document.createElement('input'); inpId.type='hidden'; inpId.name='id'; inpId.value = paciente.paciente_id;
+        var btn = document.createElement('button'); btn.type='submit'; btn.className='accion-eliminar'; btn.textContent='Eliminar';
         f.appendChild(inpAcc); f.appendChild(inpId); f.appendChild(btn);
         tdAcc.appendChild(f);
         tr.appendChild(tdAcc);
         tbody.appendChild(tr);
       });
-      table.appendChild(tbody);
-      cont.appendChild(table);
+      tabla.appendChild(tbody);
+      contenedor.appendChild(tabla);
     } else {
-      cont.innerHTML = '<div class="alert alert-danger">Error cargando pacientes</div>';
+      contenedor.innerHTML = '<div class="alert alert-danger">Error cargando pacientes</div>';
     }
   }catch(err){ console.error('cargarPacientes', err); }
 }
 
-function escapeHtml(s){ return String(s||'').replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+function escaparHtml(s){ return String(s||'').replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
 
 // iniciar carga de pacientes
 document.addEventListener('DOMContentLoaded', function(){ cargarPacientes(); });

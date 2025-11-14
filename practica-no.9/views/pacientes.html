@@ -83,14 +83,14 @@
   </div>
   <script src="/practica-no.9/assets/js/sidebar.js"></script>
   <!-- Modal Agregar/Editar Paciente -->
-  <div id="modal_producto" class="modal">
+  <div id="modal_paciente" class="modal">
     <div class="modal-content modal-large">
       <span class="close" data-modal-close>&times;</span>
-      <h2 id="titulo_modal_producto">Agregar Paciente</h2>
+      <h2 id="titulo_modal_paciente">Agregar Paciente</h2>
       <div class="producto-modal-grid">
         <div class="producto-form-section">
-            <form id="formulario_producto" method="post" action="/practica-no.9/controllers/pacientes.php">
-            <input type="hidden" id="producto_id" name="id">
+            <form id="formulario_paciente" method="post" action="/practica-no.9/controllers/pacientes.php">
+            <input type="hidden" id="paciente_id" name="id">
             <input type="hidden" name="accion" id="accion_form" value="crear">
 
             <div class="row">
@@ -199,7 +199,6 @@
           </form>
         </div>
 
-  <!-- vista previa eliminada a petición -->
       </div>
     </div>
   </div>
