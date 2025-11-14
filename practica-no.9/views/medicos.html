@@ -15,7 +15,7 @@
     <div id="aplicacion">
       <aside class="sidebar" id="barra_lateral">
         <div class="brand">
-          <img src="../assets/images/CS.png" alt="CS">
+          <img src="/practica-no.9/assets/images/CS.png" alt="CS">
           <div>
             <div style="font-weight:800;">Clínica Cornejo</div>
             <small style="opacity:0.9">Panel</small>
@@ -48,7 +48,7 @@
               </div>
               <div class="icons">
                 <a href="#" id="icono_usuario" class="icon" title="Iniciar Sesion">
-                  <img src="../assets/images/Login.png" alt="Login" class="icon-img">
+                  <img src="/practica-no.9/assets/images/Login.png" alt="Login" class="icon-img">
                 </a>
                 <span id="usuario_email" style="margin-left:8px; font-size:0.9rem; color:#333;"></span>
               </div>
@@ -58,10 +58,31 @@
 
         <main>
           <h1>Médicos</h1>
+          <!-- Mensajes simples -->
+            <div id="mensajes_medicos">
+            <script>
+              const p = new URLSearchParams(window.location.search);
+              const exito = p.get('exito');
+              const error = p.get('error');
+              if(exito){ document.write('<div class="alert alert-success">'+decodeURIComponent(exito)+'</div>'); }
+              if(error){ document.write('<div class="alert alert-danger">'+decodeURIComponent(error)+'</div>'); }
+            </script>
+          </div>
           <div style="display:flex; justify-content:space-between; align-items:center; margin:12px 0;">
             <div>
                 <button id="btn_nuevo_medico" class="btn-registrar-medico">Agregar médico</button>
               </div>
+          </div>
+
+          <!-- Formulario simple para crear médico (fallback) -->
+          <div style="max-width:700px; margin-bottom:12px;">
+            <form method="post" action="../controllers/medicos.php">
+              <input type="hidden" name="accion" value="crear">
+              <div class="mb-2"><label>Nombre</label><input name="nombre" class="form-control" required></div>
+              <div class="mb-2"><label>Especialidad</label><input name="especialidad" class="form-control"></div>
+              <div class="mb-2"><label>Horario</label><input name="horario" class="form-control" placeholder="Ej: Lun-Vie 09:00-14:00"></div>
+              <div style="text-align:right;"><button type="submit" class="btn btn-primary">Guardar médico</button></div>
+            </form>
           </div>
 
           <div class="card shadow-sm" style="padding:14px;">

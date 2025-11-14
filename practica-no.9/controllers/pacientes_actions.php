@@ -111,3 +111,31 @@ function obtener_paciente($id){
     return null;
   }
 }
+
+// Lista de especialidades para la vista de pacientes
+function listar_especialidades(){
+  $bd = obtener_conexion();
+  if(!$bd) return [];
+  try{
+    $sql = 'SELECT especialidad_id, nombre as nombre_especialidad FROM especialidades ORDER BY nombre';
+    $stmt = $bd->query($sql);
+    $filas = $stmt->fetchAll();
+    return $filas ?: [];
+  } catch(PDOException $e){
+    return [];
+  }
+}
+
+// Lista de médicos para la vista de pacientes
+function listar_medicos(){
+  $bd = obtener_conexion();
+  if(!$bd) return [];
+  try{
+    $sql = 'SELECT medico_id, nombres, apellidos FROM medicos WHERE activo = 1 ORDER BY apellidos, nombres';
+    $stmt = $bd->query($sql);
+    $filas = $stmt->fetchAll();
+    return $filas ?: [];
+  } catch(PDOException $e){
+    return [];
+  }
+}

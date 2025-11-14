@@ -40,7 +40,7 @@
       const target = e.target;
   // botón de colapsar <- encoger 
       if(target.closest && target.closest('#boton_colapsar')){ e.preventDefault(); alternarBarra(); return; }
-  // si se pulsa la marca en  que no lo hice funcionar
+  // si se pulsa la marca en  que no lo hice funcionar en movil :( no funciona alv arreglar despues)
       if(target.closest && target.closest('.sidebar .brand')){
         if(window.innerWidth <= 800){ barra_lateral && barra_lateral.classList.toggle('open'); }
       }
@@ -66,7 +66,7 @@
         }
       }catch(_){ }
     });
-    // al cambiar el tamaño, aseguramos consistencia: en móvil reset, en desktop aplicar preferencia
+    // al cambiar el tamaño, aseguramos consistencia: en móvil siempre abierto y sin colapsar
     window.addEventListener('resize', function(){
       if(window.innerWidth <= 800){
         try{ localStorage.setItem(CLAVE_BARRA_COLAPSADA, '0'); }catch(_){ }
@@ -89,7 +89,7 @@
   function qs(selector, root=document){ return root.querySelector(selector); }
   function qsa(selector, root=document){ return Array.from(root.querySelectorAll(selector)); }
 
-  // abrir modal (control de accesibilidad basico)
+  // abrir modal control de accesibilidad 
   function abrirModal(modal){
     if(!modal) return;
     modal.classList.add('show');
@@ -139,7 +139,7 @@
 
     qsa('a[href^="#modal_"]').forEach(a => { a.addEventListener('click', function(e){ e.preventDefault(); const id = (a.getAttribute('href')||'').replace('#',''); abrirModalPorId(id); }); });
 
-    // botón en la página para agregar paciente (si existe) -> abrir modal
+    // botón en la página para agregar paciente si existe -> abrir modal
     const btnAgregar = document.getElementById('btn_agregar_paciente');
     if(btnAgregar){
       btnAgregar.addEventListener('click', function(e){ e.preventDefault(); abrirModalPorId('modal_producto'); });

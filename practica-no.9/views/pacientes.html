@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Control de Pacientes</title>
+  <link rel="stylesheet" href="/practica-no.9/assets/css/styles.css">
+  <style>body{padding:20px}</style>
+</head>
+<body>
+  <div class="top-bar">
+    La vida es la Prioridad ante todo
+  </div>
+  <div id="aplicacion">
+    <aside class="sidebar" id="barra_lateral">
+        <div class="brand">
+        <div style="font-weight:800;">Clínica Cornejo</div>
+        <small style="opacity:0.9">Panel</small>
+      </div>
+  <nav>
+  <a href="/practica-no.9/views/dashboard.html"><span class="label">Dashboard</span></a>
+  <a href="/practica-no.9/views/pacientes.html"><span class="label">Pacientes</span></a>
+  <a href="/practica-no.9/views/agenda.html"><span class="label">Agenda</span></a>
+  <a href="/practica-no.9/views/medicos.html"><span class="label">Médicos</span></a>
+  <a href="/practica-no.9/views/reportes.html"><span class="label">Reportes</span></a>
+  <a href="/practica-no.9/views/pagos.html"><span class="label">Pagos</span></a>
+  <a href="/practica-no.9/views/tarifas.html"><span class="label">Tarifas</span></a>
+  <a href="/practica-no.9/views/bitacoras.html"><span class="label">Bitácoras</span></a>
+  <a href="/practica-no.9/views/especialidades.html"><span class="label">Especialidades</span></a>
+  <a href="#" data-modal-target="#modal_logout"><span class="label">Cerrar Sesión</span></a>
+      </nav>
+      <div class="spacer"></div>
+  <button class="toggle-btn" id="boton_colapsar">Esconder</button>
+    </aside>
+
+    <!-- Header superior con buscador y iconos -->
+  <div class="page-content" id="contenido_pagina">
+      <header>
+        <div class="container">
+          <div style="flex:1"></div>
+          <div class="header-right">
+            <div class="search-box">
+              <input type="text" id="buscador" placeholder="Buscar">
+            </div>
+            <div class="icons">
+
+              <a href="#" id="icono_usuario" class="icon" title="Iniciar Sesion">Usuario</a>
+              <span id="usuario_email" style="margin-left:8px; font-size:0.9rem; color:#333;"></span>
+            </div>
+          </div>
+        </div>
+      </header>
+      <h1>Control de Pacientes</h1>
+      <p>Lista de pacientes</p>
+      <!-- mensajes  exito / error -->
+      <div id="mensajes">
+        
+      </div>
+      <div style="max-width:900px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center; gap:12px;">
+        <button id="btn_agregar_paciente" class="btn-admin">+ Agregar Paciente</button>
+      </div>
+
+      <!--   tarjetas de pacientes -->
+      <div id="pacientes_grid" class="products-grid" style="max-width:1000px;">
+      </div>
+  <p><a href="/practica-no.9/views/dashboard.html">Volver al inicio</a></p>
+      
+    </div>
+  </div>
+  <!-- Modal Confirmación Cerrar Sesión -->
+  <div id="modal_logout" class="modal">
+    <div class="modal-content modal-small">
+      <h2>¿Cerrar sesión?</h2>
+      <p>¿Estás seguro que quieres cerrar sesión?</p>
+      <div class="modal-buttons">
+        <button id="boton_cerrar_sesion" class="btn-modal">Si, cerrar</button>
+        <button id="boton_cancelar_cerrar_sesion" class="btn-modal btn-secondary" data-modal-close>No</button>
+      </div>
+    </div>
+  </div>
+  <script src="/practica-no.9/assets/js/sidebar.js"></script>
+  <!-- Modal Agregar/Editar Paciente -->
+  <div id="modal_producto" class="modal">
+    <div class="modal-content modal-large">
+      <span class="close" data-modal-close>&times;</span>
+      <h2 id="titulo_modal_producto">Agregar Paciente</h2>
+      <div class="producto-modal-grid">
+        <div class="producto-form-section">
+            <form id="formulario_producto" method="post" action="/practica-no.9/controllers/pacientes.php">
+            <input type="hidden" id="producto_id" name="id">
+            <input type="hidden" name="accion" id="accion_form" value="crear">
+
+            <div class="row">
+              <div class="col-md-6">
+                <label>Nombre</label>
+                <input class="form-control" type="text" id="p_nombre" name="nombres" required>
+              </div>
+              <div class="col-md-6">
+                <label>Apellidos</label>
+                <input class="form-control" type="text" id="p_apellidos" name="apellidos" required>
+              </div>
+            </div>
+
+            <div class="row mt-2">
+              <div class="col-md-4">
+                <label>Sexo</label>
+                <select class="form-control" id="p_sexo" name="sexo">
+                  <option value="">--</option>
+                  <option value="F">Femenino</option>
+                  <option value="M">Masculino</option>
+                  <option value="O">Otro</option>
+                </select>
+              </div>
+              <div class="col-md-4">
+                <label>Fecha de nacimiento</label>
+                <input class="form-control" type="date" id="p_fecha_nac" name="fecha_nacimiento">
+              </div>
+              <div class="col-md-4">
+                <label>Teléfono</label>
+                <input class="form-control" type="tel" id="p_telefono" name="telefono">
+              </div>
+            </div>
+
+            <div class="row mt-2">
+              <div class="col-md-6">
+                <label>Email</label>
+                <input class="form-control" type="email" id="p_email" name="email">
+              </div>
+              <div class="col-md-6">
+                <label>Dirección</label>
+                <input class="form-control" type="text" id="p_direccion" name="direccion">
+              </div>
+            </div>
+
+            <div class="row mt-2">
+              <div class="col-md-4">
+                <label>Ciudad</label>
+                <input class="form-control" type="text" id="p_ciudad" name="ciudad">
+              </div>
+              <div class="col-md-4">
+                <label>Estado</label>
+                <input class="form-control" type="text" id="p_estado" name="estado">
+              </div>
+              <div class="col-md-4">
+                <label>Código Postal</label>
+                <input class="form-control" type="text" id="p_cp" name="cp">
+              </div>
+            </div>
+
+            <div class="row mt-2">
+              <div class="col-md-4">
+                <label>Prioridad</label>
+                <select class="form-control" id="p_prioridad" name="prioridad">
+                  <option value="Baja">Baja</option>
+                  <option value="Media">Media</option>
+                  <option value="Alta">Alta</option>
+                  <option value="Crítica">Crítica</option>
+                </select>
+              </div>
+              <div class="col-md-4">
+                <label>Tipo de sangre</label>
+                <input class="form-control" type="text" id="p_tipo_sangre" name="tipo_sangre">
+              </div>
+              <div class="col-md-4">
+                <label>Alergias</label>
+                <input class="form-control" type="text" id="p_alergias" name="alergias">
+              </div>
+            </div>
+
+            <div class="row mt-2">
+              <div class="col-md-6">
+                <label>Especialidad requerida</label>
+                <select id="p_especialidad" name="especialidad" class="form-control">
+                  <option value="">Cargando...</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label>Médico asignado</label>
+                <select id="p_medico_asignado" name="medico_asignado" class="form-control">
+                  <option value="">Cargando...</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="row mt-2">
+              <div class="col-12">
+                <label>Notas</label>
+                <textarea class="form-control" id="p_notas" name="notas" rows="3"></textarea>
+              </div>
+            </div>
+
+            <div style="margin-top:10px; text-align:center;">
+              <button type="submit" class="btn-modal">Guardar paciente</button>
+              <button type="button" class="btn-modal btn-secondary" data-modal-close>Cancelar</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="producto-preview-section">
+          <h3>Vista Previa</h3>
+          <div class="preview-box">
+            <img id="imagen_preview" src="" alt="Vista previa" style="display: none; max-width:100%">
+            <div id="texto_placeholder" class="placeholder">No hay imagen seleccionada</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/practica-no.9/assets/js/pacientes.js"></script>
+  <!-- Modal Agendamiento -->
+  <div id="modal_agendar" class="modal">
+    <div class="modal-content modal-small">
+      <h2>Agendar Cita</h2>
+      <form id="form_agendar">
+        <input type="hidden" id="ag_paciente_id">
+        <label>Especialidad</label>
+        <input id="ag_especialidad" type="text" readonly>
+        <label>Fecha</label>
+        <input id="ag_fecha" type="date" required>
+        <label>Hora</label>
+        <input id="ag_hora" type="time" required>
+        <label>Médico disponible</label>
+        <select id="ag_medico_select" required>
+          <option value="">Selecciona un médico</option>
+        </select>
+        <div style="margin-top:12px; text-align:center;">
+          <button type="submit" class="btn-modal">Reservar</button>
+          <button type="button" class="btn-modal btn-secondary" data-modal-close>Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
+</html>
