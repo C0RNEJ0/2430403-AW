@@ -146,7 +146,7 @@
     // botón en la página para agregar paciente si existe -> abrir modal
     const btnAgregar = document.getElementById('btn_agregar_paciente');
     if(btnAgregar){
-      btnAgregar.addEventListener('click', function(e){ e.preventDefault(); abrirModalPorId('modal_producto'); });
+      btnAgregar.addEventListener('click', function(e){ e.preventDefault(); abrirModalPorId('modal_paciente'); });
     }
   });
 

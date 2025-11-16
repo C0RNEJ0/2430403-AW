@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function(){
     } catch(e){ /* silencioso */ }
   })();
 
-  // Confirmar eliminación: intercepta formularios con input[name="accion"] == 'eliminar'
+  // Confirmar eliminación
   document.querySelectorAll('form').forEach(function(formulario){
     var inAcc = formulario.querySelector('input[name="accion"]');
     if(inAcc && inAcc.value === 'eliminar'){
@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function(){
     }
   });
 
-  // Validación ligera de formularios de paciente (si existen)
+  // Validación  de formularios de paciente si existen
   var forms = document.querySelectorAll('form');
   forms.forEach(function(formulario){
     var inAcc = formulario.querySelector('input[name="accion"]');
@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', function(){
       }
     }catch(err){ console.error('especialidades:', err); }
   }
-
+      
   async function cargarMedicos(){
     try{
       var respuesta = await fetch('/practica-no.9/controllers/medicos_list.php');
@@ -132,15 +132,12 @@ async function cargarPacientes(){
   try{
     var respuesta = await fetch('/practica-no.9/controllers/pacientes.php?api=listar');
     var json = await respuesta.json();
-    var contenedor = document.getElementById('pacientes_grid');
-    if(!contenedor) return;
-    contenedor.innerHTML = '';
+    var tabla = document.getElementById('tabla_pacientes');
+    if(!tabla) return;
+    var tbody = tabla.querySelector('tbody');
+    tbody.innerHTML = '';
     if(json.exito && Array.isArray(json.datos)){
-      if(json.datos.length === 0){ contenedor.innerHTML = '<div class="info">No hay pacientes registrados.</div>'; return; }
-      var tabla = document.createElement('table'); tabla.className = 'pacientes-table';
-      var thead = document.createElement('thead'); thead.innerHTML = '<tr><th>Nombre</th><th>Sexo</th><th>Fecha Nac.</th><th>Teléfono</th><th>Email</th><th>Ciudad</th><th>Prioridad</th><th>Acciones</th></tr>';
-      tabla.appendChild(thead);
-      var tbody = document.createElement('tbody');
+      if(json.datos.length === 0){ tbody.innerHTML = '<tr><td colspan="8">No hay pacientes registrados.</td></tr>'; return; }
       json.datos.forEach(function(paciente){
         var tr = document.createElement('tr');
         var nombreCompleto = (paciente.nombres||'') + ' ' + (paciente.apellidos||'');
@@ -152,23 +149,21 @@ async function cargarPacientes(){
                        '<td>'+escaparHtml(paciente.ciudad||'')+'</td>'+
                        '<td>'+escaparHtml(paciente.prioridad||'')+'</td>';
         var tdAcc = document.createElement('td');
-        // Editar enlace
-        var a = document.createElement('a'); a.className='accion-editar'; a.href='/practica-no.9/views/pacientes.html?action=editar&id='+encodeURIComponent(paciente.paciente_id); a.textContent='Editar';
+        // Editar enlace (navega a la vista de edición existente)
+        var a = document.createElement('a'); a.className='btn btn-sm btn-outline-primary me-1'; a.href='/practica-no.9/controllers/pacientes.php?action=editar&id='+encodeURIComponent(paciente.paciente_id); a.textContent='Editar';
         tdAcc.appendChild(a);
         // Form eliminar
         var f = document.createElement('form'); f.method='post'; f.action='/practica-no.9/controllers/pacientes.php'; f.style.display='inline-block'; f.style.margin='0';
         var inpAcc = document.createElement('input'); inpAcc.type='hidden'; inpAcc.name='accion'; inpAcc.value='eliminar';
         var inpId = document.createElement('input'); inpId.type='hidden'; inpId.name='id'; inpId.value = paciente.paciente_id;
-        var btn = document.createElement('button'); btn.type='submit'; btn.className='accion-eliminar'; btn.textContent='Eliminar';
+        var btn = document.createElement('button'); btn.type='submit'; btn.className='btn btn-sm btn-outline-danger'; btn.textContent='Eliminar';
         f.appendChild(inpAcc); f.appendChild(inpId); f.appendChild(btn);
         tdAcc.appendChild(f);
         tr.appendChild(tdAcc);
         tbody.appendChild(tr);
       });
-      tabla.appendChild(tbody);
-      contenedor.appendChild(tabla);
     } else {
-      contenedor.innerHTML = '<div class="alert alert-danger">Error cargando pacientes</div>';
+      tbody.innerHTML = '<tr><td colspan="8" class="text-danger">Error cargando pacientes</td></tr>';
     }
   }catch(err){ console.error('cargarPacientes', err); }
 }

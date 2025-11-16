@@ -69,8 +69,25 @@
         <button id="btn_agregar_paciente" class="btn-admin">+ Agregar Paciente</button>
       </div>
 
-      <!--   tarjetas de pacientes -->
-      <div id="pacientes_grid" class="products-grid" style="max-width:1000px;">
+      <!-- Tabla de control de pacientes (Bootstrap) -->
+      <div class="table-responsive" style="max-width:1000px;">
+        <table id="tabla_pacientes" class="table table-striped table-sm simple-table">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Sexo</th>
+              <th>Fecha Nac.</th>
+              <th>Teléfono</th>
+              <th>Email</th>
+              <th>Ciudad</th>
+              <th>Prioridad</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- filas añadidas dinámicamente -->
+          </tbody>
+        </table>
       </div>
   
       
