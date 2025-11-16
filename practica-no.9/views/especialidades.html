@@ -68,19 +68,19 @@
           if(error){ document.write('<div class="alert alert-danger">'+decodeURIComponent(error)+'</div>'); }
         </script>
       </div>
-  <!-- Botón principal eliminado: solo queda el formulario inline -->
 
-      <!-- Formulario simple para crear especialidad (fallback cuando JS no carga) -->
+      <!-- Formulario simple para crear especialidad -->
       <div style="max-width:600px; margin-bottom:12px;">
-        <form method="post" action="../controllers/especialidades.php">
-          <input type="hidden" name="accion" value="crear">
+        <form id="form_especialidad" method="post" action="../controllers/especialidades.php">
+          <input type="hidden" name="accion" value="crear" id="especialidad_accion">
+          <input type="hidden" name="id" id="especialidad_id" value="">
           <div class="mb-2">
             <label>Nombre</label>
-            <input name="nombre" class="form-control" required />
+            <input id="especialidad_nombre" name="nombre" class="form-control" required />
           </div>
           <div class="mb-2">
             <label>Descripción</label>
-            <textarea name="descripcion" class="form-control"></textarea>
+            <textarea id="especialidad_descripcion" name="descripcion" class="form-control"></textarea>
           </div>
           <div style="text-align:right; margin-top:8px;">
             <button type="submit" class="btn-agregar-especialidad">Agregar</button>
@@ -103,7 +103,6 @@
         </div>
       </div>
 
-  <!-- Modal eliminado: utilizamos solo el formulario inline -->
 
       
     </div>
@@ -122,6 +121,5 @@
   <script src="../assets/js/sidebar.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script src="../assets/js/especialidades.js"></script>
-  <!-- Script eliminado: el formulario inline envía directamente al servidor -->
 </body>
 </html>

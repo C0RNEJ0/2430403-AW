@@ -30,6 +30,14 @@ function procesar_post_pacientes(){
   try{
     if($accion === 'eliminar'){
       $id = (int)($_POST['id'] ?? 0);
+      // comprobar si el paciente tiene citas asociadas
+      $check = $bd->prepare('SELECT COUNT(*) AS cnt FROM citas WHERE paciente_id = :id');
+      $check->bindValue(':id', $id, PDO::PARAM_INT);
+      $check->execute();
+      $fila = $check->fetch();
+      if($fila && isset($fila['cnt']) && (int)$fila['cnt'] > 0){
+        return ['ok'=>false, 'error' => 'No se puede eliminar el paciente: tiene citas registradas.'];
+      }
       $sentencia = $bd->prepare('DELETE FROM pacientes WHERE paciente_id = :id LIMIT 1');
       $sentencia->bindValue(':id', $id, PDO::PARAM_INT);
       $sentencia->execute();

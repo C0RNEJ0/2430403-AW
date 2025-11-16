@@ -1,4 +1,14 @@
 (function(){
+  function q(sel,root=document){ return root.querySelector(sel); }
+  async function cargar(desde, hasta){ try{ const url = `../controllers/reportes.php?desde=${encodeURIComponent(desde)}&hasta=${encodeURIComponent(hasta)}`; const r = await fetch(url); return await r.json(); }catch(e){ console.error(e); return { exito:false }; } }
+  function renderTransacciones(lista){ const tbody = q('#tabla_reportes tbody'); if(!tbody) return; tbody.innerHTML=''; lista.forEach(t=>{ const tr = document.createElement('tr'); tr.innerHTML = `<td>${t.fecha}</td><td>${t.paciente}</td><td>${t.medico||''}</td><td>${t.servicio||''}</td><td>$ ${Number(t.monto).toFixed(2)}</td>`; tbody.appendChild(tr); }); }
+  function renderKPIs(obj){ if(q('#kpi_ingresos')) q('#kpi_ingresos').textContent = '$' + Number(obj.total||0).toFixed(2); if(q('#kpi_citas')) q('#kpi_citas').textContent = obj.citas || 0; if(q('#kpi_pacientes')) q('#kpi_pacientes').textContent = obj.pacientes_nuevos || 0; }
+  async function init(){ const hoy = new Date().toISOString().slice(0,10); const desde = prompt('Desde (YYYY-MM-DD) o Enter para inicio mes','') || new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().slice(0,10); const hasta = prompt('Hasta (YYYY-MM-DD) o Enter para hoy','') || hoy; const data = await cargar(desde,hasta); if(!data.exito) return alert('Error cargando reportes'); renderTransacciones(data.datos.transacciones); renderKPIs(data.datos); // render por medico
+    const cont = document.createElement('div'); cont.style.marginTop='16px'; data.datos.por_medico.forEach(m=>{ const card = document.createElement('div'); card.className='p-2 bg-light rounded mb-2'; card.innerHTML = `<strong>${m.medico||'Sin médico'}</strong>: $ ${Number(m.total_medico||0).toFixed(2)}`; cont.appendChild(card); }); document.querySelector('.page-content .card:last-of-type').appendChild(cont);
+  }
+  document.addEventListener('DOMContentLoaded', init);
+})();
+(function(){
   // reportes de citas, pagos y pacientes 
   const CL_CITAS = 'citas';
   const CL_PAGOS = 'pagos';
@@ -32,19 +42,19 @@
   }
 
   function q(s){ return document.querySelector(s); }
-          // que son los kpis son indicadores clave de rendimiento
-  function renderKpis(){
-    const pagos = cargar(CL_PAGOS);
-    const citas = cargar(CL_CITAS);
-    const pacs = cargar(CL_PAC);
+          //  indicadores clave de rendimiento
+  function renderKpis(){ 
+    const pagos = cargar(CL_PAGOS); // pagos
+    const citas = cargar(CL_CITAS); // citas
+    const pacs = cargar(CL_PAC); // pacientes
     const total = pagos.reduce((sum,p)=> sum + (Number(p.monto)||0), 0);
-    q('#kpi_ingresos').textContent = '$' + total.toFixed(2);
-    q('#kpi_citas').textContent = citas.length;
-    q('#kpi_pacientes').textContent = pacs.length;
+    q('#kpi_ingresos').textContent = '$' + total.toFixed(2); // ingresos
+    q('#kpi_citas').textContent = citas.length; // citas
+    q('#kpi_pacientes').textContent = pacs.length; // pacientes
   }
 
   function renderTabla(){
-    const pagos = cargar(CL_PAGOS);
+    const pagos = cargar(CL_PAGOS); 
     const pacs = cargar(CL_PAC);
     const citas = cargar(CL_CITAS);
     const tbody = q('#tabla_reportes tbody'); if(!tbody) return; tbody.innerHTML = '';
@@ -53,7 +63,7 @@
       const cita = citas.find(x=> Number(x.id)===Number(p.citaId)) || {};
       const tr = document.createElement('tr');
       tr.innerHTML = `<td>${p.fecha}</td><td>${pac.nombre||('Paciente '+p.pacienteId)}</td><td>${cita.medicoName||('Dr.'+p.medicoId||'')}</td><td>${p.servicio||''}</td><td>$ ${Number(p.monto).toFixed(2)}</td>`;
-      tbody.appendChild(tr);
+      tbody.appendChild(tr); // fin forEach
     });
   }
 

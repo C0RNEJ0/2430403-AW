@@ -13,12 +13,13 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
     $resultado = procesar_post_pacientes(); 
     // la función devuelve a ok que indica ganaste y error que indica perdiste
     if(isset($resultado['ok']) && $resultado['ok']){
-  $mensaje = $resultado['mensaje'] ?? 'Operación completada.';
-  header('Location: /practica-no.9/controllers/pacientes.php?exito='.urlencode($mensaje));
+      $mensaje = $resultado['mensaje'] ?? 'Operación completada.';
+      header('Location: /practica-no.9/controllers/pacientes.php?exito='.urlencode($mensaje));
       exit;
     } else {
-      $mensaje_error = $resultado['error'] ?? 'Error procesando paciente.';
-  header('Location: /practica-no.9/controllers/pacientes.php?error='.urlencode($mensaje_error));
+      // Si la función devolvió 'error' o 'mensaje', usarlo para mostrar al usuario
+      $mensaje_error = $resultado['error'] ?? ($resultado['mensaje'] ?? 'Error procesando paciente.');
+      header('Location: /practica-no.9/controllers/pacientes.php?error='.urlencode($mensaje_error));
       exit;
     }
   }
