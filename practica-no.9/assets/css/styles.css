@@ -694,6 +694,56 @@ main {
     .page-content { margin-left:0 }
 }
 
+/* Responsive improvements: mobile hamburger and overlay */
+.sidebar-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 1100;
+    transition: opacity 0.2s ease;
+}
+.sidebar-backdrop.show { display:block; }
+
+.sidebar-toggle-mobile {
+    display: none;
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 22px;
+    padding: 8px 10px;
+    border-radius: 8px;
+}
+
+@media (max-width: 1024px) {
+    /* permitir colapsar el sidebar en tablets */
+    .sidebar { width: 200px; }
+    .page-content { margin-left:200px; }
+    .sidebar-toggle-mobile { display: inline-flex; }
+}
+
+@media (max-width: 600px) {
+    /* móvil: overlay sidebar, contenido full width */
+    .sidebar { width: 260px; transform: translateX(-120%); }
+    .sidebar.open { transform: translateX(0%); }
+    .sidebar-toggle-mobile { display: inline-flex; color: #fff; }
+    .page-content { margin-left:0; padding:12px; }
+    header .container { padding: 0 12px; }
+    .container { padding: 0 12px; }
+    .search-box input { width: 100%; max-width: 260px; }
+    .sidebar a { justify-content:flex-start; padding:10px 12px; }
+    .sidebar .brand img{ width:48px; height:48px }
+    /* esconder labels largos en menú lateral para ahorrar espacio si se aplica clase collapsed */
+    .sidebar-collapsed .sidebar a span.label { display:none }
+}
+
+/* Make main layout fluid on small screens */
+@media (max-width: 480px) {
+    body { font-size: 14px; }
+    .btn-admin { padding: 10px 14px; font-size: 14px; }
+    .modal-content { width: 96%; }
+}
+
 /* Horas del calendario */
 .hora-slot {
     padding: 8px 6px;

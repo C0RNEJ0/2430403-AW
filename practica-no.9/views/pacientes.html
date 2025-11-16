@@ -15,7 +15,7 @@
     La vida es la Prioridad ante todo
   </div>
   <div id="aplicacion">
-    <aside class="sidebar" id="barra_lateral">
+  <aside class="sidebar" id="barra_lateral">
         <div class="brand">
         <div style="font-weight:800;">Clínica Cornejo</div>
         <small style="opacity:0.9">Panel</small>
@@ -36,11 +36,17 @@
   <button class="toggle-btn" id="boton_colapsar">Esconder</button>
     </aside>
 
+  <!-- backdrop para sidebar en móviles -->
+  <div class="sidebar-backdrop" id="sidebar_backdrop"></div>
+
     <!-- Header superior con buscador y iconos -->
   <div class="page-content" id="contenido_pagina">
       <header>
         <div class="container">
-          <div style="flex:1"></div>
+          <div style="flex:1">
+            <!-- botón hamburguesa para móvil -->
+            <button class="sidebar-toggle-mobile" id="btn_toggle_mobile" aria-label="Abrir menú">☰</button>
+          </div>
           <div class="header-right">
             <div class="search-box">
               <input type="text" id="buscador" placeholder="Buscar">

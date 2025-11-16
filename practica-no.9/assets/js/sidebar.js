@@ -75,6 +75,11 @@
         aplicarEstado();
       }
     });
+  // nuevo: botón hamburguesa móvil y backdrop
+  const btnMobile = document.getElementById('btn_toggle_mobile');
+  const backdrop = document.getElementById('sidebar_backdrop');
+  if(btnMobile){ btnMobile.addEventListener('click', function(e){ e.preventDefault(); if(barra_lateral){ barra_lateral.classList.add('open'); if(backdrop) backdrop.classList.add('show'); document.body.style.overflow = 'hidden'; } }); }
+  if(backdrop){ backdrop.addEventListener('click', function(){ if(barra_lateral){ barra_lateral.classList.remove('open'); backdrop.classList.remove('show'); document.body.style.overflow = ''; } }); }
   });
 })();
 
