@@ -60,7 +60,7 @@
   // helper pequeño para evitar errores si la clave cambia
   function CLVESafe(key){ return key === 'citas' ? CLAVES_ALMACEN.citas : CLAVES_ALMACEN.pacientes; }
 
-  // inicios: botones prev/next
+  //  botones siguiente y anterior
   document.addEventListener('DOMContentLoaded', ()=>{
     const btnSig = document.getElementById('cal_next'); if(btnSig) btnSig.addEventListener('click', ()=>{ mesActual = new Date(mesActual.getFullYear(), mesActual.getMonth()+1, 1); renderizar(); });
     const btnAnt = document.getElementById('cal_prev'); if(btnAnt) btnAnt.addEventListener('click', ()=>{ mesActual = new Date(mesActual.getFullYear(), mesActual.getMonth()-1, 1); renderizar(); });

@@ -48,7 +48,7 @@
       }
   // borrar via servidor
   async function borrar(id){ if(!confirm('Confirmar borrar pago')) return; const f = new FormData(); f.append('accion','eliminar'); f.append('id', id); const res = await guardarServidor(f); if(res && res.exito){ renderizar(); } else alert('Error borrando pago'); }
- // guardar (nuevo/editar)
+ // guardar (nuevo y editar)
   async function handleGuardar(e){ e.preventDefault && e.preventDefault(); const id = q('#pago_id')? q('#pago_id').value : ''; const fecha = q('#pago_fecha')? q('#pago_fecha').value : ''; const paciente_id = q('#pago_paciente')? q('#pago_paciente').value : ''; const paciente = q('#pago_paciente')? q('#pago_paciente').selectedOptions[0].text : ''; const medico = q('#pago_medico')? q('#pago_medico').value : ''; const servicio = q('#pago_servicio')? q('#pago_servicio').value.trim() : ''; const monto = q('#pago_monto')? parseFloat(q('#pago_monto').value) || 0 : 0; const cita_id = q('#pago_cita_id')? q('#pago_cita_id').value : ''; const metodo = q('#pago_metodo')? q('#pago_metodo').value : ''; const referencia = q('#pago_referencia')? q('#pago_referencia').value : ''; const nota = q('#pago_nota')? q('#pago_nota').value : '';
     if(!fecha||!paciente||!monto){ alert('Fecha, paciente y monto son requeridos'); return; }
     const fd = new FormData(); if(id) fd.append('id', id); fd.append('fecha', fecha); fd.append('paciente', paciente); fd.append('paciente_id', paciente_id); fd.append('medico', medico); fd.append('servicio', servicio); fd.append('monto', monto); fd.append('cita_id', cita_id); fd.append('metodo_pago', metodo); fd.append('referencia', referencia); fd.append('nota', nota);
