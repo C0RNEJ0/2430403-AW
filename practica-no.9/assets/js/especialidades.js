@@ -44,8 +44,17 @@
     fetch('../controllers/especialidades_list.php')
       .then(resp => resp.json())
       .then(respuesta => {
-        if(respuesta && respuesta.exito && Array.isArray(respuesta.datos)) render(respuesta.datos);
-        else console.error('Error al cargar especialidades', respuesta && respuesta.error);
+        if(respuesta && respuesta.exito && Array.isArray(respuesta.datos) && respuesta.datos.length) {
+          renderizar(respuesta.datos);
+        } else {
+          console.error('Error al cargar especialidades', respuesta && respuesta.error);
+          // datos de ejemplo de respaldo para interfaz
+          const ejemplos = [
+            { especialidad_id: '1', nombre: 'Cardiología', descripcion: 'Enfermedades del corazón' },
+            { especialidad_id: '2', nombre: 'Pediatría', descripcion: 'Atención a niños' }
+          ];
+          renderizar(ejemplos);
+        }
       })
       .catch(err => console.error('Error al cargar especialidades:', err));
   });

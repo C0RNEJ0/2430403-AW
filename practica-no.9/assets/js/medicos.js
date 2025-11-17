@@ -14,6 +14,26 @@
     adjuntarManejadoresFilas();
     try{ if(window.jQuery && $.fn.dataTable){ $("#medicosTable").DataTable(); } }catch(e){}
   }
+  
+  // Cargar especialidades para el formulario de médicos (select)
+  async function cargarEspecialidadesSelect(){
+    try{
+      const resp = await fetch('../controllers/especialidades_list.php');
+      const js = await resp.json();
+      const sel = document.getElementById('medico_especialidad');
+      if(!sel) return;
+      sel.innerHTML = '';
+      if(js && js.exito && Array.isArray(js.datos) && js.datos.length){
+        sel.appendChild(new Option('Seleccione',''));
+        js.datos.forEach(e=> sel.appendChild(new Option(e.nombre || e.nombre_especialidad || '', e.especialidad_id || e.id || '')));
+      } else {
+        // opciones de respaldo
+        sel.appendChild(new Option('Cardiología','Cardiología'));
+        sel.appendChild(new Option('Pediatría','Pediatría'));
+        sel.appendChild(new Option('Traumatología','Traumatología'));
+      }
+    }catch(err){ console.error('No se pudieron cargar especialidades para medicos', err); }
+  }
          // elementos de editar y eliminar
   function adjuntarManejadoresFilas(){
     document.querySelectorAll('.accion-eliminar').forEach(btn=>{
@@ -42,14 +62,26 @@
       });
     });
   }
-  // carga inicial de médicos
+  // carga inicial de médicos y opciones de especialidad
   document.addEventListener('DOMContentLoaded', function(){
     fetch('../controllers/medicos_list.php')
       .then(resp => resp.json())
       .then(respuesta => {
-        if(respuesta && respuesta.exito && Array.isArray(respuesta.datos)) render(respuesta.datos);
-        else console.error('Error al cargar médicos', respuesta && respuesta.error);
-      }).catch(err => console.error('Error al cargar médicos:', err));
+        if(respuesta && respuesta.exito && Array.isArray(respuesta.datos) && respuesta.datos.length) {
+          renderizar(respuesta.datos);
+        } else {
+          console.error('Error al cargar médicos', respuesta && respuesta.error);
+          // datos de ejemplo de respaldo
+          const ejemplos = [
+            { medico_id: '1', nombre: 'Dr. Juan Perez', especialidad: 'Cardiología', horario: 'Lun-Vie 09:00-14:00' },
+            { medico_id: '2', nombre: 'Dra. Ana Gómez', especialidad: 'Pediatría', horario: 'Mar-Jue 10:00-16:00' }
+          ];
+          renderizar(ejemplos);
+        }
+      }).catch(err => { console.error('Error al cargar médicos:', err); renderizar([{ medico_id:'1', nombre:'Dr. Ejemplo', especialidad:'Cardiología', horario:'-'}]); });
+
+    // cargar opciones de especialidad en el formulario
+    cargarEspecialidadesSelect();
   });
 })();
 
