@@ -26,7 +26,9 @@
 
   // inicialización al cargar el DOM
   document.addEventListener('DOMContentLoaded', function(){
-    // aplicar estado guardado en compu
+  // asegurar que ningún modal quede abierto por error (cerrar modales preexistentes)
+  try{ document.querySelectorAll('.modal.show').forEach(m=> m.classList.remove('show')); }catch(_){ }
+  // aplicar estado guardado en compu
     if(window.innerWidth <= 800){
       try{ localStorage.setItem(CLAVE_BARRA_COLAPSADA, '0'); }catch(_){ }
       body.classList.remove('sidebar-collapsed');

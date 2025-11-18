@@ -1,4 +1,6 @@
 (function(){
+  // versión para depuración: actualizar si modifica este archivo
+  try{ console.log('medicos.js cargado v20251117.2'); }catch(_){ }
   function escaparHtml(s){ return String(s||'').replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[m])); }
   function renderizar(filas){
     const tbody = document.querySelector('#medicosTable tbody'); if(!tbody) return;
@@ -44,7 +46,7 @@
         fetch('../controllers/medicos.php', { method: 'POST', body: f }).then(()=> location.reload());
       });
     });
-    
+     // Editar médico
     document.querySelectorAll('.accion-editar').forEach(btn=>{
       btn.addEventListener('click', function(){
         const id = this.dataset.id;
@@ -71,7 +73,7 @@
           renderizar(respuesta.datos);
         } else {
           console.error('Error al cargar médicos', respuesta && respuesta.error);
-          // datos de ejemplo de respaldo
+          // datos de ejemplo
           const ejemplos = [
             { medico_id: '1', nombre: 'Dr. Juan Perez', especialidad: 'Cardiología', horario: 'Lun-Vie 09:00-14:00' },
             { medico_id: '2', nombre: 'Dra. Ana Gómez', especialidad: 'Pediatría', horario: 'Mar-Jue 10:00-16:00' }
