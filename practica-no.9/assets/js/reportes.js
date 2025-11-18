@@ -3,8 +3,37 @@
   async function cargar(desde, hasta){ try{ const url = `../controllers/reportes.php?desde=${encodeURIComponent(desde)}&hasta=${encodeURIComponent(hasta)}`; const r = await fetch(url); return await r.json(); }catch(e){ console.error(e); return { exito:false }; } }
   function renderTransacciones(lista){ const tbody = q('#tabla_reportes tbody'); if(!tbody) return; tbody.innerHTML=''; lista.forEach(t=>{ const tr = document.createElement('tr'); tr.innerHTML = `<td>${t.fecha}</td><td>${t.paciente}</td><td>${t.medico||''}</td><td>${t.servicio||''}</td><td>$ ${Number(t.monto).toFixed(2)}</td>`; tbody.appendChild(tr); }); }
   function renderKPIs(obj){ if(q('#kpi_ingresos')) q('#kpi_ingresos').textContent = '$' + Number(obj.total||0).toFixed(2); if(q('#kpi_citas')) q('#kpi_citas').textContent = obj.citas || 0; if(q('#kpi_pacientes')) q('#kpi_pacientes').textContent = obj.pacientes_nuevos || 0; }
-  async function init(){ const hoy = new Date().toISOString().slice(0,10); const desde = prompt('Desde (YYYY-MM-DD) o Enter para inicio mes','') || new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().slice(0,10); const hasta = prompt('Hasta (YYYY-MM-DD) o Enter para hoy','') || hoy; const data = await cargar(desde,hasta); if(!data.exito) return alert('Error cargando reportes'); renderTransacciones(data.datos.transacciones); renderKPIs(data.datos); // render por medico
-    const cont = document.createElement('div'); cont.style.marginTop='16px'; data.datos.por_medico.forEach(m=>{ const card = document.createElement('div'); card.className='p-2 bg-light rounded mb-2'; card.innerHTML = `<strong>${m.medico||'Sin médico'}</strong>: $ ${Number(m.total_medico||0).toFixed(2)}`; cont.appendChild(card); }); document.querySelector('.page-content .card:last-of-type').appendChild(cont);
+  async function init(){
+    // Cargar todos los reportes sin pedir rango (sin modal)
+    const desde = '0000-01-01';
+    const hasta = '9999-12-31';
+
+    // mostrar etiqueta indicando que se están mostrando todos los reportes
+    try{
+      const encabezado = document.querySelector('.page-content h1') || document.querySelector('h1');
+      if(encabezado){
+        let etiqueta = document.getElementById('reportes_rango');
+        if(!etiqueta){
+          etiqueta = document.createElement('div');
+          etiqueta.id = 'reportes_rango';
+          etiqueta.style.fontSize = '0.95rem';
+          etiqueta.style.opacity = '0.85';
+          etiqueta.style.marginTop = '6px';
+          encabezado.insertAdjacentElement('afterend', etiqueta);
+        }
+        etiqueta.textContent = 'Rango: Todos los reportes';
+      }
+    }catch(e){ /* no bloquear si falla */ }
+
+    const data = await cargar(desde,hasta);
+    if(!data.exito){ console.error('Error cargando reportes', data); return; }
+    renderTransacciones(data.datos.transacciones);
+    renderKPIs(data.datos);
+    // render por medico
+    const cont = document.createElement('div'); cont.style.marginTop='16px';
+    data.datos.por_medico.forEach(m=>{ const card = document.createElement('div'); card.className='p-2 bg-light rounded mb-2'; card.innerHTML = `<strong>${m.medico||'Sin médico'}</strong>: $ ${Number(m.total_medico||0).toFixed(2)}`; cont.appendChild(card); });
+    const targetCard = document.querySelector('.page-content .card:last-of-type');
+    if(targetCard) targetCard.appendChild(cont);
   }
   document.addEventListener('DOMContentLoaded', init);
 })();
