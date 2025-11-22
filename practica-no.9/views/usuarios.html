@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Usuarios - Clínica Cornejo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/sidebar-modern.css">
+</head>
+
+<body>
+    <div class="d-flex">
+        <!-- Sidebar Container -->
+        <div id="sidebar-container"></div>
+
+        <!-- Main Content -->
+        <div class="main-content flex-grow-1">
+            <!-- Top Bar -->
+            <header class="top-bar d-flex justify-content-between align-items-center p-3 bg-white shadow-sm">
+                <div class="d-flex align-items-center gap-3">
+                    <h4 class="m-0 text-primary fw-bold">Gestión de Usuarios</h4>
+                </div>
+                <div class="user-profile d-flex align-items-center gap-3">
+                    <div class="text-end d-none d-md-block">
+                        <p class="m-0 fw-bold" id="user_name_display">Admin</p>
+                        <small class="text-muted">Super Admin</small>
+                    </div>
+                    <div class="avatar-circle bg-primary text-white d-flex align-items-center justify-content-center rounded-circle"
+                        style="width: 40px; height: 40px;">
+                        <i class="bi bi-person-fill"></i>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content -->
+            <div class="container-fluid p-4">
+                <!-- Stats Cards -->
+                <div class="row g-4 mb-4">
+                    <div class="col-md-4">
+                        <div class="card border-0 shadow-sm p-3 h-100">
+                            <div class="d-flex align-items-center">
+                                <div class="rounded-circle bg-primary bg-opacity-10 p-3 me-3">
+                                    <i class="bi bi-people-fill text-primary fs-4"></i>
+                                </div>
+                                <div>
+                                    <h6 class="text-muted mb-1">Total Usuarios</h6>
+                                    <h3 class="mb-0 fw-bold" id="total_usuarios">0</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card border-0 shadow-sm p-3 h-100">
+                            <div class="d-flex align-items-center">
+                                <div class="rounded-circle bg-success bg-opacity-10 p-3 me-3">
+                                    <i class="bi bi-person-check-fill text-success fs-4"></i>
+                                </div>
+                                <div>
+                                    <h6 class="text-muted mb-1">Activos</h6>
+                                    <h3 class="mb-0 fw-bold" id="total_activos">0</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card border-0 shadow-sm p-3 h-100">
+                            <div class="d-flex align-items-center">
+                                <div class="rounded-circle bg-warning bg-opacity-10 p-3 me-3">
+                                    <i class="bi bi-shield-lock-fill text-warning fs-4"></i>
+                                </div>
+                                <div>
+                                    <h6 class="text-muted mb-1">Roles</h6>
+                                    <h3 class="mb-0 fw-bold" id="total_roles">3</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Users Table Section -->
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0 text-primary">Lista de Usuarios</h5>
+                        <button class="btn btn-primary" onclick="abrirModalUsuario()">
+                            <i class="bi bi-plus-lg me-2"></i>Nuevo Usuario
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle" id="tabla_usuarios">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Usuario</th>
+                                        <th>Rol</th>
+                                        <th>Estado</th>
+                                        <th>Creado</th>
+                                        <th>Último Acceso</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Usuario -->
+    <div class="modal fade" id="modal_usuario" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="modal_usuario_titulo">Nuevo Usuario</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <form id="form_usuario">
+                        <input type="hidden" id="usuario_id">
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Nombre Completo</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="bi bi-person"></i></span>
+                                <input type="text" class="form-control" id="nombre" required
+                                    placeholder="Ej. Juan Pérez">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Correo Electrónico</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="bi bi-envelope"></i></span>
+                                <input type="email" class="form-control" id="email" required
+                                    placeholder="usuario@clinica.com">
+                            </div>
+                        </div>
+
+                        <div class="mb-3" id="div_password">
+                            <label class="form-label fw-bold">Contraseña</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light"><i class="bi bi-key"></i></span>
+                                <input type="password" class="form-control" id="password"
+                                    placeholder="Mínimo 6 caracteres">
+                                <button class="btn btn-outline-secondary" type="button" onclick="togglePassword()">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                            </div>
+                            <small class="text-muted" id="password_help">Requerida para nuevos usuarios</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Rol</label>
+                            <select class="form-select" id="rol" required onchange="toggleCamposRol()">
+                                <option value="">Seleccione un rol...</option>
+                                <option value="super_admin">Super Admin</option>
+                                <option value="doctor">Doctor</option>
+                                <option value="secretaria">Secretaria</option>
+                                <option value="paciente">Paciente</option>
+                            </select>
+                        </div>
+
+                        <!-- Campos dinámicos según rol -->
+                        <div class="mb-3 d-none" id="div_medico">
+                            <label class="form-label fw-bold">Vincular con Médico</label>
+                            <select class="form-select" id="medico_id">
+                                <option value="">Seleccione médico...</option>
+                                <!-- Populated by JS -->
+                            </select>
+                        </div>
+
+                        <div class="mb-3 d-none" id="div_paciente">
+                            <label class="form-label fw-bold">Vincular con Paciente</label>
+                            <select class="form-select" id="paciente_id">
+                                <option value="">Seleccione paciente...</option>
+                                <!-- Populated by JS -->
+                            </select>
+                        </div>
+
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-save me-2"></i>Guardar Usuario
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Logout (Global) -->
+    <div id="modal_logout" class="modal-modern">
+        <div class="modal-overlay"></div>
+        <div class="modal-container">
+            <div class="modal-header">
+                <i class="bi bi-box-arrow-right"></i>
+                <h3>Cerrar Sesión</h3>
+                <button class="close-btn" data-modal-close>&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>¿Estás seguro que deseas cerrar sesión?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" data-modal-close>Cancelar</button>
+                <button class="btn-confirm" onclick="cerrar_sesion()">Cerrar Sesión</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/js/modal-handler.js"></script>
+    <script src="../assets/js/global-modals.js"></script>
+    <script src="../assets/js/load-sidebar.js"></script>
+    <script src="../assets/js/usuarios.js"></script>
+</body>
+
+</html>

@@ -4,7 +4,7 @@
   function renderTransacciones(lista){ const tbody = q('#tabla_reportes tbody'); if(!tbody) return; tbody.innerHTML=''; lista.forEach(t=>{ const tr = document.createElement('tr'); tr.innerHTML = `<td>${t.fecha}</td><td>${t.paciente}</td><td>${t.medico||''}</td><td>${t.servicio||''}</td><td>$ ${Number(t.monto).toFixed(2)}</td>`; tbody.appendChild(tr); }); }
   function renderKPIs(obj){ if(q('#kpi_ingresos')) q('#kpi_ingresos').textContent = '$' + Number(obj.total||0).toFixed(2); if(q('#kpi_citas')) q('#kpi_citas').textContent = obj.citas || 0; if(q('#kpi_pacientes')) q('#kpi_pacientes').textContent = obj.pacientes_nuevos || 0; }
   async function init(){
-    // Cargar todos los reportes sin pedir rango (sin modal)
+    // Cargar todos los reportes sin pedir rango (
     const desde = '0000-01-01';
     const hasta = '9999-12-31';
 

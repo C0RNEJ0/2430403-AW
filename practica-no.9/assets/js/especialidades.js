@@ -48,7 +48,7 @@
           renderizar(respuesta.datos);
         } else {
           console.error('Error al cargar especialidades', respuesta && respuesta.error);
-          // datos de ejemplo de respaldo para interfaz
+          // datos de ejemplo 
           const ejemplos = [
             { especialidad_id: '1', nombre: 'Cardiología', descripcion: 'Enfermedades del corazón' },
             { especialidad_id: '2', nombre: 'Pediatría', descripcion: 'Atención a niños' }

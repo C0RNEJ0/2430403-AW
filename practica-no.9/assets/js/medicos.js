@@ -1,5 +1,4 @@
 (function(){
-  // versión para depuración: actualizar si modifica este archivo
   try{ console.log('medicos.js cargado v20251117.2'); }catch(_){ }
   function escaparHtml(s){ return String(s||'').replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[m])); }
   function renderizar(filas){

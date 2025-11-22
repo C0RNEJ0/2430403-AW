@@ -1,155 +1,119 @@
-(function(){
-  // Gestión de la barra lateral  
-  const aplicacion = document.getElementById('aplicacion');
-  const barra_lateral = document.getElementById('barra_lateral');
+(function () {
+  'use strict'
+
+  // Elementos del DOM
+  const sidebar = document.getElementById('sidebar_restored');
+  const toggleBtn = document.getElementById('btn_toggle_sidebar');
+  const openBtn = document.getElementById('btn_hamburger');
+  const overlay = document.getElementById('sidebar_overlay');
   const body = document.body;
 
-  const CLAVE_BARRA_COLAPSADA = 'cs_sidebar_collapsed';
+  const CLAVE_BARRA_COLAPSADA = 'sidebar_collapsed_state';
 
-  function estaColapsado(){
-    return localStorage.getItem(CLAVE_BARRA_COLAPSADA) === '1';
+  // Verificar estado colapsado
+  function estaColapsado() {
+    return localStorage.getItem(CLAVE_BARRA_COLAPSADA) === 'true';
   }
 
-  function aplicarEstado(){
-    if(estaColapsado()){
+  // Aplicar estado colapsado
+  function aplicarEstado() {
+    const isCollapsed = estaColapsado();
+    if (isCollapsed) {
       body.classList.add('sidebar-collapsed');
     } else {
       body.classList.remove('sidebar-collapsed');
     }
   }
 
-  function alternarBarra(){
-    const col = !estaColapsado();
-    localStorage.setItem(CLAVE_BARRA_COLAPSADA, col ? '1' : '0');
-    aplicarEstado();
+  // Marcar página activa
+  function marcarPaginaActiva() {
+    const currentPath = window.location.pathname;
+    const navLinks = document.querySelectorAll('.sidebar-nav .nav-link');
+
+    navLinks.forEach(link => {
+      link.classList.remove('active');
+
+      const href = link.getAttribute('href');
+      if (!href || href === '#' || href.startsWith('javascript:')) return;
+
+      // Normalizar paths para comparación
+      const linkPath = href.split('/').pop();
+      const currentPage = currentPath.split('/').pop();
+
+      if (currentPage === linkPath) {
+        link.classList.add('active');
+      }
+    });
   }
 
-  // inicialización al cargar el DOM
-  document.addEventListener('DOMContentLoaded', function(){
-  // asegurar que ningún modal quede abierto por error (cerrar modales preexistentes)
-  try{ document.querySelectorAll('.modal.show').forEach(m=> m.classList.remove('show')); }catch(_){ }
-  // aplicar estado guardado en compu
-    if(window.innerWidth <= 800){
-      try{ localStorage.setItem(CLAVE_BARRA_COLAPSADA, '0'); }catch(_){ }
-      body.classList.remove('sidebar-collapsed');
-      barra_lateral && barra_lateral.classList.remove('open');
-    } else {
+  // Cargar info del usuario
+  function cargarInfoUsuario() {
+    const userName = document.getElementById('sidebar_user_name');
+    const userRole = document.getElementById('sidebar_user_role');
+
+    const usuarioEmail = localStorage.getItem('usuario_email') || 'Usuario';
+    const usuarioRol = localStorage.getItem('usuario_rol') || 'Administrador';
+
+    if (userName) {
+      // Si es email, tomar la parte antes del @
+      const nombre = usuarioEmail.includes('@') ? usuarioEmail.split('@')[0] : usuarioEmail;
+      userName.textContent = nombre.charAt(0).toUpperCase() + nombre.slice(1);
+    }
+
+    if (userRole) {
+      userRole.textContent = usuarioRol.charAt(0).toUpperCase() + usuarioRol.slice(1);
+    }
+  }
+
+  // Event Listeners
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', function () {
+      const nuevoEstado = !estaColapsado();
+      localStorage.setItem(CLAVE_BARRA_COLAPSADA, nuevoEstado);
       aplicarEstado();
-    }
-  // delegación de clicks para elementos interactivos
-  document.addEventListener('click', function(e){
-      const target = e.target;
-  // botón de colapsar <- encoger 
-      if(target.closest && target.closest('#boton_colapsar')){ e.preventDefault(); alternarBarra(); return; }
-  // si se pulsa la marca en  que no lo hice funcionar en movil :( no funciona alv arreglar despues)
-      if(target.closest && target.closest('.sidebar .brand')){
-        if(window.innerWidth <= 800){ barra_lateral && barra_lateral.classList.toggle('open'); }
-      }
-  // abrir modales por atributos data-modal-target / data-modal-open
-      const openBtn = target.closest && (target.closest('[data-modal-target]') || target.closest('[data-modal-open]'));
-      if(openBtn){ e.preventDefault(); const targetId = (openBtn.getAttribute('data-modal-target') || openBtn.getAttribute('data-modal-open') || '').replace(/^#/, ''); if(targetId) abrirModalPorId(targetId); }
-  // cerrar modal si se hace clic en el overlay
-      if(target.classList && target.classList.contains('modal')){ cerrarModal(target); }
-      const closeBtn = target.closest && (target.closest('[data-modal-close]') || target.closest('.close'));
-      if(closeBtn){ e.preventDefault(); const modal = closeBtn.closest('.modal'); modal && cerrarModal(modal); }
-  // botón cerrar sesión
-      const cerrarBtn = target.closest && target.closest('#boton_cerrar_sesion');
-      if(cerrarBtn){ e.preventDefault(); try{ sessionStorage.clear(); }catch(_){}; try{ localStorage.removeItem(CLAVE_BARRA_COLAPSADA); }catch(_){}; try{ localStorage.removeItem('auth_token'); localStorage.removeItem('user'); }catch(_){}; window.location.href = '../views/login/login.html'; }
-    // si en móvil se pulsa un enlace del nav, cerrar el overlay de la sidebar
-      try{
-        const navLink = target.closest && target.closest('.sidebar nav a');
-        if(navLink){
-      // si es móvil, cerrar overlay
-          if(window.innerWidth <= 800){ barra_lateral && barra_lateral.classList.remove('open'); }
-      // evitar que al navegar se aplique el modo "colapsado" por accidente
-          try{ localStorage.setItem(CLAVE_BARRA_COLAPSADA, '0'); }catch(_){ }
-          try{ body.classList.remove('sidebar-collapsed'); }catch(_){ }
-        }
-      }catch(_){ }
     });
-    // al cambiar el tamaño, aseguramos consistencia: en móvil siempre abierto y sin colapsar
-    window.addEventListener('resize', function(){
-      if(window.innerWidth <= 800){
-        try{ localStorage.setItem(CLAVE_BARRA_COLAPSADA, '0'); }catch(_){ }
-        body.classList.remove('sidebar-collapsed');
-        barra_lateral && barra_lateral.classList.remove('open');
+  }
+
+  // Móvil: Abrir sidebar
+  if (openBtn) {
+    openBtn.addEventListener('click', function () {
+      if (sidebar) sidebar.classList.add('show');
+      if (overlay) overlay.classList.add('show');
+    });
+  }
+
+  // Móvil: Cerrar sidebar
+  function cerrarSidebarMovil() {
+    if (sidebar) sidebar.classList.remove('show');
+    if (overlay) overlay.classList.remove('show');
+  }
+
+  if (overlay) overlay.addEventListener('click', cerrarSidebarMovil);
+
+  // Manejar botón de cerrar sesión
+  const logoutBtn = document.querySelector('.sidebar-nav a[onclick*="modal_logout"]');
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', function (e) {
+      e.preventDefault();
+      // Intentar abrir el modal usando el modalHandler global
+      if (typeof abrirModal === 'function') {
+        abrirModal('modal_logout');
+      } else if (window.modalHandler) {
+        window.modalHandler.openModal('modal_logout');
       } else {
-        aplicarEstado();
+        // Fallback: abrir modal manualmente
+        const modal = document.getElementById('modal_logout');
+        if (modal) {
+          modal.classList.add('show');
+          document.body.style.overflow = 'hidden';
+        }
       }
     });
-  // nuevo: botón hamburguesa móvil y backdrop
-  const btnMobile = document.getElementById('btn_toggle_mobile');
-  const backdrop = document.getElementById('sidebar_backdrop');
-  if(btnMobile){ btnMobile.addEventListener('click', function(e){ e.preventDefault(); if(barra_lateral){ barra_lateral.classList.add('open'); if(backdrop) backdrop.classList.add('show'); document.body.style.overflow = 'hidden'; } }); }
-  if(backdrop){ backdrop.addEventListener('click', function(){ if(barra_lateral){ barra_lateral.classList.remove('open'); backdrop.classList.remove('show'); document.body.style.overflow = ''; } }); }
-  });
-})();
-
-// Gestión ligera y accesible de modales usada por varias páginas
-(function(){
-  // no quiero chocar con otro script
-  if (window.__cs_modals_initialized) return;
-  window.__cs_modals_initialized = true;
-
-  // helpers simples
-  function qs(selector, root=document){ return root.querySelector(selector); }
-  function qsa(selector, root=document){ return Array.from(root.querySelectorAll(selector)); }
-
-  // abrir modal control de accesibilidad 
-  function abrirModal(modal){
-    if(!modal) return;
-    modal.classList.add('show');
-    modal.setAttribute('aria-hidden', 'false');
-    const previouslyFocused = document.activeElement; modal.__previouslyFocused = previouslyFocused;
-    const focusable = qsa('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])', modal).filter(el => !el.hasAttribute('disabled'));
-    if(focusable.length) focusable[0].focus();
-    document.body.style.overflow = 'hidden';
   }
 
-  function cerrarModal(modal){
-    if(!modal) return;
-    modal.classList.remove('show');
-    modal.setAttribute('aria-hidden', 'true');
-    try{ const prev = modal.__previouslyFocused; if(prev && typeof prev.focus === 'function') prev.focus(); } catch(_){ }
-    document.body.style.overflow = '';
-  }
-
-  function abrirModalPorId(id){ const modal = document.getElementById(id) || document.querySelector('#'+CSS.escape(id)); abrirModal(modal); }
-
-  function inicializarTriggersModal(root=document){
-    qsa('[data-modal-target], [data-modal-open]', root).forEach(btn => {
-      const target = btn.getAttribute('data-modal-target') || btn.getAttribute('data-modal-open');
-      if(!target) return; btn.addEventListener('click', function(e){ e.preventDefault(); const id = target.replace(/^#/, ''); abrirModalPorId(id); });
-    });
-  }
-
-  function inicializarClosersModal(root=document){
-    qsa('.modal').forEach(modal => {
-      modal.addEventListener('click', function(e){ if(e.target === modal){ cerrarModal(modal); } });
-      qsa('[data-modal-close], .close', modal).forEach(btn => { btn.addEventListener('click', function(e){ e.preventDefault(); cerrarModal(modal); }); });
-    });
-  }
-
-  // cerrar con Escape
-  document.addEventListener('keydown', function(e){ if(e.key === 'Escape' || e.key === 'Esc'){ const open = qs('.modal.show'); if(open) cerrarModal(open); } });
-
-  document.addEventListener('DOMContentLoaded', function(){
-    qsa('.modal').forEach(modal => {
-      if(!modal.hasAttribute('role')) modal.setAttribute('role','dialog');
-      if(!modal.hasAttribute('aria-hidden')) modal.setAttribute('aria-hidden','true');
-      const content = qs('.modal-content', modal); if(content && !content.hasAttribute('tabindex')) content.setAttribute('tabindex', '-1');
-    });
-
-    inicializarTriggersModal();
-    inicializarClosersModal();
-
-    qsa('a[href^="#modal_"]').forEach(a => { a.addEventListener('click', function(e){ e.preventDefault(); const id = (a.getAttribute('href')||'').replace('#',''); abrirModalPorId(id); }); });
-
-    // botón en la página para agregar paciente si existe -> abrir modal
-    const btnAgregar = document.getElementById('btn_agregar_paciente');
-    if(btnAgregar){
-      btnAgregar.addEventListener('click', function(e){ e.preventDefault(); abrirModalPorId('modal_paciente'); });
-    }
-  });
+  // Inicialización
+  aplicarEstado();
+  marcarPaginaActiva();
+  cargarInfoUsuario();
 
 })();

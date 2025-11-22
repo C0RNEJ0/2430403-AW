@@ -1,26 +1,75 @@
 <?php
+// Esto llama a la conexion
 require_once __DIR__ . '/../config/bd_huevos.php';
+
+// Esto configura el json
 header('Content-Type: application/json; charset=utf-8');
-try{
-  $conn = obtenerConexion();
-  $metodo = $_SERVER['REQUEST_METHOD'];
-  if ($metodo === 'GET'){
-    $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
-    if ($id>0){
-      $stmt = $conn->prepare('SELECT tarifa_id, especialidad, servicio, precio FROM tarifas WHERE tarifa_id = ? LIMIT 1');
-      $stmt->bind_param('i',$id); $stmt->execute(); $res = $stmt->get_result(); $fila = $res->fetch_assoc(); echo json_encode(['exito'=>true,'datos'=>[$fila]]); exit;
+
+// Aqui conectamos a la base
+$bd = obtener_conexion();
+
+// Obtenemos la accion
+$accion = $_REQUEST['accion'] ?? '';
+
+// Si la accion es listar traemos las tarifas
+if ($accion === 'listar') {
+    try {
+        // Traemos todas las tarifas ordenadas por nombre
+        $sql = "SELECT * FROM tarifas ORDER BY nombre_servicio ASC";
+        $stmt = $bd->query($sql);
+        $tarifas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        // Devolvemos los datos
+        echo json_encode(['exito' => true, 'datos' => $tarifas]);
+    } catch (Exception $e) {
+        echo json_encode(['exito' => false, 'error' => $e->getMessage()]);
     }
-    $res = $conn->query('SELECT tarifa_id, especialidad, servicio, precio FROM tarifas ORDER BY especialidad, servicio'); $filas=[]; while($r=$res->fetch_assoc()) $filas[]=$r; echo json_encode(['exito'=>true,'datos'=>$filas]); exit;
-  }
-  if ($metodo === 'POST'){
-    $accion = $_POST['accion'] ?? 'crear';
-    if ($accion === 'eliminar'){
-      $id = (int)($_POST['id']??0); $stmt = $conn->prepare('DELETE FROM tarifas WHERE tarifa_id = ? LIMIT 1'); $stmt->bind_param('i',$id); $stmt->execute(); echo json_encode(['exito'=>true]); exit;
+}
+// Si la accion es crear guardamos una nueva tarifa
+else if ($accion === 'crear') {
+    try {
+        // Recogemos los datos
+        $nombre = $_POST['nombre_servicio'];
+        $costo = $_POST['costo'];
+        
+        // Insertamos en la base
+        $sql = "INSERT INTO tarifas (nombre_servicio, costo) VALUES (?, ?)";
+        $stmt = $bd->prepare($sql);
+        $stmt->execute([$nombre, $costo]);
+        
+        echo json_encode(['exito' => true, 'mensaje' => 'Tarifa creada']);
+    } catch (Exception $e) {
+        echo json_encode(['exito' => false, 'error' => $e->getMessage()]);
     }
-    $id = (int)($_POST['id']??0); $esp = trim($_POST['especialidad'] ?? ''); $serv = trim($_POST['servicio'] ?? ''); $precio = floatval($_POST['precio']??0);
-    if (!$esp || !$serv) { echo json_encode(['exito'=>false,'error'=>'Especialidad y servicio requeridos']); exit; }
-    if ($id>0){ $stmt = $conn->prepare('UPDATE tarifas SET especialidad=?, servicio=?, precio=? WHERE tarifa_id = ?'); $stmt->bind_param('ssdi',$esp,$serv,$precio,$id); $stmt->execute(); echo json_encode(['exito'=>true]); exit; }
-    $stmt = $conn->prepare('INSERT INTO tarifas (especialidad, servicio, precio) VALUES (?,?,?)'); $stmt->bind_param('ssd',$esp,$serv,$precio); $stmt->execute(); echo json_encode(['exito'=>true,'id'=>$conn->insert_id]); exit;
-  }
-  echo json_encode(['exito'=>false]);
-}catch(Exception $e){ echo json_encode(['exito'=>false,'error'=>$e->getMessage()]); }
+}
+// Si la accion es editar actualizamos la tarifa
+else if ($accion === 'editar') {
+    try {
+        $id = $_POST['tarifa_id'];
+        $nombre = $_POST['nombre_servicio'];
+        $costo = $_POST['costo'];
+        
+        // Actualizamos los datos
+        $sql = "UPDATE tarifas SET nombre_servicio=?, costo=? WHERE tarifa_id=?";
+        $stmt = $bd->prepare($sql);
+        $stmt->execute([$nombre, $costo, $id]);
+        
+        echo json_encode(['exito' => true, 'mensaje' => 'Tarifa actualizada']);
+    } catch (Exception $e) {
+        echo json_encode(['exito' => false, 'error' => $e->getMessage()]);
+    }
+}
+// Si la accion es eliminar borramos la tarifa
+else if ($accion === 'eliminar') {
+    try {
+        $id = $_POST['tarifa_id'];
+        // Borramos de la base
+        $stmt = $bd->prepare("DELETE FROM tarifas WHERE tarifa_id = ?");
+        $stmt->execute([$id]);
+        
+        echo json_encode(['exito' => true, 'mensaje' => 'Tarifa eliminada']);
+    } catch (Exception $e) {
+        echo json_encode(['exito' => false, 'error' => $e->getMessage()]);
+    }
+}
+?>

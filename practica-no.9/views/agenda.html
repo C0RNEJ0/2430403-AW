@@ -1,46 +1,34 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Control de Agenda</title>
-  <link rel="stylesheet" href="../assets/css/styles.css">
+  <link rel="stylesheet" href="/assets/css/styles.css">
 
   <!-- guardar este boostrap para el calendario-->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <style>body{padding:20px}</style>
+  <style>
+    body {
+      padding: 20px
+    }
+  </style>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="../assets/css/sidebar-modern.css">
 </head>
+
 <body>
   <div class="top-bar">
     La vida es la Prioridad ante todo
   </div>
   <div id="aplicacion">
-    <aside class="sidebar" id="barra_lateral">
-      <div class="brand">
-  <img src="/practica-no.9/assets/images/CS.png" alt="CS">
-        <div>
-          <div style="font-weight:800;">Clínica Cornejo</div>
-          <small style="opacity:0.9">Panel</small>
-        </div>
-      </div>
-  <nav>
-        <a href="dashboard.html"><span class="label">Dashboard</span></a>
-        <a href="../controllers/pacientes.php"><span class="label">Pacientes</span></a>
-        <a href="agenda.html"><span class="label">Agenda</span></a>
-        <a href="medicos.html"><span class="label">Médicos</span></a>
-        <a href="reportes.html"><span class="label">Reportes</span></a>
-        <a href="pagos.html"><span class="label">Pagos</span></a>
-        <a href="tarifas.html"><span class="label">Tarifas</span></a>
-        <a href="bitacoras.html"><span class="label">Bitácoras</span></a>
-        <a href="especialidades.html"><span class="label">Especialidades</span></a>
-  <a href="#" data-modal-target="#modal_logout"><span class="label">Cerrar Sesión</span></a>
-      </nav>
-      <div class="spacer"></div>
-  <button class="toggle-btn" id="boton_colapsar">Esconder</button>
-    </aside>
+    <!-- Offcanvas sidebar Bootstrap -->
+
 
     <!-- Header superior con buscador y iconos -->
-  <div class="page-content" id="contenido_pagina">
+    <div class="page-content" id="contenido_pagina">
       <header>
         <div class="container">
           <div style="flex:1"></div>
@@ -49,7 +37,7 @@
               <input type="text" id="buscador" placeholder="Buscar">
             </div>
             <div class="icons">
-            
+
               </a>
               <span id="usuario_email" style="margin-left:8px; font-size:0.9rem; color:#333;"></span>
             </div>
@@ -58,6 +46,12 @@
       </header>
       <h1>Control de Agenda</h1>
       <p>Calendario y citas programadas.</p>
+
+      <!-- Botón para agregar nueva cita -->
+      <div class="mb-3">
+        <button id="btn_nueva_cita" class="btn-admin">+ Nueva Cita</button>
+      </div>
+
       <div id="calendar-root" class="card" style="width:100%; max-width:1000px;">
         <div class="card-body">
           <div class="d-flex justify-content-between align-items-center mb-3">
@@ -67,28 +61,122 @@
             </div>
             <h5 id="cal_title" class="mb-0">Mes Año</h5>
             <div>
-              <button id="seed_citas" class="btn btn-secondary btn-sm">Seed demo</button>
+              <!-- Botón seed removido -->
             </div>
           </div>
           <div id="cal_grid" style="min-height:300px;"></div>
         </div>
       </div>
-      
+
     </div>
   </div>
-  <!-- Modal Confirmación Cerrar Sesión -->
-  <div id="modal_logout" class="modal">
-    <div class="modal-content modal-small">
-      <h2>¿Cerrar sesión?</h2>
-      <p>¿Estás seguro que quieres cerrar sesión?</p>
-      <div class="modal-buttons">
-        <button id="boton_cerrar_sesion" class="btn-modal">Si, cerrar</button>
-        <button id="boton_cancelar_cerrar_sesion" class="btn-modal btn-secondary" data-modal-close>No</button>
+
+  <!-- Modal para Crear/Editar Cita -->
+  <div id="modal_cita" class="modal-modern">
+    <div class="modal-overlay"></div>
+    <div class="modal-container modal-large">
+      <div class="modal-header">
+        <i class="bi bi-calendar-event"></i>
+        <h3 id="titulo_modal_cita">Nueva Cita</h3>
+        <button class="modal-close" data-modal-close>
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="formulario_cita">
+          <input type="hidden" id="cita_id" name="cita_id">
+          <input type="hidden" name="accion" id="accion_cita" value="crear">
+
+          <div class="row">
+            <div class="col-md-6">
+              <label class="form-label">Paciente *</label>
+              <select class="form-control" id="cita_paciente" name="paciente_id" required>
+                <option value="">Cargando...</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Médico *</label>
+              <select class="form-control" id="cita_medico" name="medico_id" required>
+                <option value="">Cargando...</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row mt-2">
+            <div class="col-md-6">
+              <label class="form-label">Fecha *</label>
+              <input class="form-control" type="date" id="cita_fecha" name="fecha" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Hora *</label>
+              <input class="form-control" type="time" id="cita_hora" name="hora" required>
+            </div>
+          </div>
+
+          <div class="row mt-2">
+            <div class="col-md-6">
+              <label class="form-label">Motivo</label>
+              <input class="form-control" type="text" id="cita_motivo" name="motivo">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Estado</label>
+              <select class="form-control" id="cita_estado" name="estado">
+                <option value="programada">Programada</option>
+                <option value="confirmada">Confirmada</option>
+                <option value="realizada">Realizada</option>
+                <option value="cancelada">Cancelada</option>
+                <option value="no_asistio">No Asistió</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row mt-2">
+            <div class="col-12">
+              <label class="form-label">Notas</label>
+              <textarea class="form-control" id="cita_notas" name="notas" rows="3"></textarea>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-modal-secondary" data-modal-close>Cancelar</button>
+        <button type="submit" form="formulario_cita" class="btn-modal-primary">
+          <i class="bi bi-save"></i> Guardar Cita
+        </button>
       </div>
     </div>
   </div>
+
+  <!-- Modal Confirmación Cerrar Sesión -->
+  <div id="modal_logout" class="modal-modern">
+    <div class="modal-overlay"></div>
+    <div class="modal-container modal-small">
+      <div class="modal-header">
+        <i class="bi bi-box-arrow-right"></i>
+        <h3>Cerrar Sesión</h3>
+        <button class="modal-close" data-modal-close>
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>¿Estás seguro que deseas cerrar sesión?</p>
+        <p style="font-size: 13px; color: #888;">Tendrás que volver a iniciar sesión para acceder al sistema.</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-secondary" data-modal-close>Cancelar</button>
+        <button id="boton_cerrar_sesion" class="btn-modal-danger">
+          <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+        </button>
+      </div>
+    </div>
+  </div>
+  <script src="../assets/js/modal-handler.js"></script>
+  <script src="../assets/js/modal-utils.js"></script>
   <script src="../assets/js/agenda.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="../assets/js/sidebar.js"></script>
+  <!-- sidebar.js eliminado, usamos offcanvas de Bootstrap -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../assets/js/load-sidebar.js"></script>
 </body>
+
 </html>

@@ -1,26 +1,8 @@
 <?php
 
-function obtener_conexion(){
-  $servidor   = '127.0.0.1';
-  $puerto     = 3306;
-  $basedatos  = 'clinica_cornejo';
-  $usuario    = 'admin';
-  $contrasena = 'e8d0055b61beef5a1681ee280703da98497636b40340afca';
-
-  try{
-    $dsn = "mysql:host=$servidor;port=$puerto;dbname=$basedatos;charset=utf8mb4";
-    $conexion = new PDO($dsn, $usuario, $contrasena, [
-      PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-      PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-      PDO::ATTR_EMULATE_PREPARES => false,
-    ]);
-  return $conexion;
-  } catch(PDOException $e){
-    return null;
-  }
-}
-
+require_once __DIR__ . '/../config/bd_huevos.php';
 function procesar_post_pacientes(){
+  require_once __DIR__ . '/bitacoras_helpers.php';
   $bd = obtener_conexion();
   if(!$bd) return ['error' => 'No se pudo conectar a la BD.'];
 
@@ -43,6 +25,7 @@ function procesar_post_pacientes(){
       $sentencia->execute();
       return ['ok'=>true, 'mensaje' => 'Paciente eliminado correctamente.'];
     }
+    // editar
     if($accion === 'editar'){
       $id = (int)($_POST['id'] ?? 0);
       $upd = 'UPDATE pacientes SET nombres=:nombres, apellidos=:apellidos, sexo=:sexo, fecha_nacimiento=:fecha_nacimiento, telefono=:telefono, email=:email, direccion=:direccion, ciudad=:ciudad, estado=:estado, cp=:cp, prioridad=:prioridad, tipo_sangre=:tipo_sangre, alergias=:alergias, notas=:notas WHERE paciente_id = :id';
@@ -62,8 +45,10 @@ function procesar_post_pacientes(){
       $sentencia->bindValue(':alergias', $_POST['alergias'] ?? null);
       $sentencia->bindValue(':notas', $_POST['notas'] ?? null);
       $sentencia->bindValue(':id', $id, PDO::PARAM_INT);
-      $sentencia->execute();
-      return ['ok'=>true, 'mensaje' => 'Paciente actualizado correctamente.'];
+  $sentencia->execute();
+  // registrar bitacora (usuario_id por ahora null)
+  registrar_bitacora_pdo($bd, null, 'UPDATE', 'pacientes', $id, 'Paciente editado');
+  return ['ok'=>true, 'mensaje' => 'Paciente actualizado correctamente.'];
     }
     // crear
     $ins = 'INSERT INTO pacientes (nombres, apellidos, sexo, fecha_nacimiento, telefono, email, direccion, ciudad, estado, cp, prioridad, tipo_sangre, alergias, notas) VALUES (:nombres, :apellidos, :sexo, :fecha_nacimiento, :telefono, :email, :direccion, :ciudad, :estado, :cp, :prioridad, :tipo_sangre, :alergias, :notas)';
@@ -83,6 +68,9 @@ function procesar_post_pacientes(){
   $sentencia->bindValue(':alergias', $_POST['alergias'] ?? null);
   $sentencia->bindValue(':notas', $_POST['notas'] ?? null);
   $sentencia->execute();
+  $id_nuevo = $bd->lastInsertId();
+  // registrar bitacora
+  registrar_bitacora_pdo($bd, null, 'INSERT', 'pacientes', $id_nuevo, 'Paciente creado');
   return ['ok'=>true, 'mensaje' => 'Paciente guardado correctamente.'];
   } catch(PDOException $e){
     return ['error' => $e->getMessage()];

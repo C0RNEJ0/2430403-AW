@@ -1,95 +1,83 @@
 <?php
+// Esto llama a la conexion
 require_once __DIR__ . '/../config/bd_huevos.php';
 
-$mensaje_exito = '';
-$mensaje_error = '';
+// Esto configura el json
+header('Content-Type: application/json; charset=utf-8');
 
-$conexion = null;
-try {
-  $conexion = obtenerConexion(); // mysqli
-} catch (Exception $e) {
-  $mensaje_error = 'Error de conexión: ' . $e->getMessage();
-}
+// Aqui conectamos a la base
+$bd = obtener_conexion();
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && $conexion) {
-  $accion = $_POST['accion'] ?? 'crear';
-  try {
-    if ($accion === 'eliminar') {
-      $id = (int)($_POST['id'] ?? 0);
-      $stmt = $conexion->prepare('DELETE FROM medicos WHERE medico_id = ? LIMIT 1');
-      $stmt->bind_param('i', $id);
-      $stmt->execute();
-      $stmt->close();
-      $mensaje_exito = 'Médico eliminado.';
-    } else {
-  $id = (int)($_POST['id'] ?? 0);
-  $nombre = trim($_POST['nombre'] ?? '');
-  $especialidad_text = trim($_POST['especialidad'] ?? '');
-  $horario = trim($_POST['horario'] ?? '');
-  $email = trim($_POST['email'] ?? '');
-  $telefono = trim($_POST['telefono'] ?? '');
-  $cedula_profesional = trim($_POST['cedula_profesional'] ?? '');
-  $activo = isset($_POST['activo']) ? 1 : 0;
-  $email_generado = false;
+// Obtenemos la accion
+$accion = $_REQUEST['accion'] ?? '';
 
-      // validaciones servidor
-      if ($nombre === '') {
-        $mensaje_error = 'El nombre del médico no puede estar vacío.';
-        header('Location: ../views/medicos.html?err=' . urlencode($mensaje_error));
-        exit;
-      }
-      if ($email !== '' && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $mensaje_error = 'El email del médico no es válido.';
-        header('Location: ../views/medicos.html?err=' . urlencode($mensaje_error));
-        exit;
-      }
-
-      if ($email === '') {
-        $email = 'sin-email-' . uniqid() . '@noemail.local';
-        $email_generado = true;
-      }
-
-      // buscar id de especialidad por nombre 
-      $especialidad_id = null;
-      if ($especialidad_text !== '') {
-        $s = $conexion->prepare('SELECT especialidad_id FROM especialidades WHERE nombre = ? LIMIT 1');
-        $s->bind_param('s', $especialidad_text);
-        $s->execute();
-        $res = $s->get_result();
-        if ($row = $res->fetch_assoc()) {
-          $especialidad_id = (int)$row['especialidad_id'];
-        }
-        $s->close();
-      }
-
-      if ($id > 0) {
-        $stmt = $conexion->prepare('UPDATE medicos SET nombre = ?, email = ?, telefono = ?, cedula_profesional = ?, especialidad_id = ?, horario = ?, activo = ? WHERE medico_id = ?');
-        $stmt->bind_param('ssssisii', $nombre, $email, $telefono, $cedula_profesional, $especialidad_id, $horario, $activo, $id);
-      } else {
-  $stmt = $conexion->prepare('INSERT INTO medicos (nombre, email, telefono, cedula_profesional, especialidad_id, horario, activo) VALUES (?, ?, ?, ?, ?, ?, ?)');
-  $stmt->bind_param('ssssisi', $nombre, $email, $telefono, $cedula_profesional, $especialidad_id, $horario, $activo);
-      }
-      $stmt->execute();
-      if ($stmt->errno === 1062) {
-        $mensaje_error = 'Error al procesar la petición: email duplicado.';
-        $stmt->close();
-        header('Location: ../views/medicos.html?error=' . urlencode($mensaje_error));
-        exit;
-      }
-      if ($id > 0) $stmt->close(); else $last = $conexion->insert_id;
-      $mensaje_exito = $id>0 ? 'Médico actualizado.' : 'Médico guardado.';
+// Si la accion es listar json traemos los medicos
+if ($accion === 'listar_json') {
+    try {
+        // Preparamos la consulta con especialidades
+        $sql = "SELECT m.*, e.nombre as especialidad_nombre 
+                FROM medicos m 
+                LEFT JOIN especialidades e ON m.especialidad_id = e.especialidad_id 
+                WHERE m.activo = 1 
+                ORDER BY m.nombre ASC";
+        $stmt = $bd->query($sql);
+        $medicos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        // Devolvemos los datos
+        echo json_encode(['exito' => true, 'datos' => $medicos]);
+    } catch (Exception $e) {
+        echo json_encode(['exito' => false, 'error' => $e->getMessage()]);
     }
-  } catch (Exception $e) {
-    $mensaje_error = 'Error al procesar la petición: ' . $e->getMessage();
-  }
 }
-
-if (!empty($mensaje_exito)) {
-  header('Location: ../views/medicos.html?exito=' . urlencode($mensaje_exito));
-  exit;
+// Si la accion es crear guardamos un nuevo medico
+else if ($accion === 'crear') {
+    try {
+        // Recogemos los datos
+        $nombre = $_POST['nombre'];
+        $email = $_POST['email'];
+        $telefono = $_POST['telefono'] ?? '';
+        $especialidad = $_POST['especialidad_id'] ?? null;
+        
+        // Insertamos en la base
+        $sql = "INSERT INTO medicos (nombre, email, telefono, especialidad_id, activo) VALUES (?, ?, ?, ?, 1)";
+        $stmt = $bd->prepare($sql);
+        $stmt->execute([$nombre, $email, $telefono, $especialidad]);
+        
+        echo json_encode(['exito' => true, 'mensaje' => 'Medico creado']);
+    } catch (Exception $e) {
+        echo json_encode(['exito' => false, 'error' => $e->getMessage()]);
+    }
 }
-if (!empty($mensaje_error)) {
-  header('Location: ../views/medicos.html?error=' . urlencode($mensaje_error));
-  exit;
+// Si la accion es editar actualizamos el medico
+else if ($accion === 'editar') {
+    try {
+        $id = $_POST['medico_id'];
+        $nombre = $_POST['nombre'];
+        $email = $_POST['email'];
+        $telefono = $_POST['telefono'] ?? '';
+        $especialidad = $_POST['especialidad_id'] ?? null;
+        
+        // Actualizamos los datos
+        $sql = "UPDATE medicos SET nombre=?, email=?, telefono=?, especialidad_id=? WHERE medico_id=?";
+        $stmt = $bd->prepare($sql);
+        $stmt->execute([$nombre, $email, $telefono, $especialidad, $id]);
+        
+        echo json_encode(['exito' => true, 'mensaje' => 'Medico actualizado']);
+    } catch (Exception $e) {
+        echo json_encode(['exito' => false, 'error' => $e->getMessage()]);
+    }
+}
+// Si la accion es eliminar borramos el medico
+else if ($accion === 'eliminar') {
+    try {
+        $id = $_POST['id'];
+        // Hacemos soft delete poniendo activo en 0
+        $stmt = $bd->prepare("UPDATE medicos SET activo = 0 WHERE medico_id = ?");
+        $stmt->execute([$id]);
+        
+        echo json_encode(['exito' => true, 'mensaje' => 'Medico eliminado']);
+    } catch (Exception $e) {
+        echo json_encode(['exito' => false, 'error' => $e->getMessage()]);
+    }
 }
 ?>

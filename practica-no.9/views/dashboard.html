@@ -1,44 +1,29 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard</title>
-  <link rel="stylesheet" href="../assets/css/styles.css">
+  <link rel="stylesheet" href="/assets/css/styles.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <style>body{padding:20px}</style>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="../assets/css/sidebar-modern.css">
+  <style>
+    body {
+      padding: 20px
+    }
+  </style>
 </head>
+
 <body>
   <div class="top-bar">
     La vida es la Prioridad ante todo
   </div>
   <div id="aplicacion">
-    <aside class="sidebar" id="barra_lateral">
-      <div class="brand">
-  <img src="/practica-no.9/assets/images/CS.png" alt="CS">
-        <div>
-          <div style="font-weight:800;">Clínica Cornejo</div>
-          <small style="opacity:0.9">Panel</small>
-        </div>
-      </div>
-  <nav>
-        <a href="dashboard.html"><span class="label">Dashboard</span></a>
-        <a href="../controllers/pacientes.php"><span class="label">Pacientes</span></a>
-        <a href="agenda.html"><span class="label">Agenda</span></a>
-        <a href="medicos.html"><span class="label">Médicos</span></a>
-        <a href="reportes.html"><span class="label">Reportes</span></a>
-        <a href="pagos.html"><span class="label">Pagos</span></a>
-        <a href="tarifas.html"><span class="label">Tarifas</span></a>
-        <a href="bitacoras.html"><span class="label">Bitácoras</span></a>
-        <a href="especialidades.html"><span class="label">Especialidades</span></a>
-  <a href="#" data-modal-target="#modal_logout"><span class="label">Cerrar Sesión</span></a>
-      </nav>
-      <div class="spacer"></div>
-  <button class="toggle-btn" id="boton_colapsar">Esconder</button>
-    </aside>
 
     <!-- Header superior con buscador y iconos -->
-  <div class="page-content" id="contenido_pagina">
+    <div class="page-content" id="contenido_pagina">
       <header>
         <div class="container">
           <div style="flex:1"></div>
@@ -47,9 +32,9 @@
               <input type="text" id="buscador" placeholder="Buscar">
             </div>
             <div class="icons">
-            
+
               <a href="#" id="icono_usuario" class="icon" title="Iniciar Sesion">
-                <img src="/practica-no.9/assets/images/Login.png" alt="Login" class="icon-img">
+                <img src="../assets/images/Login.png" alt="Login" class="icon-img">
               </a>
               <span id="usuario_email" style="margin-left:8px; font-size:0.9rem; color:#333;"></span>
             </div>
@@ -105,7 +90,18 @@
         <div class="col-12 col-lg-6">
           <div class="card p-3">
             <h5>Pacientes recientes</h5>
-            <div class="table-responsive"><table class="table table-sm" id="tabla_pacientes"><thead><tr><th>Nombre</th><th>Edad</th><th>Prioridad</th></tr></thead><tbody></tbody></table></div>
+            <div class="table-responsive">
+              <table class="table table-sm" id="tabla_pacientes">
+                <thead>
+                  <tr>
+                    <th>Nombre</th>
+                    <th>Edad</th>
+                    <th>Prioridad</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
           </div>
         </div>
         <div class="col-12 col-lg-6">
@@ -116,22 +112,38 @@
         </div>
       </div>
 
-      
+
     </div>
   </div>
   <!-- Modal Confirmación Cerrar Sesión -->
-  <div id="modal_logout" class="modal">
-    <div class="modal-content modal-small">
-      <h2>¿Cerrar sesión?</h2>
-      <p>¿Estás seguro que quieres cerrar sesión?</p>
-      <div class="modal-buttons">
-        <button id="boton_cerrar_sesion" class="btn-modal">Si, cerrar</button>
-        <button id="boton_cancelar_cerrar_sesion" class="btn-modal btn-secondary" data-modal-close>No</button>
+  <div id="modal_logout" class="modal-modern">
+    <div class="modal-overlay"></div>
+    <div class="modal-container modal-small">
+      <div class="modal-header">
+        <i class="bi bi-box-arrow-right"></i>
+        <h3>Cerrar Sesión</h3>
+        <button class="modal-close" data-modal-close>
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>¿Estás seguro que deseas cerrar sesión?</p>
+        <p style="font-size: 13px; color: #888;">Tendrás que volver a iniciar sesión para acceder al sistema.</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-secondary" data-modal-close>Cancelar</button>
+        <button id="boton_cerrar_sesion" class="btn-modal-danger">
+          <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+        </button>
       </div>
     </div>
   </div>
+  <script src="../assets/js/modal-handler.js"></script>
+  <script src="../assets/js/global-modals.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="../assets/js/load-sidebar.js"></script>
   <script src="../assets/js/dashboard.js"></script>
-  <script src="../assets/js/sidebar.js"></script>
 </body>
+
 </html>
