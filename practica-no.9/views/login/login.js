@@ -1,8 +1,6 @@
 
-// Login y Funciones Básicas
-// Clínica Cornejo
 
-// Función para mostrar alertas bonitas o normales
+// Función para mostrar alertas
 const mostrarAlerta = (titulo, texto, icono) => {
     if (window.Swal && typeof Swal.fire === 'function') return Swal.fire(titulo, texto, icono);
     alert(`${titulo}: ${texto}`);

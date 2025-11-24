@@ -1,6 +1,6 @@
 // admin.js
 document.addEventListener('DOMContentLoaded', function () {
-    // Variables globales simples
+    // Variables globales
     let idEliminar = null;
     let tipoEliminar = ''; // 'usuario', 'paciente', 'medico'
 

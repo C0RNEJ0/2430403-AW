@@ -1,7 +1,3 @@
-/**
- * Gestión de Usuarios
- * Clínica Cornejo
- */
 
 (function () {
     'use strict';
@@ -246,7 +242,7 @@
     }
 
     /**
-     * Cambiar estado (Activar/Desactivar)
+     * Cambiar estado Activaro Desactivar
      */
     async function cambiarEstado(id, nuevoEstado) {
         const formData = new FormData();

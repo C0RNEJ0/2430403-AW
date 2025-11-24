@@ -1,9 +1,5 @@
 <?php
-/**
- * Controlador de Administración de Personal
- * Clínica Cornejo
- * Solo accesible para Super Admin
- */
+
 
 define('BASE_PATH', dirname(__DIR__));
 

@@ -22,10 +22,41 @@ document.addEventListener('DOMContentLoaded', function () {
     renderizarCalendario();
   };
 
+  // --- FUNCIONES PARA MODALES ---
+
+  window.abrirModalNuevaCita = function () {
+    document.getElementById('formulario_cita').reset();
+    document.getElementById('cita_id').value = '';
+    document.getElementById('accion_cita').value = 'crear';
+    document.getElementById('titulo_modal_cita').innerText = 'Nueva Cita';
+    document.getElementById('modal_cita').style.display = 'flex';
+  };
+
+  window.editarCita = function (id) {
+    const cita = citas.find(c => c.cita_id == id);
+    if (!cita) return;
+
+    document.getElementById('cita_id').value = cita.cita_id;
+    document.getElementById('accion_cita').value = 'editar';
+    document.getElementById('cita_paciente').value = cita.paciente_id;
+    document.getElementById('cita_medico').value = cita.medico_id;
+
+    let partes = cita.fecha_hora_inicio.split(' ');
+    document.getElementById('cita_fecha').value = partes[0];
+    document.getElementById('cita_hora').value = partes[1].substring(0, 5);
+
+    document.getElementById('cita_motivo').value = cita.motivo || '';
+    document.getElementById('cita_estado').value = cita.estado;
+    document.getElementById('cita_notas').value = cita.notas || '';
+
+    document.getElementById('titulo_modal_cita').innerText = 'Editar Cita';
+    document.getElementById('modal_cita').style.display = 'flex';
+  };
+
   // Botón nueva cita
   const btnNueva = document.getElementById('btn_nueva_cita');
   if (btnNueva) {
-    btnNueva.onclick = abrirModalNuevaCita;
+    btnNueva.onclick = window.abrirModalNuevaCita;
   }
 
   // --- CARGA DE DATOS ---
@@ -146,38 +177,7 @@ document.addEventListener('DOMContentLoaded', function () {
     grid.innerHTML = html;
   }
 
-  // --- MODAL Y FORMULARIO ---
-
-  window.abrirModalNuevaCita = function () {
-    document.getElementById('formulario_cita').reset();
-    document.getElementById('cita_id').value = '';
-    document.getElementById('accion_cita').value = 'crear';
-    document.getElementById('titulo_modal_cita').innerText = 'Nueva Cita';
-    document.getElementById('modal_cita').style.display = 'flex';
-  };
-
-  window.editarCita = function (id) {
-    // Buscar cita en el array local
-    const cita = citas.find(c => c.cita_id == id);
-    if (!cita) return;
-
-    document.getElementById('cita_id').value = cita.cita_id;
-    document.getElementById('accion_cita').value = 'editar';
-    document.getElementById('cita_paciente').value = cita.paciente_id;
-    document.getElementById('cita_medico').value = cita.medico_id;
-
-    // Separar fecha y hora
-    let partes = cita.fecha_hora_inicio.split(' ');
-    document.getElementById('cita_fecha').value = partes[0];
-    document.getElementById('cita_hora').value = partes[1].substring(0, 5);
-
-    document.getElementById('cita_motivo').value = cita.motivo || '';
-    document.getElementById('cita_estado').value = cita.estado;
-    document.getElementById('cita_notas').value = cita.notas || '';
-
-    document.getElementById('titulo_modal_cita').innerText = 'Editar Cita';
-    document.getElementById('modal_cita').style.display = 'flex';
-  };
+  // --- FORMULARIO DE CITA ---
 
   // Guardar cita (submit del formulario)
   const form = document.getElementById('formulario_cita');

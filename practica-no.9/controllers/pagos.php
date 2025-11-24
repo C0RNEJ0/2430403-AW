@@ -49,7 +49,7 @@ function listar_pagos($conexion) {
         
         if ($id_pago > 0) {
             // obtener un pago especifico
-            $consulta = 'SELECT pago_id, fecha, paciente, medico, servicio, monto, metodo FROM vw_pagos_ui WHERE pago_id = ? LIMIT 1';
+            $consulta = 'SELECT pago_id, fecha, paciente, medico, servicio, monto, metodo_pago as metodo FROM vw_pagos_ui WHERE pago_id = ? LIMIT 1';
             $stmt = $conexion->prepare($consulta);
             $stmt->bind_param('i', $id_pago);
             $stmt->execute();
@@ -60,7 +60,7 @@ function listar_pagos($conexion) {
         }
         
         // obtener todos los pagos
-        $consulta = 'SELECT pago_id, fecha, paciente, medico, servicio, monto, metodo FROM vw_pagos_ui ORDER BY fecha DESC';
+        $consulta = 'SELECT pago_id, fecha, paciente, medico, servicio, monto, metodo_pago as metodo FROM vw_pagos_ui ORDER BY fecha DESC';
         $resultado = $conexion->query($consulta);
         $lista_pagos = [];
         
@@ -80,7 +80,7 @@ function obtener_pago_por_id($conexion) {
         $id_pago = isset($_GET['id']) ? (int)$_GET['id'] : 0;
         
         if ($id_pago > 0) {
-            $consulta = 'SELECT pago_id, fecha, paciente, medico, servicio, monto, metodo FROM vw_pagos_ui WHERE pago_id = ? LIMIT 1';
+            $consulta = 'SELECT pago_id, fecha, paciente, medico, servicio, monto, metodo_pago as metodo FROM vw_pagos_ui WHERE pago_id = ? LIMIT 1';
             $stmt = $conexion->prepare($consulta);
             $stmt->bind_param('i', $id_pago);
             $stmt->execute();
@@ -105,13 +105,13 @@ function consultar_por_fecha($conexion) {
         $metodo_filtro = $_GET['metodo'] ?? '';
         
         // construir consulta base
-        $consulta = "SELECT pago_id, fecha, paciente, medico, servicio, monto, metodo 
+        $consulta = "SELECT pago_id, fecha, paciente, medico, servicio, monto, metodo_pago as metodo 
                      FROM vw_pagos_ui 
                      WHERE fecha BETWEEN ? AND ?";
         
         // agregar filtro de metodo si existe
         if ($metodo_filtro) {
-            $consulta .= " AND metodo = ?";
+            $consulta .= " AND metodo_pago = ?";
         }
         
         $consulta .= " ORDER BY fecha DESC";
@@ -148,7 +148,7 @@ function generar_corte_caja($conexion) {
         
         // consulta para obtener desglose de pagos
         $consulta = "SELECT pago_id, fecha, paciente as paciente_paga, 
-                     medico as medico_recibe, servicio, metodo, monto
+                     medico as medico_recibe, servicio, metodo_pago as metodo, monto
                      FROM vw_pagos_ui 
                      WHERE fecha BETWEEN ? AND ?
                      ORDER BY fecha DESC";

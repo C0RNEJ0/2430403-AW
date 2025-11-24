@@ -1,5 +1,5 @@
 <?php
-// Helpers simples para registrar bitácoras usando PDO o mysqli
+// Helpers para registrar bitácoras 
 require_once __DIR__ . '/../config/bd_huevos.php';
 
 function registrar_bitacora_pdo($bd, $usuario_id, $accion, $tabla, $registro_id = null, $detalles = null){

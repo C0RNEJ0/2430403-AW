@@ -13,11 +13,149 @@
         body {
             padding: 20px
         }
+        .badge {
+            font-size: 0.85rem;
+        }
     </style>
 </head>
 
 <body>
+    <div class="top-bar">
+        La vida es la Prioridad ante todo
+    </div>
     <div id="aplicacion">
-    <!-- Contenido principal -->
-    <div class="page-content" id="contenido_pagina">
+        <!-- Contenido principal -->
+        <div class="page-content" id="contenido_pagina">
+            <div class="container-fluid px-4 mt-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h1>Panel de Administración</h1>
+                        <p class="text-muted">Gestión de usuarios y logs del sistema</p>
+                    </div>
+                </div>
 
+                <!-- Tabs de navegación -->
+                <ul class="nav nav-tabs mb-4" id="adminTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="logs-tab" data-bs-toggle="tab" data-bs-target="#logs" type="button" role="tab">
+                            <i class="bi bi-journal-text"></i> Logs de Usuarios
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="usuarios-tab" data-bs-toggle="tab" data-bs-target="#usuarios" type="button" role="tab">
+                            <i class="bi bi-people"></i> Usuarios
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="sistema-tab" data-bs-toggle="tab" data-bs-target="#sistema" type="button" role="tab">
+                            <i class="bi bi-gear"></i> Sistema
+                        </button>
+                    </li>
+                </ul>
+
+                <!-- Contenido de las tabs -->
+                <div class="tab-content" id="adminTabsContent">
+                    <!-- Tab de Logs -->
+                    <div class="tab-pane fade show active" id="logs" role="tabpanel">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row mb-3">
+                                    <div class="col-md-8">
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="bi bi-search"></i></span>
+                                            <input type="text" id="buscar_logs" class="form-control" placeholder="Buscar en logs...">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 text-end">
+                                        <button id="btn_recargar_logs" class="btn btn-primary">
+                                            <i class="bi bi-arrow-clockwise"></i> Recargar
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="table-responsive">
+                                    <table id="tabla_logs" class="table table-striped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Usuario</th>
+                                                <th>Acción</th>
+                                                <th>Tabla</th>
+                                                <th>Detalles</th>
+                                                <th>IP</th>
+                                                <th>Fecha</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td colspan="7" class="text-center">Cargando logs...</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab de Usuarios -->
+                    <div class="tab-pane fade" id="usuarios" role="tabpanel">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Gestión de Usuarios</h5>
+                                <p class="text-muted">Aquí puedes gestionar los usuarios del sistema</p>
+                                <div class="alert alert-info">
+                                    <i class="bi bi-info-circle"></i> Esta sección está en desarrollo
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab de Sistema -->
+                    <div class="tab-pane fade" id="sistema" role="tabpanel">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Configuración del Sistema</h5>
+                                <p class="text-muted">Configuración general del sistema</p>
+                                <div class="alert alert-info">
+                                    <i class="bi bi-info-circle"></i> Esta sección está en desarrollo
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Confirmación Cerrar Sesión -->
+    <div id="modal_logout" class="modal-modern">
+        <div class="modal-overlay"></div>
+        <div class="modal-container modal-small">
+            <div class="modal-header">
+                <i class="bi bi-box-arrow-right"></i>
+                <h3>Cerrar Sesión</h3>
+                <button class="modal-close" data-modal-close>
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>¿Estás seguro que deseas cerrar sesión?</p>
+                <p style="font-size: 13px; color: #888;">Tendrás que volver a iniciar sesión para acceder al sistema.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-modal-secondary" data-modal-close>Cancelar</button>
+                <button id="boton_cerrar_sesion" class="btn-modal-danger">
+                    <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/js/modal-handler.js"></script>
+    <script src="../assets/js/global-modals.js"></script>
+    <script src="../assets/js/load-sidebar.js"></script>
+    <script src="../assets/js/logs.js"></script>
+</body>
+
+</html>

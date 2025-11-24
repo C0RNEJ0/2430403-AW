@@ -1,6 +1,4 @@
-// archivo: assets/js/pagos.js
-// manejo de pagos con filtros por fecha y corte de caja
-// todas las variables y comentarios en español junior
+
 
 (function () {
   // variables globales para manejar los pagos

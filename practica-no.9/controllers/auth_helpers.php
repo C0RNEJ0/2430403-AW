@@ -1,5 +1,5 @@
 <?php
-// Helpers simples de auth por sesión (español junior)
+// Helpers  de auth por sesión 
 require_once __DIR__ . '/../config/bd_huevos.php';
 session_start();
 
