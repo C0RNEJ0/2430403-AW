@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Roles</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="../assets/css/sidebar-modern.css">
+    <style>
+        body {
+            padding: 20px;
+        }
+
+        .badge {
+            font-size: 0.85rem;
+        }
+
+        .table-actions {
+            white-space: nowrap;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="top-bar">
+        La vida es la Prioridad ante todo
+    </div>
+    <div id="aplicacion">
+        <!-- Contenido principal -->
+        <div class="page-content" id="contenido_pagina">
+            <div class="container-fluid px-4 mt-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h1><i class="bi bi-shield-lock"></i> Gestión de Roles</h1>
+                        <p class="text-muted">Administra los roles del sistema</p>
+                    </div>
+                    <button class="btn btn-primary" onclick="abrirModalNuevoRol()">
+                        <i class="bi bi-plus-circle"></i> Nuevo Rol
+                    </button>
+                </div>
+
+                <!-- Tabla de roles -->
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="tabla_roles" class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Nombre</th>
+                                        <th>Descripción</th>
+                                        <th>Usuarios</th>
+                                        <th class="text-end">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="5" class="text-center">Cargando roles...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Nuevo/Editar Rol -->
+    <div id="modal_rol" class="modal-modern">
+        <div class="modal-overlay"></div>
+        <div class="modal-container">
+            <div class="modal-header">
+                <i class="bi bi-shield-lock"></i>
+                <h3 id="modal_rol_titulo">Nuevo Rol</h3>
+                <button class="modal-close" data-modal-close>
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="form_rol">
+                    <input type="hidden" id="rol_id" name="rol_id">
+
+                    <div class="mb-3">
+                        <label for="rol_nombre" class="form-label">Nombre del Rol *</label>
+                        <input type="text" class="form-control" id="rol_nombre" name="nombre" required>
+                        <small class="text-muted">Ejemplo: medico, secretaria, enfermera</small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="rol_descripcion" class="form-label">Descripción</label>
+                        <textarea class="form-control" id="rol_descripcion" name="descripcion" rows="3"></textarea>
+                        <small class="text-muted">Descripción opcional del rol y sus responsabilidades</small>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-modal-secondary" data-modal-close>Cancelar</button>
+                <button id="btn_guardar_rol" class="btn-modal-primary" onclick="guardarRol()">
+                    <i class="bi bi-save"></i> Guardar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Confirmación Eliminar -->
+    <div id="modal_eliminar_rol" class="modal-modern">
+        <div class="modal-overlay"></div>
+        <div class="modal-container modal-small">
+            <div class="modal-header">
+                <i class="bi bi-exclamation-triangle text-danger"></i>
+                <h3>Confirmar Eliminación</h3>
+                <button class="modal-close" data-modal-close>
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>¿Estás seguro que deseas eliminar este rol?</p>
+                <p class="text-muted" style="font-size: 13px;">
+                    <strong>Nota:</strong> No se puede eliminar un rol que tenga usuarios asociados.
+                </p>
+                <input type="hidden" id="eliminar_rol_id">
+            </div>
+            <div class="modal-footer">
+                <button class="btn-modal-secondary" data-modal-close>Cancelar</button>
+                <button id="btn_confirmar_eliminar" class="btn-modal-danger" onclick="confirmarEliminarRol()">
+                    <i class="bi bi-trash"></i> Eliminar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Cerrar Sesión -->
+    <div id="modal_logout" class="modal-modern">
+        <div class="modal-overlay"></div>
+        <div class="modal-container modal-small">
+            <div class="modal-header">
+                <i class="bi bi-box-arrow-right"></i>
+                <h3>Cerrar Sesión</h3>
+                <button class="modal-close" data-modal-close>
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>¿Estás seguro que deseas cerrar sesión?</p>
+                <p style="font-size: 13px; color: #888;">Tendrás que volver a iniciar sesión para acceder al sistema.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-modal-secondary" data-modal-close>Cancelar</button>
+                <button id="boton_cerrar_sesion" class="btn-modal-danger">
+                    <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/js/modal-handler.js"></script>
+    <script src="../assets/js/global-modals.js"></script>
+    <script src="../assets/js/load-sidebar.js"></script>
+    <script src="../assets/js/roles.js"></script>
+</body>
+
+</html>

@@ -13,6 +13,7 @@
         body {
             padding: 20px
         }
+
         .badge {
             font-size: 0.85rem;
         }
@@ -37,17 +38,26 @@
                 <!-- Tabs de navegación -->
                 <ul class="nav nav-tabs mb-4" id="adminTabs" role="tablist">
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="logs-tab" data-bs-toggle="tab" data-bs-target="#logs" type="button" role="tab">
+                        <button class="nav-link active" id="logs-tab" data-bs-toggle="tab" data-bs-target="#logs"
+                            type="button" role="tab">
                             <i class="bi bi-journal-text"></i> Logs de Usuarios
                         </button>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="usuarios-tab" data-bs-toggle="tab" data-bs-target="#usuarios" type="button" role="tab">
+                        <button class="nav-link" id="usuarios-tab" data-bs-toggle="tab" data-bs-target="#usuarios"
+                            type="button" role="tab">
                             <i class="bi bi-people"></i> Usuarios
                         </button>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="sistema-tab" data-bs-toggle="tab" data-bs-target="#sistema" type="button" role="tab">
+                        <button class="nav-link" id="roles-tab" data-bs-toggle="tab" data-bs-target="#roles"
+                            type="button" role="tab">
+                            <i class="bi bi-shield-lock"></i> Roles
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="sistema-tab" data-bs-toggle="tab" data-bs-target="#sistema"
+                            type="button" role="tab">
                             <i class="bi bi-gear"></i> Sistema
                         </button>
                     </li>
@@ -63,7 +73,8 @@
                                     <div class="col-md-8">
                                         <div class="input-group">
                                             <span class="input-group-text"><i class="bi bi-search"></i></span>
-                                            <input type="text" id="buscar_logs" class="form-control" placeholder="Buscar en logs...">
+                                            <input type="text" id="buscar_logs" class="form-control"
+                                                placeholder="Buscar en logs...">
                                         </div>
                                     </div>
                                     <div class="col-md-4 text-end">
@@ -110,7 +121,33 @@
                         </div>
                     </div>
 
+                    <!-- Tab de Roles -->
+                    <div class="tab-pane fade" id="roles" role="tabpanel">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title mb-3">
+                                    <i class="bi bi-shield-lock"></i> Gestión de Roles
+                                </h5>
+                                <p class="text-muted mb-4">Administra los roles del sistema y sus permisos</p>
+
+                                <!-- Botón para ir a la vista completa -->
+                                <div class="d-grid gap-2">
+                                    <a href="roles.html" class="btn btn-primary">
+                                        <i class="bi bi-box-arrow-up-right"></i> Abrir Gestión de Roles
+                                    </a>
+                                </div>
+
+                                <div class="alert alert-info mt-3">
+                                    <i class="bi bi-info-circle"></i>
+                                    Los roles definen los permisos de acceso de los usuarios en el sistema.
+                                    Roles disponibles: super_admin, medico, secretaria, paciente.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Tab de Sistema -->
+
                     <div class="tab-pane fade" id="sistema" role="tabpanel">
                         <div class="card">
                             <div class="card-body">
@@ -140,7 +177,8 @@
             </div>
             <div class="modal-body">
                 <p>¿Estás seguro que deseas cerrar sesión?</p>
-                <p style="font-size: 13px; color: #888;">Tendrás que volver a iniciar sesión para acceder al sistema.</p>
+                <p style="font-size: 13px; color: #888;">Tendrás que volver a iniciar sesión para acceder al sistema.
+                </p>
             </div>
             <div class="modal-footer">
                 <button class="btn-modal-secondary" data-modal-close>Cancelar</button>
