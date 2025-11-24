@@ -1,7 +1,4 @@
-/**
- * Script global para conectar funciones de modales
- * Se incluye en todas las páginas para manejar cerrar sesión
- */
+
 
 // esperar a que el DOM esté listo
 document.addEventListener('DOMContentLoaded', function () {

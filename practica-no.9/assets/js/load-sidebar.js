@@ -1,7 +1,4 @@
-/**
- * Load Sidebar - Carga dinámica del sidebar 
- * Clínica Cornejo
- */
+
 
 (function () {
     'use strict';

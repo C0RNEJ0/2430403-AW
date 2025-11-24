@@ -1,4 +1,4 @@
-// agenda.js - Versión Simplificada
+// agenda.js 
 document.addEventListener('DOMContentLoaded', function () {
   // Variables globales
   let fechaActual = new Date();
@@ -88,8 +88,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const mes = fechaActual.getMonth();
 
     const primerDiaSemana = new Date(anio, mes, 1).getDay(); // 0 = Domingo
-    // Ajustar para que lunes sea 0 (opcional, pero común en latam)
-    // Aquí usaremos domingo como inicio estándar de JS para simplificar
+    // Ajustar para que lunes sea 0
+    // Aquí usaremos domingo como inicio estándar de JS 
 
     const ultimoDiaMes = new Date(anio, mes + 1, 0).getDate();
 
@@ -201,9 +201,7 @@ document.addEventListener('DOMContentLoaded', function () {
     };
   }
 
-  // Botón eliminar en el modal (si existe, o agregar uno dinámicamente)
-  // Para simplificar, asumimos que si editas puedes querer eliminar
-  // Podríamos agregar un botón de eliminar en el modal si no existe en el HTML original
+
 
   // Cerrar modales
   document.querySelectorAll('.modal-close, .btn-modal-secondary').forEach(btn => {

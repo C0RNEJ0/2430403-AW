@@ -1,6 +1,115 @@
 <?php
 
 require_once __DIR__ . '/../config/bd_huevos.php';
+
+/**
+ * Valida y sanitiza los datos de entrada de un paciente
+ * @param array $datos Datos del formulario
+ * @return array ['valido' => bool, 'errores' => array, 'datos' => array]
+ */
+function validar_datos_paciente($datos) {
+  $errores = [];
+  $datos_limpios = [];
+  
+  // Validar campos obligatorios
+  if (empty(trim($datos['nombres'] ?? ''))) {
+    $errores[] = 'El campo Nombres es obligatorio.';
+  } else {
+    $datos_limpios['nombres'] = trim($datos['nombres']);
+    if (strlen($datos_limpios['nombres']) > 100) {
+      $errores[] = 'El campo Nombres no puede exceder 100 caracteres.';
+    }
+  }
+  
+  if (empty(trim($datos['apellidos'] ?? ''))) {
+    $errores[] = 'El campo Apellidos es obligatorio.';
+  } else {
+    $datos_limpios['apellidos'] = trim($datos['apellidos']);
+    if (strlen($datos_limpios['apellidos']) > 100) {
+      $errores[] = 'El campo Apellidos no puede exceder 100 caracteres.';
+    }
+  }
+  
+  // Validar sexo (opcional pero debe ser válido si se proporciona)
+  $sexo = trim($datos['sexo'] ?? '');
+  if (!empty($sexo) && !in_array($sexo, ['F', 'M', 'O'])) {
+    $errores[] = 'El valor de Sexo no es válido.';
+  }
+  $datos_limpios['sexo'] = $sexo ?: null;
+  
+  // Validar fecha de nacimiento (opcional pero debe ser válida)
+  $fecha_nac = trim($datos['fecha_nacimiento'] ?? '');
+  if (!empty($fecha_nac)) {
+    $fecha_obj = DateTime::createFromFormat('Y-m-d', $fecha_nac);
+    if (!$fecha_obj || $fecha_obj->format('Y-m-d') !== $fecha_nac) {
+      $errores[] = 'La fecha de nacimiento no es válida.';
+    } else {
+      // Verificar que no sea una fecha futura
+      if ($fecha_obj > new DateTime()) {
+        $errores[] = 'La fecha de nacimiento no puede ser futura.';
+      }
+    }
+  }
+  $datos_limpios['fecha_nacimiento'] = $fecha_nac ?: null;
+  
+  // Validar teléfono (opcional pero debe tener formato válido)
+  $telefono = trim($datos['telefono'] ?? '');
+  if (!empty($telefono)) {
+    // Permitir números, espacios, guiones y paréntesis
+    if (!preg_match('/^[\d\s\-\(\)\+]+$/', $telefono)) {
+      $errores[] = 'El formato del teléfono no es válido.';
+    }
+    if (strlen($telefono) > 20) {
+      $errores[] = 'El teléfono no puede exceder 20 caracteres.';
+    }
+  }
+  $datos_limpios['telefono'] = $telefono ?: null;
+  
+  // Validar email (opcional pero debe ser válido)
+  $email = trim($datos['email'] ?? '');
+  if (!empty($email)) {
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+      $errores[] = 'El formato del email no es válido.';
+    }
+    if (strlen($email) > 150) {
+      $errores[] = 'El email no puede exceder 150 caracteres.';
+    }
+  }
+  $datos_limpios['email'] = $email ?: null;
+  
+  // Sanitizar y validar longitud de campos de texto
+  $campos_texto = [
+    'direccion' => 200,
+    'ciudad' => 100,
+    'estado' => 100,
+    'cp' => 10,
+    'tipo_sangre' => 10,
+    'alergias' => 500,
+    'notas' => 1000
+  ];
+  
+  foreach ($campos_texto as $campo => $max_longitud) {
+    $valor = trim($datos[$campo] ?? '');
+    if (strlen($valor) > $max_longitud) {
+      $errores[] = "El campo " . ucfirst(str_replace('_', ' ', $campo)) . " no puede exceder {$max_longitud} caracteres.";
+    }
+    $datos_limpios[$campo] = $valor ?: null;
+  }
+  
+  // Validar prioridad
+  $prioridad = trim($datos['prioridad'] ?? 'Baja');
+  if (!in_array($prioridad, ['Baja', 'Media', 'Alta', 'Crítica'])) {
+    $prioridad = 'Baja';
+  }
+  $datos_limpios['prioridad'] = $prioridad;
+  
+  return [
+    'valido' => empty($errores),
+    'errores' => $errores,
+    'datos' => $datos_limpios
+  ];
+}
+
 function procesar_post_pacientes(){
   require_once __DIR__ . '/bitacoras_helpers.php';
   $bd = obtener_conexion();
@@ -28,22 +137,30 @@ function procesar_post_pacientes(){
     // editar
     if($accion === 'editar'){
       $id = (int)($_POST['id'] ?? 0);
+      
+      // Validar datos de entrada
+      $validacion = validar_datos_paciente($_POST);
+      if (!$validacion['valido']) {
+        return ['ok' => false, 'error' => implode(' ', $validacion['errores'])];
+      }
+      
+      $datos = $validacion['datos'];
       $upd = 'UPDATE pacientes SET nombres=:nombres, apellidos=:apellidos, sexo=:sexo, fecha_nacimiento=:fecha_nacimiento, telefono=:telefono, email=:email, direccion=:direccion, ciudad=:ciudad, estado=:estado, cp=:cp, prioridad=:prioridad, tipo_sangre=:tipo_sangre, alergias=:alergias, notas=:notas WHERE paciente_id = :id';
       $sentencia = $bd->prepare($upd);
-      $sentencia->bindValue(':nombres', $_POST['nombres'] ?? null);
-      $sentencia->bindValue(':apellidos', $_POST['apellidos'] ?? null);
-      $sentencia->bindValue(':sexo', $_POST['sexo'] ?? null);
-      $sentencia->bindValue(':fecha_nacimiento', $_POST['fecha_nacimiento'] ?? null);
-      $sentencia->bindValue(':telefono', $_POST['telefono'] ?? null);
-      $sentencia->bindValue(':email', $_POST['email'] ?? null);
-      $sentencia->bindValue(':direccion', $_POST['direccion'] ?? null);
-      $sentencia->bindValue(':ciudad', $_POST['ciudad'] ?? null);
-      $sentencia->bindValue(':estado', $_POST['estado'] ?? null);
-      $sentencia->bindValue(':cp', $_POST['cp'] ?? null);
-      $sentencia->bindValue(':prioridad', $_POST['prioridad'] ?? 'Baja');
-      $sentencia->bindValue(':tipo_sangre', $_POST['tipo_sangre'] ?? null);
-      $sentencia->bindValue(':alergias', $_POST['alergias'] ?? null);
-      $sentencia->bindValue(':notas', $_POST['notas'] ?? null);
+      $sentencia->bindValue(':nombres', $datos['nombres']);
+      $sentencia->bindValue(':apellidos', $datos['apellidos']);
+      $sentencia->bindValue(':sexo', $datos['sexo']);
+      $sentencia->bindValue(':fecha_nacimiento', $datos['fecha_nacimiento']);
+      $sentencia->bindValue(':telefono', $datos['telefono']);
+      $sentencia->bindValue(':email', $datos['email']);
+      $sentencia->bindValue(':direccion', $datos['direccion']);
+      $sentencia->bindValue(':ciudad', $datos['ciudad']);
+      $sentencia->bindValue(':estado', $datos['estado']);
+      $sentencia->bindValue(':cp', $datos['cp']);
+      $sentencia->bindValue(':prioridad', $datos['prioridad']);
+      $sentencia->bindValue(':tipo_sangre', $datos['tipo_sangre']);
+      $sentencia->bindValue(':alergias', $datos['alergias']);
+      $sentencia->bindValue(':notas', $datos['notas']);
       $sentencia->bindValue(':id', $id, PDO::PARAM_INT);
   $sentencia->execute();
   // registrar bitacora (usuario_id por ahora null)
@@ -51,29 +168,43 @@ function procesar_post_pacientes(){
   return ['ok'=>true, 'mensaje' => 'Paciente actualizado correctamente.'];
     }
     // crear
-    $ins = 'INSERT INTO pacientes (nombres, apellidos, sexo, fecha_nacimiento, telefono, email, direccion, ciudad, estado, cp, prioridad, tipo_sangre, alergias, notas) VALUES (:nombres, :apellidos, :sexo, :fecha_nacimiento, :telefono, :email, :direccion, :ciudad, :estado, :cp, :prioridad, :tipo_sangre, :alergias, :notas)';
+    // Validar datos de entrada
+    $validacion = validar_datos_paciente($_POST);
+    if (!$validacion['valido']) {
+      return ['ok' => false, 'error' => implode(' ', $validacion['errores'])];
+    }
+    
+    $datos = $validacion['datos'];
+  $ins = 'INSERT INTO pacientes (nombres, apellidos, sexo, fecha_nacimiento, telefono, email, direccion, ciudad, estado, cp, prioridad, tipo_sangre, alergias, notas) VALUES (:nombres, :apellidos, :sexo, :fecha_nacimiento, :telefono, :email, :direccion, :ciudad, :estado, :cp, :prioridad, :tipo_sangre, :alergias, :notas)';
   $sentencia = $bd->prepare($ins);
-  $sentencia->bindValue(':nombres', $_POST['nombres'] ?? null);
-  $sentencia->bindValue(':apellidos', $_POST['apellidos'] ?? null);
-  $sentencia->bindValue(':sexo', $_POST['sexo'] ?? null);
-  $sentencia->bindValue(':fecha_nacimiento', $_POST['fecha_nacimiento'] ?? null);
-  $sentencia->bindValue(':telefono', $_POST['telefono'] ?? null);
-  $sentencia->bindValue(':email', $_POST['email'] ?? null);
-  $sentencia->bindValue(':direccion', $_POST['direccion'] ?? null);
-  $sentencia->bindValue(':ciudad', $_POST['ciudad'] ?? null);
-  $sentencia->bindValue(':estado', $_POST['estado'] ?? null);
-  $sentencia->bindValue(':cp', $_POST['cp'] ?? null);
-  $sentencia->bindValue(':prioridad', $_POST['prioridad'] ?? 'Baja');
-  $sentencia->bindValue(':tipo_sangre', $_POST['tipo_sangre'] ?? null);
-  $sentencia->bindValue(':alergias', $_POST['alergias'] ?? null);
-  $sentencia->bindValue(':notas', $_POST['notas'] ?? null);
+  $sentencia->bindValue(':nombres', $datos['nombres']);
+  $sentencia->bindValue(':apellidos', $datos['apellidos']);
+  $sentencia->bindValue(':sexo', $datos['sexo']);
+  $sentencia->bindValue(':fecha_nacimiento', $datos['fecha_nacimiento']);
+  $sentencia->bindValue(':telefono', $datos['telefono']);
+  $sentencia->bindValue(':email', $datos['email']);
+  $sentencia->bindValue(':direccion', $datos['direccion']);
+  $sentencia->bindValue(':ciudad', $datos['ciudad']);
+  $sentencia->bindValue(':estado', $datos['estado']);
+  $sentencia->bindValue(':cp', $datos['cp']);
+  $sentencia->bindValue(':prioridad', $datos['prioridad']);
+  $sentencia->bindValue(':tipo_sangre', $datos['tipo_sangre']);
+  $sentencia->bindValue(':alergias', $datos['alergias']);
+  $sentencia->bindValue(':notas', $datos['notas']);
   $sentencia->execute();
   $id_nuevo = $bd->lastInsertId();
   // registrar bitacora
   registrar_bitacora_pdo($bd, null, 'INSERT', 'pacientes', $id_nuevo, 'Paciente creado');
   return ['ok'=>true, 'mensaje' => 'Paciente guardado correctamente.'];
   } catch(PDOException $e){
-    return ['error' => $e->getMessage()];
+    // Mejorar mensaje de error para duplicados
+    $mensaje_error = $e->getMessage();
+    if (strpos($mensaje_error, 'Duplicate entry') !== false) {
+      if (strpos($mensaje_error, 'email') !== false) {
+        $mensaje_error = 'El email ingresado ya está registrado en el sistema. Por favor use un email diferente.';
+      }
+    }
+    return ['ok' => false, 'error' => $mensaje_error];
   }
 }
 

@@ -1,4 +1,4 @@
-// admin.js - Versión Simplificada
+// admin.js
 document.addEventListener('DOMContentLoaded', function () {
     // Variables globales simples
     let idEliminar = null;
@@ -148,7 +148,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         alert('Error al guardar');
                     }
                 } catch (e) {
-                    // Si falla JSON, asumimos éxito y recargamos (parche rápido)
+                    // Si falla JSON, asumimos éxito y recargamos 
                     cerrarModal('modal_paciente');
                     cargarPacientes();
                 }

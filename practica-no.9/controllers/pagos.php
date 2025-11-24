@@ -11,7 +11,7 @@ $accion = $_GET['accion'] ?? $_POST['accion'] ?? 'listar';
 $metodo_http = $_SERVER['REQUEST_METHOD'];
 
 // obtener conexion a la base de datos
-$conexion = obtenerConexion();
+$conexion = obtener_conexion_mysqli();
 
 // manejar las diferentes acciones
 switch ($accion) {

@@ -36,12 +36,14 @@ else if ($accion === 'crear') {
         $nombre = $_POST['nombre'];
         $email = $_POST['email'];
         $telefono = $_POST['telefono'] ?? '';
-        $especialidad = $_POST['especialidad_id'] ?? null;
+        // El formulario envía 'especialidad', pero también soportamos 'especialidad_id'
+        $especialidad = $_POST['especialidad'] ?? $_POST['especialidad_id'] ?? null;
+        $horario = $_POST['horario'] ?? '';
         
         // Insertamos en la base
-        $sql = "INSERT INTO medicos (nombre, email, telefono, especialidad_id, activo) VALUES (?, ?, ?, ?, 1)";
+        $sql = "INSERT INTO medicos (nombre, email, telefono, especialidad_id, horario, activo) VALUES (?, ?, ?, ?, ?, 1)";
         $stmt = $bd->prepare($sql);
-        $stmt->execute([$nombre, $email, $telefono, $especialidad]);
+        $stmt->execute([$nombre, $email, $telefono, $especialidad, $horario]);
         
         echo json_encode(['exito' => true, 'mensaje' => 'Medico creado']);
     } catch (Exception $e) {
@@ -55,12 +57,13 @@ else if ($accion === 'editar') {
         $nombre = $_POST['nombre'];
         $email = $_POST['email'];
         $telefono = $_POST['telefono'] ?? '';
-        $especialidad = $_POST['especialidad_id'] ?? null;
+        $especialidad = $_POST['especialidad'] ?? $_POST['especialidad_id'] ?? null;
+        $horario = $_POST['horario'] ?? '';
         
         // Actualizamos los datos
-        $sql = "UPDATE medicos SET nombre=?, email=?, telefono=?, especialidad_id=? WHERE medico_id=?";
+        $sql = "UPDATE medicos SET nombre=?, email=?, telefono=?, especialidad_id=?, horario=? WHERE medico_id=?";
         $stmt = $bd->prepare($sql);
-        $stmt->execute([$nombre, $email, $telefono, $especialidad, $id]);
+        $stmt->execute([$nombre, $email, $telefono, $especialidad, $horario, $id]);
         
         echo json_encode(['exito' => true, 'mensaje' => 'Medico actualizado']);
     } catch (Exception $e) {
@@ -71,11 +74,18 @@ else if ($accion === 'editar') {
 else if ($accion === 'eliminar') {
     try {
         $id = $_POST['id'];
-        // Hacemos soft delete poniendo activo en 0
-        $stmt = $bd->prepare("UPDATE medicos SET activo = 0 WHERE medico_id = ?");
+        // Intentamos eliminar físicamente (hard delete)
+        $stmt = $bd->prepare("DELETE FROM medicos WHERE medico_id = ?");
         $stmt->execute([$id]);
         
-        echo json_encode(['exito' => true, 'mensaje' => 'Medico eliminado']);
+        echo json_encode(['exito' => true, 'mensaje' => 'Medico eliminado permanentemente']);
+    } catch (PDOException $e) {
+        // Verificar si es error de constraint (citas asociadas)
+        if ($e->getCode() == '23000') {
+            echo json_encode(['exito' => false, 'error' => 'No se puede eliminar el médico porque tiene citas o registros asociados.']);
+        } else {
+            echo json_encode(['exito' => false, 'error' => $e->getMessage()]);
+        }
     } catch (Exception $e) {
         echo json_encode(['exito' => false, 'error' => $e->getMessage()]);
     }

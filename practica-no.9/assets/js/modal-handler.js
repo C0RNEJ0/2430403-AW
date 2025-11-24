@@ -1,7 +1,4 @@
-/**
- * Sistema de Manejo de Modales
- * Clínica Cornejo
- */
+
 
 class ModalHandler {
     constructor() {
@@ -138,14 +135,29 @@ function cerrarModal(modalId) {
  * Limpia los datos de sesión y redirige al login
  */
 function cerrar_sesion() {
-    // limpiar datos de sesion local
-    localStorage.removeItem('usuario_actual');
-    localStorage.removeItem('usuario_email');
-    localStorage.removeItem('usuario_rol');
-    sessionStorage.clear();
-
-    // redirigir al login
-    window.location.href = '../views/login/login.html';
+    // Enviar petición al backend para destruir sesión PHP
+    fetch('../controllers/login.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: 'accion=logout'
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Sesión cerrada en servidor:', data);
+        })
+        .catch(error => {
+            console.error('Error al cerrar sesión en servidor:', error);
+        })
+        .finally(() => {
+            // Limpiar datos locales y redirigir siempre
+            localStorage.removeItem('usuario_actual');
+            localStorage.removeItem('usuario_email');
+            localStorage.removeItem('usuario_rol');
+            sessionStorage.clear();
+            window.location.href = '../views/login/login.html';
+        });
 }
 
 // Exponer funciones y objetos globalmente

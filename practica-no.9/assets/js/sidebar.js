@@ -90,26 +90,37 @@
 
   if (overlay) overlay.addEventListener('click', cerrarSidebarMovil);
 
-  // Manejar botón de cerrar sesión
-  const logoutBtn = document.querySelector('.sidebar-nav a[onclick*="modal_logout"]');
-  if (logoutBtn) {
-    logoutBtn.addEventListener('click', function (e) {
+  // Manejar botón de cerrar sesión con delegación de eventos
+  document.addEventListener('click', function (e) {
+    // Buscar si el clic fue en el botón de logout o dentro de él
+    const logoutLink = e.target.closest('a[onclick*="modal_logout"]');
+
+    if (logoutLink) {
       e.preventDefault();
-      // Intentar abrir el modal usando el modalHandler global
+      console.log('Click en logout detectado via delegación');
+
+      // Intentar abrir el modal
       if (typeof abrirModal === 'function') {
         abrirModal('modal_logout');
       } else if (window.modalHandler) {
         window.modalHandler.openModal('modal_logout');
       } else {
-        // Fallback: abrir modal manualmente
+        // Fallback manual
         const modal = document.getElementById('modal_logout');
         if (modal) {
           modal.classList.add('show');
           document.body.style.overflow = 'hidden';
+        } else {
+          console.error('Modal logout no encontrado');
+          // Último recurso: cerrar sesión directo si no hay modal
+          if (confirm('¿Cerrar sesión?')) {
+            if (typeof cerrar_sesion === 'function') cerrar_sesion();
+            else window.location.href = '../views/login/login.html';
+          }
         }
       }
-    });
-  }
+    }
+  });
 
   // Inicialización
   aplicarEstado();

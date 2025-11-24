@@ -4,7 +4,7 @@ require_once __DIR__ . '/../config/bd_huevos.php';
 header('Content-Type: application/json; charset=utf-8');
 
 try {
-  $conn = obtenerConexion();
+  $conn = obtener_conexion_mysqli();
   $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
   if ($id>0) {
     // obtener médico por id

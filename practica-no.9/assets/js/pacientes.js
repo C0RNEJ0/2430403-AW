@@ -103,9 +103,18 @@ document.addEventListener('DOMContentLoaded', function () {
       // Validar campos requeridos
       var nombre = formPaciente.querySelector('[name="nombres"]');
       var apellidos = formPaciente.querySelector('[name="apellidos"]');
+      var email = formPaciente.querySelector('[name="email"]');
+      var telefono = formPaciente.querySelector('[name="telefono"]');
+      var fechaNac = formPaciente.querySelector('[name="fecha_nacimiento"]');
 
       if (nombre && nombre.value.trim() === '') {
         alert('El campo Nombres es obligatorio.');
+        nombre.focus();
+        return false;
+      }
+
+      if (nombre && nombre.value.trim().length > 100) {
+        alert('El campo Nombres no puede exceder 100 caracteres.');
         nombre.focus();
         return false;
       }
@@ -114,6 +123,53 @@ document.addEventListener('DOMContentLoaded', function () {
         alert('El campo Apellidos es obligatorio.');
         apellidos.focus();
         return false;
+      }
+
+      if (apellidos && apellidos.value.trim().length > 100) {
+        alert('El campo Apellidos no puede exceder 100 caracteres.');
+        apellidos.focus();
+        return false;
+      }
+
+      // Validar email si se proporciona
+      if (email && email.value.trim() !== '') {
+        var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email.value.trim())) {
+          alert('El formato del email no es válido.');
+          email.focus();
+          return false;
+        }
+        if (email.value.trim().length > 150) {
+          alert('El email no puede exceder 150 caracteres.');
+          email.focus();
+          return false;
+        }
+      }
+
+      // Validar teléfono si se proporciona
+      if (telefono && telefono.value.trim() !== '') {
+        var telefonoRegex = /^[\d\s\-\(\)\+]+$/;
+        if (!telefonoRegex.test(telefono.value.trim())) {
+          alert('El formato del teléfono no es válido. Solo se permiten números, espacios, guiones, paréntesis y el signo +.');
+          telefono.focus();
+          return false;
+        }
+        if (telefono.value.trim().length > 20) {
+          alert('El teléfono no puede exceder 20 caracteres.');
+          telefono.focus();
+          return false;
+        }
+      }
+
+      // Validar fecha de nacimiento si se proporciona
+      if (fechaNac && fechaNac.value.trim() !== '') {
+        var fechaObj = new Date(fechaNac.value);
+        var hoy = new Date();
+        if (fechaObj > hoy) {
+          alert('La fecha de nacimiento no puede ser futura.');
+          fechaNac.focus();
+          return false;
+        }
       }
 
       // Enviar formulario
