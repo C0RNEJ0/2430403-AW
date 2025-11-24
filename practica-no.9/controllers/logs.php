@@ -11,6 +11,18 @@ if (!$conexion) {
 }
 
 try {
+    // verificar si la tabla bitacora existe
+    $check_table = "SHOW TABLES LIKE 'bitacora'";
+    $stmt_check = $conexion->prepare($check_table);
+    $stmt_check->execute();
+    $table_exists = $stmt_check->fetch();
+    
+    if (!$table_exists) {
+        // si no existe la tabla, devolver array vacio
+        echo json_encode(['exito' => true, 'datos' => [], 'mensaje' => 'Tabla de bitácora no existe aún']);
+        exit;
+    }
+    
     // consulta para obtener logs de bitacora
     $sql = "SELECT 
                 b.bitacora_id,
