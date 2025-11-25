@@ -180,8 +180,121 @@ function confirmarEliminarRol() {
 
 // NUEVO: Abrir modal para crear usuario con un rol específico
 function abrirModalCrearUsuario(nombreRol, rolId) {
-    // Por ahora mostrar un alert, luego implementaremos el modal completo
-    alert(`Funcionalidad para crear usuario con rol "${nombreRol}" en desarrollo.\n\nPróximamente podrás:\n- Crear médicos con email y contraseña\n- Crear secretarias con email y contraseña\n- Asociar automáticamente el rol correcto`);
+    // Resetear formulario
+    document.getElementById('form_crear_usuario').reset();
+    document.getElementById('usuario_rol_nombre').value = nombreRol;
+
+    // Actualizar título
+    document.getElementById('modal_usuario_titulo').textContent = `Crear Usuario - ${nombreRol.charAt(0).toUpperCase() + nombreRol.slice(1)}`;
+
+    // Ocultar todos los campos específicos
+    document.getElementById('campos_medico').style.display = 'none';
+    document.getElementById('campos_secretaria').style.display = 'none';
+
+    // Mostrar campos según el rol
+    if (nombreRol === 'medico') {
+        document.getElementById('usuario_accion').value = 'crear_medico';
+        document.getElementById('campos_medico').style.display = 'block';
+        cargarEspecialidades();
+    } else if (nombreRol === 'secretaria') {
+        document.getElementById('usuario_accion').value = 'crear_secretaria';
+        document.getElementById('campos_secretaria').style.display = 'block';
+        cargarMedicosParaAsociar();
+    }
+
+    abrirModal('modal_crear_usuario');
+}
+
+// Cargar especialidades para el select
+function cargarEspecialidades() {
+    fetch('../controllers/especialidades_list.php')
+        .then(response => response.json())
+        .then(data => {
+            const select = document.getElementById('usuario_especialidad');
+            let html = '<option value="">Seleccionar especialidad...</option>';
+
+            if (data.exito && data.datos) {
+                data.datos.forEach(esp => {
+                    html += `<option value="${esp.especialidad_id}">${escapeHtml(esp.nombre)}</option>`;
+                });
+            }
+
+            select.innerHTML = html;
+        })
+        .catch(error => {
+            console.error('Error al cargar especialidades:', error);
+        });
+}
+
+// Cargar médicos para asociar a secretaria
+function cargarMedicosParaAsociar() {
+    fetch('../controllers/medicos_list.php')
+        .then(response => response.json())
+        .then(data => {
+            const select = document.getElementById('usuario_medico_asociado');
+            let html = '<option value="">Sin médico asociado</option>';
+
+            if (data.exito && data.datos) {
+                data.datos.forEach(med => {
+                    html += `<option value="${med.medico_id}">${escapeHtml(med.nombre)}</option>`;
+                });
+            }
+
+            select.innerHTML = html;
+        })
+        .catch(error => {
+            console.error('Error al cargar médicos:', error);
+        });
+}
+
+// Guardar usuario con rol
+function guardarUsuarioRol() {
+    const form = document.getElementById('form_crear_usuario');
+    const formData = new FormData(form);
+
+    // Validar campos requeridos
+    const nombre = formData.get('nombre').trim();
+    const email = formData.get('email').trim();
+    const password = formData.get('password');
+
+    if (!nombre || !email || !password) {
+        mostrarError('Por favor completa todos los campos requeridos');
+        return;
+    }
+
+    if (password.length < 6) {
+        mostrarError('La contraseña debe tener al menos 6 caracteres');
+        return;
+    }
+
+    // Deshabilitar botón
+    const btnGuardar = document.getElementById('btn_guardar_usuario');
+    const textoOriginal = btnGuardar.innerHTML;
+    btnGuardar.disabled = true;
+    btnGuardar.innerHTML = '<i class="bi bi-hourglass-split"></i> Creando...';
+
+    fetch('../controllers/crear_usuario_rol.php', {
+        method: 'POST',
+        body: formData
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.exito) {
+                mostrarExito(data.mensaje || 'Usuario creado exitosamente');
+                cerrarModal('modal_crear_usuario');
+                cargarRoles(); // Recargar tabla para actualizar conteo
+            } else {
+                mostrarError(data.error || 'Error al crear usuario');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            mostrarError('Error de conexión al crear usuario');
+        })
+        .finally(() => {
+            btnGuardar.disabled = false;
+            btnGuardar.innerHTML = textoOriginal;
+        });
 }
 
 // Mostrar mensaje de éxito
