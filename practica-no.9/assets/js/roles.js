@@ -3,9 +3,7 @@ document.addEventListener('DOMContentLoaded', function () {
     cargarRoles();
 });
 
-
 // Cargar y mostrar todos los roles
-
 function cargarRoles() {
     fetch('../controllers/roles.php?accion=listar')
         .then(response => response.json())
@@ -22,9 +20,7 @@ function cargarRoles() {
         });
 }
 
-
 // carga la tabla de roles
-
 function renderizarTablaRoles(roles) {
     const tbody = document.querySelector('#tabla_roles tbody');
 
@@ -44,6 +40,9 @@ function renderizarTablaRoles(roles) {
                 </span>
             </td>
             <td class="text-end table-actions">
+                <button class="btn btn-sm btn-success" onclick="abrirModalCrearUsuario('${escapeHtml(rol.nombre)}', ${rol.rol_id})" title="Crear Usuario">
+                    <i class="bi bi-person-plus"></i>
+                </button>
                 <button class="btn btn-sm btn-outline-primary" onclick="abrirModalEditarRol(${rol.rol_id})" title="Editar">
                     <i class="bi bi-pencil"></i>
                 </button>
@@ -179,9 +178,14 @@ function confirmarEliminarRol() {
         });
 }
 
+// NUEVO: Abrir modal para crear usuario con un rol específico
+function abrirModalCrearUsuario(nombreRol, rolId) {
+    // Por ahora mostrar un alert, luego implementaremos el modal completo
+    alert(`Funcionalidad para crear usuario con rol "${nombreRol}" en desarrollo.\n\nPróximamente podrás:\n- Crear médicos con email y contraseña\n- Crear secretarias con email y contraseña\n- Asociar automáticamente el rol correcto`);
+}
+
 // Mostrar mensaje de éxito
 function mostrarExito(mensaje) {
-    // Crear alerta temporal
     const alerta = document.createElement('div');
     alerta.className = 'alert alert-success alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3';
     alerta.style.zIndex = '9999';
@@ -191,7 +195,6 @@ function mostrarExito(mensaje) {
     `;
     document.body.appendChild(alerta);
 
-    // Remover después de 3 segundos
     setTimeout(() => {
         alerta.remove();
     }, 3000);
@@ -199,7 +202,6 @@ function mostrarExito(mensaje) {
 
 // Mostrar mensaje de error
 function mostrarError(mensaje) {
-    // Crear alerta temporal
     const alerta = document.createElement('div');
     alerta.className = 'alert alert-danger alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3';
     alerta.style.zIndex = '9999';
@@ -209,7 +211,6 @@ function mostrarError(mensaje) {
     `;
     document.body.appendChild(alerta);
 
-    // Remover después de 5 segundos
     setTimeout(() => {
         alerta.remove();
     }, 5000);
@@ -228,7 +229,6 @@ function escapeHtml(text) {
     return text.replace(/[&<>"']/g, m => map[m]);
 }
 
-// Abrir modal
 // Abrir modal
 function abrirModal(modalId) {
     const modal = document.getElementById(modalId);
