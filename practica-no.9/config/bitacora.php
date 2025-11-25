@@ -1,8 +1,4 @@
 <?php
-/**
- * Sistema de Bitácoras y Auditoría
- * Clínica Cornejo
- */
 
 // Prevenir acceso directo
 if (!defined('BASE_PATH')) {

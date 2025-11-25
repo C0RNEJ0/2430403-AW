@@ -41,7 +41,7 @@ function obtener_conexion() {
 }
 
 /**
- * Obtener conexión MySQLi (para compatibilidad con código antiguo)
+ * Obtener conexión MySQLi (para compatibilidad con código antiguo que ya no suoe donde quedo)
  * 
  * @return mysqli|null Conexión MySQLi o null en caso de error
  */

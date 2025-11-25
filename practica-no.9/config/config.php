@@ -1,5 +1,5 @@
 <?php
-// Configuracion basica del proyecto
+// Configuracion del proyecto
 // Clinica cornejo
 
 // Evitar que entren directo al archivo

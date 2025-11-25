@@ -1,8 +1,4 @@
 <?php
-/**
- * Controlador de Login
- * Clínica Cornejo
- */
 
 // Definir ruta base
 define('BASE_PATH', dirname(__DIR__));

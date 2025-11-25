@@ -1,8 +1,5 @@
 <?php
-/**
- * Controlador para crear usuarios con roles específicos
- * Crea automáticamente el registro en medicos si es necesario
- */
+
 
 require_once __DIR__ . '/../config/bd_huevos.php';
 require_once __DIR__ . '/../controllers/bitacoras_helpers.php';

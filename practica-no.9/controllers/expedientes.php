@@ -1,5 +1,5 @@
 <?php
-// Controlador simple de expedientes
+// Controlador de expedientes
 // Esto llama a la conexion
 require_once __DIR__ . '/../config/bd_huevos.php';
 require_once __DIR__ . '/pacientes_actions.php';
