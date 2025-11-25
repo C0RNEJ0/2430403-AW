@@ -183,6 +183,93 @@
                             </select>
                         </div>
 
+                        <!-- aqui el admin puede seleccionar los permisos del usuario -->
+                        <div class="mb-3" id="div_permisos">
+                            <label class="form-label fw-bold">Permisos de Acceso</label>
+                            <small class="text-muted d-block mb-2">Selecciona a qué módulos puede acceder este
+                                usuario</small>
+                            <div class="card border-0 bg-light p-3">
+                                <div class="row g-2">
+                                    <!-- columna izquierda de permisos -->
+                                    <div class="col-md-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="permiso_dashboard"
+                                                name="permisos[]" value="dashboard" checked disabled>
+                                            <label class="form-check-label" for="permiso_dashboard">
+                                                <i class="bi bi-speedometer2 me-1"></i> Dashboard
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="permiso_pacientes"
+                                                name="permisos[]" value="pacientes">
+                                            <label class="form-check-label" for="permiso_pacientes">
+                                                <i class="bi bi-people me-1"></i> Pacientes
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="permiso_agenda"
+                                                name="permisos[]" value="agenda">
+                                            <label class="form-check-label" for="permiso_agenda">
+                                                <i class="bi bi-calendar3 me-1"></i> Agenda
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="permiso_medicos"
+                                                name="permisos[]" value="medicos">
+                                            <label class="form-check-label" for="permiso_medicos">
+                                                <i class="bi bi-person-badge me-1"></i> Médicos
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="permiso_expedientes"
+                                                name="permisos[]" value="expedientes">
+                                            <label class="form-check-label" for="permiso_expedientes">
+                                                <i class="bi bi-folder2-open me-1"></i> Expedientes
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <!-- columna derecha de permisos -->
+                                    <div class="col-md-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="permiso_pagos"
+                                                name="permisos[]" value="pagos">
+                                            <label class="form-check-label" for="permiso_pagos">
+                                                <i class="bi bi-cash-coin me-1"></i> Pagos
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="permiso_tarifas"
+                                                name="permisos[]" value="tarifas">
+                                            <label class="form-check-label" for="permiso_tarifas">
+                                                <i class="bi bi-currency-dollar me-1"></i> Tarifas
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="permiso_reportes"
+                                                name="permisos[]" value="reportes">
+                                            <label class="form-check-label" for="permiso_reportes">
+                                                <i class="bi bi-file-earmark-bar-graph me-1"></i> Reportes
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="permiso_admin"
+                                                name="permisos[]" value="admin">
+                                            <label class="form-check-label" for="permiso_admin">
+                                                <i class="bi bi-gear me-1"></i> Administración
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="permiso_bitacoras"
+                                                name="permisos[]" value="bitacoras">
+                                            <label class="form-check-label" for="permiso_bitacoras">
+                                                <i class="bi bi-journal-text me-1"></i> Bitácoras
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="d-grid gap-2 mt-4">
                             <button type="submit" class="btn btn-primary btn-lg">
                                 <i class="bi bi-save me-2"></i>Guardar Usuario

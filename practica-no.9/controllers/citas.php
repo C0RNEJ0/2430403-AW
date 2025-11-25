@@ -18,24 +18,65 @@ $accion = $_POST['accion'] ?? $_GET['accion'] ?? 'listar';
 try {
     switch ($accion) {
         case 'listar':
-            // listar todas las citas con info de paciente y medico
-            $sql = "SELECT 
-                        c.cita_id,
-                        c.paciente_id,
-                        c.medico_id,
-                        c.motivo,
-                        c.notas,
-                        c.fecha_hora_inicio,
-                        c.fecha_hora_fin,
-                        c.estado,
-                        CONCAT(p.nombres, ' ', p.apellidos) as paciente_nombre,
-                        m.nombre as medico_nombre
-                    FROM citas c
-                    LEFT JOIN pacientes p ON c.paciente_id = p.paciente_id
-                    LEFT JOIN medicos m ON c.medico_id = m.medico_id
-                    ORDER BY c.fecha_hora_inicio DESC";
+            // aqui listamos las citas pero filtramos segun el rol
+            // si es medico solo ve sus citas, si es admin ve todas
+            session_start();
+            $usuario_rol = $_SESSION['usuario_rol'] ?? null;
+            $usuario_id = $_SESSION['usuario_id'] ?? null;
             
-            $stmt = $bd->prepare($sql);
+            // si es medico necesitamos su medico_id
+            $medico_id = null;
+            if ($usuario_rol === 'medico' && $usuario_id) {
+                $stmt_medico = $bd->prepare('SELECT medico_id FROM usuarios WHERE usuario_id = :uid LIMIT 1');
+                $stmt_medico->bindValue(':uid', $usuario_id, PDO::PARAM_INT);
+                $stmt_medico->execute();
+                $medico_data = $stmt_medico->fetch();
+                if ($medico_data) {
+                    $medico_id = $medico_data['medico_id'];
+                }
+            }
+            
+            // aqui armamos la consulta segun el rol
+            if ($usuario_rol === 'medico' && $medico_id) {
+                // el medico solo ve sus propias citas
+                $sql = "SELECT 
+                            c.cita_id,
+                            c.paciente_id,
+                            c.medico_id,
+                            c.motivo,
+                            c.notas,
+                            c.fecha_hora_inicio,
+                            c.fecha_hora_fin,
+                            c.estado,
+                            CONCAT(p.nombres, ' ', p.apellidos) as paciente_nombre,
+                            m.nombre as medico_nombre
+                        FROM citas c
+                        LEFT JOIN pacientes p ON c.paciente_id = p.paciente_id
+                        LEFT JOIN medicos m ON c.medico_id = m.medico_id
+                        WHERE c.medico_id = :medico_id
+                        ORDER BY c.fecha_hora_inicio DESC";
+                $stmt = $bd->prepare($sql);
+                $stmt->bindValue(':medico_id', $medico_id, PDO::PARAM_INT);
+            } else {
+                // el admin o secretaria ven todas las citas
+                $sql = "SELECT 
+                            c.cita_id,
+                            c.paciente_id,
+                            c.medico_id,
+                            c.motivo,
+                            c.notas,
+                            c.fecha_hora_inicio,
+                            c.fecha_hora_fin,
+                            c.estado,
+                            CONCAT(p.nombres, ' ', p.apellidos) as paciente_nombre,
+                            m.nombre as medico_nombre
+                        FROM citas c
+                        LEFT JOIN pacientes p ON c.paciente_id = p.paciente_id
+                        LEFT JOIN medicos m ON c.medico_id = m.medico_id
+                        ORDER BY c.fecha_hora_inicio DESC";
+                $stmt = $bd->prepare($sql);
+            }
+            
             $stmt->execute();
             $citas = $stmt->fetchAll(PDO::FETCH_ASSOC);
             

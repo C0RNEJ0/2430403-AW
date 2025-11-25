@@ -103,6 +103,9 @@ function crearUsuario() {
     $medico_id = !empty($_POST['medico_id']) ? intval($_POST['medico_id']) : null;
     $paciente_id = !empty($_POST['paciente_id']) ? intval($_POST['paciente_id']) : null;
     
+    // aqui obtenemos los permisos que el admin selecciono
+    $permisos = isset($_POST['permisos']) ? json_decode($_POST['permisos'], true) : [];
+    
     if (empty($nombre) || empty($email) || empty($password) || empty($rol)) {
         throw new Exception('Todos los campos son requeridos');
     }
@@ -166,6 +169,19 @@ function crearUsuario() {
     $nuevo_id = $stmt->insert_id;
     $stmt->close();
     
+    // aqui guardamos los permisos del usuario en la tabla permisos_usuario
+    if (!empty($permisos) && is_array($permisos)) {
+        $stmt_permiso = $conn->prepare("INSERT INTO permisos_usuario (usuario_id, modulo) VALUES (?, ?)");
+        foreach ($permisos as $modulo) {
+            $modulo = trim($modulo);
+            if (!empty($modulo)) {
+                $stmt_permiso->bind_param("is", $nuevo_id, $modulo);
+                $stmt_permiso->execute();
+            }
+        }
+        $stmt_permiso->close();
+    }
+    
     // Registrar en bitácora
     registrarAccion(
         $usuario_actual['usuario_id'],
@@ -174,7 +190,7 @@ function crearUsuario() {
         $nuevo_id,
         "Usuario creado: {$nombre} ({$email}) con rol {$rol}",
         null,
-        ['nombre' => $nombre, 'email' => $email, 'rol' => $rol]
+        ['nombre' => $nombre, 'email' => $email, 'rol' => $rol, 'permisos' => $permisos]
     );
     
     echo json_encode([
@@ -183,6 +199,7 @@ function crearUsuario() {
         'usuario_id' => $nuevo_id
     ]);
 }
+
 
 /**
  * Editar usuario existente

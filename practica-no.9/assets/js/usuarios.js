@@ -25,7 +25,56 @@ document.addEventListener('DOMContentLoaded', function () {
             filtrarUsuarios(termino);
         });
     }
+
+    // aqui conectamos el formulario de usuario para guardar con permisos
+    const formUsuario = document.getElementById('form_usuario');
+    if (formUsuario) {
+        formUsuario.addEventListener('submit', function (e) {
+            e.preventDefault();
+            guardarUsuarioConPermisos();
+        });
+    }
 });
+
+// aqui guardamos el usuario junto con sus permisos seleccionados
+function guardarUsuarioConPermisos() {
+    const form = document.getElementById('form_usuario');
+    const formData = new FormData(form);
+
+    // aqui obtenemos todos los permisos que el admin marco
+    const permisosSeleccionados = [];
+    document.querySelectorAll('input[name="permisos[]"]:checked').forEach(checkbox => {
+        if (!checkbox.disabled) {
+            permisosSeleccionados.push(checkbox.value);
+        }
+    });
+
+    // agregamos los permisos al formulario
+    formData.append('permisos', JSON.stringify(permisosSeleccionados));
+    formData.append('accion', 'crear');
+
+    // enviamos todo al servidor
+    fetch('../controllers/usuarios.php', {
+        method: 'POST',
+        body: formData
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.exito) {
+                alert('Usuario creado con permisos exitosamente');
+                const modal = bootstrap.Modal.getInstance(document.getElementById('modal_usuario'));
+                if (modal) modal.hide();
+                cargarUsuarios();
+            } else {
+                alert('Error: ' + (data.error || 'Error desconocido'));
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error al guardar usuario');
+        });
+}
+
 
 let usuariosData = [];
 
@@ -115,6 +164,31 @@ function filtrarUsuarios(termino) {
     );
 
     renderizarTablaUsuarios(filtrados);
+}
+
+// aqui abrimos el modal para crear un nuevo usuario
+function abrirModalUsuario() {
+    // limpiamos el formulario
+    const form = document.getElementById('form_usuario');
+    if (form) form.reset();
+
+    // limpiamos todos los checkboxes de permisos
+    document.querySelectorAll('input[name="permisos[]"]').forEach(checkbox => {
+        if (!checkbox.disabled) {
+            checkbox.checked = false;
+        }
+    });
+
+    // cambiamos el titulo del modal
+    const titulo = document.getElementById('modal_usuario_titulo');
+    if (titulo) titulo.textContent = 'Nuevo Usuario';
+
+    // abrimos el modal usando Bootstrap
+    const modalElement = document.getElementById('modal_usuario');
+    if (modalElement) {
+        const modal = new bootstrap.Modal(modalElement);
+        modal.show();
+    }
 }
 
 // Abrir modal de edición

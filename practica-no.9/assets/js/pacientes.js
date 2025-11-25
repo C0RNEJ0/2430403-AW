@@ -265,41 +265,57 @@ async function cargarPacientes() {
   } catch (err) { console.error('cargarPacientes', err); }
 }
 
-// Función para abrir modal de editar con datos del paciente
+// aqui abrimos el modal para editar un paciente que ya existe
 function abrirModalEditar(paciente) {
-  var acc = document.getElementById('accion_form'); if (acc) acc.value = 'editar';
-  var pid = document.getElementById('paciente_id'); if (pid) pid.value = paciente.paciente_id;
+  // primero cambiamos la accion del formulario a editar
+  var acc = document.getElementById('accion_form');
+  if (acc) acc.value = 'editar';
 
-  // Llenar campos del formulario
+  // guardamos el id del paciente que vamos a editar
+  var pid = document.getElementById('paciente_id');
+  if (pid) pid.value = paciente.paciente_id;
+
+  // ahora llenamos todos los campos del formulario con los datos del paciente
   var form = document.getElementById('formulario_paciente');
   if (form) {
+    // aqui ponemos el nombre y apellidos
     form.querySelector('[name="nombres"]').value = paciente.nombres || '';
     form.querySelector('[name="apellidos"]').value = paciente.apellidos || '';
+
+    // datos basicos como sexo y fecha de nacimiento
     form.querySelector('[name="sexo"]').value = paciente.sexo || '';
     form.querySelector('[name="fecha_nacimiento"]').value = paciente.fecha_nacimiento || '';
+
+    // informacion de contacto
     form.querySelector('[name="telefono"]').value = paciente.telefono || '';
     form.querySelector('[name="email"]').value = paciente.email || '';
+
+    // direccion completa del paciente
     form.querySelector('[name="direccion"]').value = paciente.direccion || '';
     form.querySelector('[name="ciudad"]').value = paciente.ciudad || '';
     form.querySelector('[name="estado"]').value = paciente.estado || '';
     form.querySelector('[name="cp"]').value = paciente.cp || '';
+
+    // prioridad y datos medicos
     form.querySelector('[name="prioridad"]').value = paciente.prioridad || 'Baja';
     form.querySelector('[name="tipo_sangre"]').value = paciente.tipo_sangre || '';
     form.querySelector('[name="alergias"]').value = paciente.alergias || '';
     form.querySelector('[name="notas"]').value = paciente.notas || '';
 
-    // Seleccionar especialidad y médico si existen
+    // si tiene especialidad asignada la seleccionamos
     var espSelect = document.getElementById('p_especialidad');
     if (espSelect && paciente.especialidad) {
       espSelect.value = paciente.especialidad;
     }
+
+    // lo mismo con el medico asignado
     var medSelect = document.getElementById('p_medico_asignado');
     if (medSelect && paciente.medico_asignado) {
       medSelect.value = paciente.medico_asignado;
     }
   }
 
-  // Mostrar botón de cobro y configurar evento
+  // mostramos el boton de cobro porque estamos editando un paciente existente
   var btnCobro = document.getElementById('btn_registrar_cobro');
   if (btnCobro) {
     btnCobro.style.display = 'inline-flex';
@@ -308,11 +324,11 @@ function abrirModalEditar(paciente) {
     };
   }
 
-  // Abrir modal usando modal-utils
+  // finalmente abrimos el modal con toda la info cargada
   if (typeof abrirModal === 'function') {
     abrirModal('modal_paciente');
   } else {
-    // Fallback
+    // por si acaso no existe la funcion abrirModal
     var modal = document.getElementById('modal_paciente');
     if (modal) {
       modal.classList.add('show');

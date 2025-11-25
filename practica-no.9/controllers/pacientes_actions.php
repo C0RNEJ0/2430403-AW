@@ -208,14 +208,50 @@ function procesar_post_pacientes(){
   }
 }
 
-// devuelve array de pacientes 
+// aqui listamos los pacientes pero filtramos segun el rol del usuario
+// si es medico solo ve sus pacientes, si es admin ve todos
 function listar_pacientes($limit = 200){
   $bd = obtener_conexion();
   if(!$bd) return ['error' => 'No se pudo conectar a la BD.'];
+  
   try{
-    $sql = 'SELECT paciente_id, nombres, apellidos, sexo, fecha_nacimiento, telefono, email, ciudad, prioridad FROM pacientes ORDER BY paciente_id DESC LIMIT :lim';
-    $sentencia = $bd->prepare($sql);
-    $sentencia->bindValue(':lim', (int)$limit, PDO::PARAM_INT);
+    // aqui obtenemos el usuario actual de la sesion
+    session_start();
+    $usuario_rol = $_SESSION['usuario_rol'] ?? null;
+    $usuario_id = $_SESSION['usuario_id'] ?? null;
+    
+    // si es medico necesitamos su medico_id para filtrar
+    $medico_id = null;
+    if ($usuario_rol === 'medico' && $usuario_id) {
+      $stmt_medico = $bd->prepare('SELECT medico_id FROM usuarios WHERE usuario_id = :uid LIMIT 1');
+      $stmt_medico->bindValue(':uid', $usuario_id, PDO::PARAM_INT);
+      $stmt_medico->execute();
+      $medico_data = $stmt_medico->fetch();
+      if ($medico_data) {
+        $medico_id = $medico_data['medico_id'];
+      }
+    }
+    
+    // aqui armamos la consulta segun el rol
+    if ($usuario_rol === 'medico' && $medico_id) {
+      // el medico solo ve pacientes que tiene asignados
+      $sql = 'SELECT DISTINCT p.paciente_id, p.nombres, p.apellidos, p.sexo, p.fecha_nacimiento, p.telefono, p.email, p.ciudad, p.prioridad 
+              FROM pacientes p
+              LEFT JOIN citas c ON p.paciente_id = c.paciente_id
+              WHERE c.medico_id = :medico_id OR p.paciente_id IN (
+                SELECT paciente_id FROM citas WHERE medico_id = :medico_id
+              )
+              ORDER BY p.paciente_id DESC LIMIT :lim';
+      $sentencia = $bd->prepare($sql);
+      $sentencia->bindValue(':medico_id', $medico_id, PDO::PARAM_INT);
+      $sentencia->bindValue(':lim', (int)$limit, PDO::PARAM_INT);
+    } else {
+      // el admin o secretaria ven todos los pacientes
+      $sql = 'SELECT paciente_id, nombres, apellidos, sexo, fecha_nacimiento, telefono, email, ciudad, prioridad FROM pacientes ORDER BY paciente_id DESC LIMIT :lim';
+      $sentencia = $bd->prepare($sql);
+      $sentencia->bindValue(':lim', (int)$limit, PDO::PARAM_INT);
+    }
+    
     $sentencia->execute();
     $filas = $sentencia->fetchAll();
     return $filas ?: [];
