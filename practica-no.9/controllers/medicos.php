@@ -8,6 +8,10 @@ header('Content-Type: application/json; charset=utf-8');
 // Aqui conectamos a la base
 $bd = obtener_conexion();
 
+// Requerir autenticación y rol de super admin
+require_once __DIR__ . '/../config/auth.php';
+requerirRol('super_admin');
+
 // Obtenemos la accion
 $accion = $_REQUEST['accion'] ?? '';
 
@@ -36,7 +40,7 @@ else if ($accion === 'crear') {
         $nombre = $_POST['nombre'];
         $email = $_POST['email'];
         $telefono = $_POST['telefono'] ?? '';
-        // El formulario envía 'especialidad', pero también soportamos 'especialidad_id'
+        // El formulario envía 'especialidad', pero también  'especialidad_id' ya asi pude arreglar el pinche error
         $especialidad = $_POST['especialidad'] ?? $_POST['especialidad_id'] ?? null;
         $horario = $_POST['horario'] ?? '';
         
@@ -74,7 +78,7 @@ else if ($accion === 'editar') {
 else if ($accion === 'eliminar') {
     try {
         $id = $_POST['id'];
-        // Intentamos eliminar físicamente (hard delete)
+        // Intentamos eliminar físicamente 
         $stmt = $bd->prepare("DELETE FROM medicos WHERE medico_id = ?");
         $stmt->execute([$id]);
         

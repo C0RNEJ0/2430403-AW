@@ -178,7 +178,7 @@ function confirmarEliminarRol() {
         });
 }
 
-// NUEVO: Abrir modal para crear usuario con un rol específico
+// Abrir modal para crear usuario con un rol específico
 function abrirModalCrearUsuario(nombreRol, rolId) {
     // Resetear formulario
     document.getElementById('form_crear_usuario').reset();

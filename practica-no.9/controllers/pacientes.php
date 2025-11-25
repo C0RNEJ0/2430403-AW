@@ -1,6 +1,10 @@
 <?php
 require_once __DIR__ . '/../config/bd_huevos.php';
+require_once __DIR__ . '/../config/auth.php';
 require_once __DIR__ . '/pacientes_actions.php';
+
+// Requerir autenticación
+requerirAutenticacion();
 
 // Manejo de API listar (GET)
 if (isset($_GET['api']) && $_GET['api'] === 'listar') {
@@ -246,6 +250,7 @@ $medicos = listar_medicos();
   <script src="../assets/js/modal-handler.js"></script>
   <script src="../assets/js/load-sidebar.js"></script>
   <script src="../assets/js/pacientes.js"></script>
+  <script src="../assets/js/auth-guard.js"></script>
 </body>
 </html>
 

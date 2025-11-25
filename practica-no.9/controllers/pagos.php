@@ -1,10 +1,12 @@
 <?php
-// archivo: controllers/pagos.php
-// controlador de pagos con consultas por fecha y corte de caja
-// variables y comentarios en español junior
+
 
 require_once __DIR__ . '/../config/bd_huevos.php';
+require_once __DIR__ . '/../config/auth.php';
 header('Content-Type: application/json; charset=utf-8');
+
+// Requerir autenticación
+requerirAutenticacion();
 
 // obtener la accion que se quiere realizar
 $accion = $_GET['accion'] ?? $_POST['accion'] ?? 'listar';

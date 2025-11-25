@@ -9,6 +9,10 @@ if (!$bd) {
     exit;
 }
 
+// Requerir autenticación
+require_once __DIR__ . '/../config/auth.php';
+requerirAutenticacion();
+
 $accion = $_POST['accion'] ?? $_GET['accion'] ?? 'listar';
 
 try {

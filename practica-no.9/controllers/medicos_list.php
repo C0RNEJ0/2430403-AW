@@ -1,7 +1,11 @@
 <?php
 require_once __DIR__ . '/../config/bd_huevos.php';
+require_once __DIR__ . '/../config/auth.php';
 
 header('Content-Type: application/json; charset=utf-8');
+
+// Requerir autenticación
+requerirAutenticacion();
 
 try {
   $conn = obtener_conexion_mysqli();

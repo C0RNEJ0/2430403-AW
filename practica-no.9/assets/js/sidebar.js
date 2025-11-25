@@ -63,6 +63,48 @@
     if (userRole) {
       userRole.textContent = usuarioRol.charAt(0).toUpperCase() + usuarioRol.slice(1);
     }
+
+    // Filtrar menú por rol
+    filtrarMenuPorRol(usuarioRol);
+  }
+
+  // Filtrar menú según el rol del usuario
+  function filtrarMenuPorRol(rolUsuario) {
+    const navLinks = document.querySelectorAll('.sidebar-nav .nav-link[data-roles]');
+
+    navLinks.forEach(link => {
+      const rolesPermitidos = link.dataset.roles.split(',');
+      const parentLi = link.closest('.nav-item');
+
+      if (rolesPermitidos.includes(rolUsuario)) {
+        if (parentLi) parentLi.style.display = 'block';
+      } else {
+        if (parentLi) parentLi.style.display = 'none';
+      }
+    });
+
+    // Ocultar divisores si no hay elementos visibles en la sección
+    ocultarDivisoresInnecesarios();
+  }
+
+  // Ocultar divisores si las secciones están vacías
+  function ocultarDivisoresInnecesarios() {
+    const dividers = document.querySelectorAll('.nav-divider');
+    dividers.forEach(divider => {
+      // si el siguiente elemento visible es otro divider o el final, ocultar este
+      let next = divider.nextElementSibling;
+      let hasVisibleContent = false;
+
+      while (next && !next.classList.contains('nav-divider')) {
+        if (next.style.display !== 'none') {
+          hasVisibleContent = true;
+          break;
+        }
+        next = next.nextElementSibling;
+      }
+
+      divider.style.display = hasVisibleContent ? 'block' : 'none';
+    });
   }
 
   // Event Listeners

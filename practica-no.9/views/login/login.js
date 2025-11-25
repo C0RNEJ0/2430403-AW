@@ -42,6 +42,11 @@ if (formulario_inicio_sesion) {
             if (data.exito) {
                 // Login correcto
 
+                // Guardar datos en localStorage para el frontend
+                localStorage.setItem('usuario_rol', data.usuario.rol);
+                localStorage.setItem('usuario_email', data.usuario.email);
+                localStorage.setItem('usuario_nombre', data.usuario.nombre);
+
                 // Si hay modal de bienvenida, mostrarlo
                 const modal = document.querySelector('#modal_bienvenida, #modal-bienvenida');
                 if (modal) {

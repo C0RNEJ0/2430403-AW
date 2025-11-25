@@ -6,17 +6,10 @@ require_once __DIR__ . '/bitacoras_helpers.php';
 // Configurar headers
 header('Content-Type: application/json; charset=utf-8');
 
-// Iniciar sesión si no está iniciada
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+require_once __DIR__ . '/../config/auth.php';
 
-// Verificar autenticación solo super_admin puede gestionar roles
-if (!isset($_SESSION['usuario_id'])) {
-    http_response_code(401);
-    echo json_encode(['exito' => false, 'error' => 'No autenticado']);
-    exit;
-}
+// Verificar autenticación y rol de super_admin
+requerirRol('super_admin');
 
 // Obtener conexión
 $bd = obtener_conexion();

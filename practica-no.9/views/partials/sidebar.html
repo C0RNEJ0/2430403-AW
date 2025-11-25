@@ -1,9 +1,8 @@
-<!-- Sidebar Original Restaurado -->
-<div class="sidebar-restored" id="sidebar_restored">
+<div class="sidebar-restored" id="sidebar">
   <!-- Header -->
   <div class="sidebar-header">
     <div class="logo-container">
-      <img src="../assets/images/CS.png" alt="Logo" class="logo-img">
+      <img src="../assets/img/logo.png" alt="Logo" class="logo-img" onerror="this.src='https://via.placeholder.com/40'">
     </div>
     <div class="brand-info">
       <h5 class="brand-name">Clínica Cornejo</h5>
@@ -14,122 +13,113 @@
   <!-- User Profile -->
   <div class="user-profile-section">
     <div class="user-avatar">
-      <i class="bi bi-person-circle"></i>
+      <i class="bi bi-person"></i>
     </div>
     <div class="user-info">
       <h6 class="user-name" id="sidebar_user_name">Usuario</h6>
-      <span class="user-role" id="sidebar_user_role">Administrador</span>
+      <span class="user-role" id="sidebar_user_role">Cargando...</span>
     </div>
   </div>
 
-  <!-- Navigation -->
+  <!-- Navegación -->
   <nav class="sidebar-nav">
     <ul class="nav-list">
-      <!-- Dashboard -->
+      <!-- Dashboard: Visible para todos -->
       <li class="nav-item">
-        <a href="../views/dashboard.html" class="nav-link active">
+        <a href="../views/dashboard.html" class="nav-link" data-roles="super_admin,medico,secretaria,paciente">
           <i class="bi bi-speedometer2"></i>
           <span>Dashboard</span>
         </a>
       </li>
 
-      <!-- Pacientes -->
+      <!-- Pacientes: Admin, Médico, Secretaria -->
       <li class="nav-item">
-        <a href="../views/pacientes.html" class="nav-link">
-          <i class="bi bi-people-fill"></i>
+        <a href="../views/pacientes.html" class="nav-link" data-roles="super_admin,medico,secretaria">
+          <i class="bi bi-people"></i>
           <span>Pacientes</span>
         </a>
       </li>
 
-      <!-- Expediente Médico -->
+      <!-- Agenda: Admin, Médico, Secretaria -->
       <li class="nav-item">
-        <a href="../views/expedientes.html" class="nav-link">
-          <i class="bi bi-journal-medical"></i>
-          <span>Expediente Médico</span>
-        </a>
-      </li>
-
-      <!-- Agenda -->
-      <li class="nav-item">
-        <a href="../views/agenda.html" class="nav-link">
-          <i class="bi bi-calendar-check"></i>
+        <a href="../views/agenda.html" class="nav-link" data-roles="super_admin,medico,secretaria">
+          <i class="bi bi-calendar3"></i>
           <span>Agenda</span>
         </a>
       </li>
 
-      <!-- Médicos -->
+      <!-- Médicos: Solo Admin -->
       <li class="nav-item">
-        <a href="../views/medicos.html" class="nav-link">
-          <i class="bi bi-hospital"></i>
+        <a href="../views/medicos.html" class="nav-link" data-roles="super_admin">
+          <i class="bi bi-person-badge"></i>
           <span>Médicos</span>
         </a>
       </li>
 
-      <!-- Especialidades -->
+      <!-- Administración: Solo Admin -->
       <li class="nav-item">
-        <a href="../views/especialidades.html" class="nav-link">
-          <i class="bi bi-heart-pulse"></i>
-          <span>Especialidades</span>
-        </a>
-      </li>
-
-      <li class="nav-divider"></li>
-
-      <!-- Administración -->
-      <li class="nav-item">
-        <a href="../views/admin.html" class="nav-link">
-          <i class="bi bi-shield-check"></i>
+        <a href="../views/admin.html" class="nav-link" data-roles="super_admin">
+          <i class="bi bi-gear"></i>
           <span>Administración</span>
         </a>
       </li>
 
-      <!-- Roles -->
+      <!-- Reportes: Admin, Médico -->
       <li class="nav-item">
-        <a href="../views/roles.html" class="nav-link">
-          <i class="bi bi-shield-lock"></i>
-          <span>Roles</span>
-        </a>
-      </li>
-
-      <!-- Reportes -->
-
-      <li class="nav-item">
-        <a href="../views/reportes.html" class="nav-link">
-          <i class="bi bi-bar-chart-line"></i>
+        <a href="../views/reportes.html" class="nav-link" data-roles="super_admin,medico">
+          <i class="bi bi-file-earmark-bar-graph"></i>
           <span>Reportes</span>
         </a>
       </li>
 
-      <!-- Pagos -->
+      <!-- Pagos: Admin, Médico, Secretaria -->
       <li class="nav-item">
-        <a href="../views/pagos.html" class="nav-link">
-          <i class="bi bi-credit-card"></i>
+        <a href="../views/pagos.html" class="nav-link" data-roles="super_admin,medico,secretaria">
+          <i class="bi bi-cash-coin"></i>
           <span>Pagos</span>
         </a>
       </li>
 
-      <!-- Tarifas -->
+      <!-- Tarifas: Admin, Médico -->
       <li class="nav-item">
-        <a href="../views/tarifas.html" class="nav-link">
+        <a href="../views/tarifas.html" class="nav-link" data-roles="super_admin,medico">
           <i class="bi bi-currency-dollar"></i>
           <span>Tarifas</span>
         </a>
       </li>
 
-      <!-- Bitácoras -->
+      <!-- Roles: Solo Admin -->
       <li class="nav-item">
-        <a href="../views/bitacoras.html" class="nav-link">
-          <i class="bi bi-list-check"></i>
+        <a href="../views/roles.html" class="nav-link" data-roles="super_admin">
+          <i class="bi bi-shield-lock"></i>
+          <span>Roles</span>
+        </a>
+      </li>
+
+      <div class="nav-divider"></div>
+
+      <!-- Bitácoras: Solo Admin -->
+      <li class="nav-item">
+        <a href="../views/bitacoras.html" class="nav-link" data-roles="super_admin">
+          <i class="bi bi-journal-text"></i>
           <span>Bitácoras</span>
         </a>
       </li>
 
-      <li class="nav-divider"></li>
+      <!-- Expedientes: Admin, Médico -->
+      <li class="nav-item">
+        <a href="../views/expedientes.html" class="nav-link" data-roles="super_admin,medico">
+          <i class="bi bi-folder2-open"></i>
+          <span>Expedientes</span>
+        </a>
+      </li>
 
-      <!-- Cerrar Sesión -->
-      <li class="nav-item mt-auto">
-        <a href="javascript:void(0);" onclick="if(window.modalHandler) window.modalHandler.openModal('modal_logout');"
-          class="nav-link text-danger-custom">
+      <div class="nav-divider"></div>
+
+      <!-- Cerrar Sesión: Todos -->
+      <li class="nav-item">
+        <a href="#" class="nav-link text-danger-custom" id="btn_logout"
+          data-roles="super_admin,medico,secretaria,paciente">
           <i class="bi bi-box-arrow-right"></i>
           <span>Cerrar Sesión</span>
         </a>

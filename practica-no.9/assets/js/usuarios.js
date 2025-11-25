@@ -1,322 +1,324 @@
+/**
+ * Gestión de Usuarios
+ * Maneja el CRUD de usuarios en el panel de administración
+ */
 
-(function () {
-    'use strict';
+document.addEventListener('DOMContentLoaded', function () {
+    // Cargar usuarios si estamos en la pestaña de usuarios
+    const usuariosTab = document.getElementById('usuarios-tab');
+    if (usuariosTab) {
+        usuariosTab.addEventListener('shown.bs.tab', function () {
+            cargarUsuarios();
+        });
 
-    // Estado global
-    let usuarios = [];
-    let usuarioActual = null;
-
-    // Elementos del DOM
-    const tablaUsuarios = document.getElementById('tabla_usuarios').querySelector('tbody');
-    const modalUsuario = new bootstrap.Modal(document.getElementById('modal_usuario'));
-    const formUsuario = document.getElementById('form_usuario');
-    const selectRol = document.getElementById('rol');
-    const divMedico = document.getElementById('div_medico');
-    const divPaciente = document.getElementById('div_paciente');
-    const selectMedico = document.getElementById('medico_id');
-    const selectPaciente = document.getElementById('paciente_id');
-
-    // Inicialización
-    document.addEventListener('DOMContentLoaded', () => {
-        cargarUsuarios();
-        cargarCatalogos();
-        actualizarStats();
-    });
-
-    // Exponer funciones globales
-    window.abrirModalUsuario = abrirModalUsuario;
-    window.editarUsuario = editarUsuario;
-    window.eliminarUsuario = eliminarUsuario;
-    window.cambiarEstado = cambiarEstado;
-    window.togglePassword = togglePassword;
-    window.toggleCamposRol = toggleCamposRol;
-
-    /**
-     * Cargar lista de usuarios
-     */
-    async function cargarUsuarios() {
-        try {
-            const respuesta = await fetch('../controllers/usuarios.php?accion=listar', {
-                method: 'POST' // El controlador espera POST para algunas acciones, aunque listar suele ser GET
-            });
-
-            const datos = await respuesta.json();
-
-            if (datos.exito) {
-                usuarios = datos.usuarios;
-                renderizarTabla();
-                actualizarStats();
-            } else {
-                console.error('Error al cargar usuarios:', datos.error);
-                mostrarNotificacion('Error al cargar usuarios', 'error');
-            }
-        } catch (error) {
-            console.error('Error de red:', error);
-            mostrarNotificacion('Error de conexión', 'error');
+        // Si ya está activa, cargar
+        if (usuariosTab.classList.contains('active')) {
+            cargarUsuarios();
         }
     }
 
-    /**
-     * Renderizar tabla de usuarios
-     */
-    function renderizarTabla() {
-        tablaUsuarios.innerHTML = '';
+    // Búsqueda
+    const inputBuscar = document.getElementById('buscar_usuarios');
+    if (inputBuscar) {
+        inputBuscar.addEventListener('input', function (e) {
+            const termino = e.target.value.toLowerCase();
+            filtrarUsuarios(termino);
+        });
+    }
+});
 
-        usuarios.forEach(usuario => {
-            const tr = document.createElement('tr');
+let usuariosData = [];
 
-            // Estado (badge)
-            const estadoBadge = usuario.activo == 1
-                ? '<span class="badge bg-success">Activo</span>'
-                : '<span class="badge bg-secondary">Inactivo</span>';
+// Cargar lista de usuarios
+function cargarUsuarios() {
+    const tbody = document.querySelector('#tabla_usuarios tbody');
+    if (!tbody) return;
 
-            // Botón de estado
-            const btnEstado = usuario.activo == 1
-                ? `<button class="btn btn-sm btn-outline-warning" onclick="cambiarEstado(${usuario.usuario_id}, 0)" title="Desactivar"><i class="bi bi-pause-circle"></i></button>`
-                : `<button class="btn btn-sm btn-outline-success" onclick="cambiarEstado(${usuario.usuario_id}, 1)" title="Activar"><i class="bi bi-play-circle"></i></button>`;
+    tbody.innerHTML = '<tr><td colspan="7" class="text-center"><div class="spinner-border text-primary" role="status"></div> Cargando...</td></tr>';
 
-            tr.innerHTML = `
+    fetch('../controllers/usuarios.php?accion=listar')
+        .then(response => response.json())
+        .then(data => {
+            if (data.exito) {
+                usuariosData = data.usuarios;
+                renderizarTablaUsuarios(usuariosData);
+            } else {
+                tbody.innerHTML = `<tr><td colspan="7" class="text-center text-danger">Error: ${data.error}</td></tr>`;
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            tbody.innerHTML = '<tr><td colspan="7" class="text-center text-danger">Error de conexión</td></tr>';
+        });
+}
+
+// Renderizar tabla
+function renderizarTablaUsuarios(usuarios) {
+    const tbody = document.querySelector('#tabla_usuarios tbody');
+    if (!tbody) return;
+
+    if (usuarios.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" class="text-center">No hay usuarios registrados</td></tr>';
+        return;
+    }
+
+    let html = '';
+    usuarios.forEach(u => {
+        const estadoClass = u.activo == 1 ? 'bg-success' : 'bg-danger';
+        const estadoTexto = u.activo == 1 ? 'Activo' : 'Inactivo';
+        const medicoAsociado = u.medico_nombre ? `<span class="badge bg-info text-dark">${escapeHtml(u.medico_nombre)}</span>` : '-';
+
+        html += `
+            <tr>
+                <td>${u.usuario_id}</td>
                 <td>
-                    <div class="d-flex align-items-center">
-                        <div class="avatar-circle bg-primary bg-opacity-10 text-primary me-3 d-flex align-items-center justify-content-center rounded-circle" style="width: 35px; height: 35px;">
-                            <span class="fw-bold">${usuario.nombre.charAt(0).toUpperCase()}</span>
-                        </div>
-                        <div>
-                            <div class="fw-bold">${usuario.nombre}</div>
-                            <div class="small text-muted">${usuario.email}</div>
-                        </div>
-                    </div>
+                    <div class="fw-bold">${escapeHtml(u.nombre)}</div>
+                    <small class="text-muted">Creado: ${formatearFecha(u.creado_en)}</small>
                 </td>
-                <td><span class="badge bg-light text-dark border">${usuario.rol}</span></td>
-                <td>${estadoBadge}</td>
-                <td><small class="text-muted">${new Date(usuario.creado_en).toLocaleDateString()}</small></td>
-                <td><small class="text-muted">${usuario.ultimo_acceso ? new Date(usuario.ultimo_acceso).toLocaleString() : 'Nunca'}</small></td>
-                <td>
-                    <div class="btn-group">
-                        <button class="btn btn-sm btn-outline-primary" onclick="editarUsuario(${usuario.usuario_id})" title="Editar">
+                <td>${escapeHtml(u.email)}</td>
+                <td><span class="badge bg-secondary">${escapeHtml(u.rol)}</span></td>
+                <td>${medicoAsociado}</td>
+                <td><span class="badge ${estadoClass}">${estadoTexto}</span></td>
+                <td class="text-end">
+                    <div class="btn-group btn-group-sm">
+                        <button class="btn btn-outline-primary" onclick="abrirModalEditarUsuario(${u.usuario_id})" title="Editar">
                             <i class="bi bi-pencil"></i>
                         </button>
-                        ${btnEstado}
-                        <button class="btn btn-sm btn-outline-danger" onclick="eliminarUsuario(${usuario.usuario_id})" title="Eliminar">
+                        <button class="btn btn-outline-${u.activo == 1 ? 'warning' : 'success'}" 
+                                onclick="cambiarEstadoUsuario(${u.usuario_id}, ${u.activo == 1 ? 0 : 1})" 
+                                title="${u.activo == 1 ? 'Desactivar' : 'Activar'}">
+                            <i class="bi bi-${u.activo == 1 ? 'slash-circle' : 'check-circle'}"></i>
+                        </button>
+                        <button class="btn btn-outline-danger" onclick="eliminarUsuario(${u.usuario_id})" title="Eliminar">
                             <i class="bi bi-trash"></i>
                         </button>
                     </div>
                 </td>
-            `;
-            tablaUsuarios.appendChild(tr);
-        });
-    }
-
-    /**
-     * Cargar catálogos (médicos y pacientes) para los selects
-     */
-    async function cargarCatalogos() {
-        try {
-            // Cargar Médicos
-            const respMedicos = await fetch('../controllers/medicos_list.php');
-            const datosMedicos = await respMedicos.json();
-            if (datosMedicos.exito) {
-                datosMedicos.datos.forEach(medico => {
-                    const option = new Option(medico.nombre, medico.medico_id);
-                    selectMedico.add(option);
-                });
-            }
-
-            // Cargar Pacientes (usando el endpoint existente)
-            const respPacientes = await fetch('../controllers/pacientes.php?api=listar');
-            const datosPacientes = await respPacientes.json();
-            if (datosPacientes.exito) {
-                datosPacientes.datos.forEach(paciente => {
-                    const nombre = `${paciente.nombres} ${paciente.apellidos}`;
-                    const option = new Option(nombre, paciente.paciente_id);
-                    selectPaciente.add(option);
-                });
-            }
-        } catch (error) {
-            console.error('Error cargando catálogos:', error);
-        }
-    }
-
-    /**
-     * Abrir modal para nuevo usuario
-     */
-    function abrirModalUsuario() {
-        usuarioActual = null;
-        formUsuario.reset();
-        document.getElementById('usuario_id').value = '';
-        document.getElementById('modal_usuario_titulo').textContent = 'Nuevo Usuario';
-        document.getElementById('password').required = true;
-        document.getElementById('password_help').textContent = 'Requerida para nuevos usuarios';
-        toggleCamposRol();
-        modalUsuario.show();
-    }
-
-    /**
-     * Abrir modal para editar usuario
-     */
-    function editarUsuario(id) {
-        const usuario = usuarios.find(u => u.usuario_id == id);
-        if (!usuario) return;
-
-        usuarioActual = usuario;
-        document.getElementById('usuario_id').value = usuario.usuario_id;
-        document.getElementById('nombre').value = usuario.nombre;
-        document.getElementById('email').value = usuario.email;
-        document.getElementById('password').value = ''; // No mostrar password
-        document.getElementById('password').required = false;
-        document.getElementById('password_help').textContent = 'Dejar en blanco para mantener la actual';
-
-        // Seleccionar rol (mapeo simple, ajustar si los nombres difieren)
-        // El backend devuelve el nombre del rol, necesitamos el value del select
-        const rolValue = mapRolToValue(usuario.rol);
-        selectRol.value = rolValue;
-
-        toggleCamposRol();
-
-        // Asignar médico o paciente si aplica
-        if (usuario.medico_id) selectMedico.value = usuario.medico_id;
-        if (usuario.paciente_id) selectPaciente.value = usuario.paciente_id;
-
-        document.getElementById('modal_usuario_titulo').textContent = 'Editar Usuario';
-        modalUsuario.show();
-    }
-
-    /**
-     * Guardar usuario (Submit)
-     */
-    formUsuario.addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        const formData = new FormData(formUsuario);
-        const accion = usuarioActual ? 'editar' : 'crear';
-        formData.append('accion', accion);
-
-        try {
-            const respuesta = await fetch('../controllers/usuarios.php', {
-                method: 'POST',
-                body: formData
-            });
-
-            const datos = await respuesta.json();
-
-            if (datos.exito) {
-                modalUsuario.hide();
-                cargarUsuarios();
-                mostrarNotificacion(datos.mensaje, 'success');
-            } else {
-                mostrarNotificacion(datos.error || 'Error al guardar', 'error');
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            mostrarNotificacion('Error de conexión', 'error');
-        }
+            </tr>
+        `;
     });
 
-    /**
-     * Eliminar usuario
-     */
-    async function eliminarUsuario(id) {
-        if (!confirm('¿Está seguro de eliminar este usuario? Esta acción no se puede deshacer.')) return;
+    tbody.innerHTML = html;
+}
 
-        const formData = new FormData();
-        formData.append('accion', 'eliminar');
-        formData.append('usuario_id', id);
+// Filtrar usuarios
+function filtrarUsuarios(termino) {
+    if (!termino) {
+        renderizarTablaUsuarios(usuariosData);
+        return;
+    }
 
-        try {
-            const respuesta = await fetch('../controllers/usuarios.php', {
-                method: 'POST',
-                body: formData
-            });
+    const filtrados = usuariosData.filter(u =>
+        u.nombre.toLowerCase().includes(termino) ||
+        u.email.toLowerCase().includes(termino) ||
+        u.rol.toLowerCase().includes(termino)
+    );
 
-            const datos = await respuesta.json();
+    renderizarTablaUsuarios(filtrados);
+}
 
-            if (datos.exito) {
-                cargarUsuarios();
-                mostrarNotificacion(datos.mensaje, 'success');
+// Abrir modal de edición
+function abrirModalEditarUsuario(usuarioId) {
+    // Obtener datos del usuario
+    fetch(`../controllers/usuarios.php?accion=obtener&usuario_id=${usuarioId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.exito) {
+                const u = data.usuario;
+
+                document.getElementById('edit_usuario_id').value = u.usuario_id;
+                document.getElementById('edit_usuario_nombre').value = u.nombre;
+                document.getElementById('edit_usuario_email').value = u.email;
+
+                // Cargar roles y seleccionar el actual
+                cargarRolesSelect(u.rol);
+
+                // Cargar médicos para asociar (si es secretaria)
+                cargarMedicosSelect(u.medico_id);
+
+                abrirModal('modal_editar_usuario');
             } else {
-                mostrarNotificacion(datos.error, 'error');
+                mostrarError(data.error || 'Error al cargar usuario');
             }
-        } catch (error) {
+        })
+        .catch(error => {
             console.error('Error:', error);
-        }
+            mostrarError('Error de conexión');
+        });
+}
+
+// Cargar roles en el select
+function cargarRolesSelect(rolActual) {
+    fetch('../controllers/roles.php?accion=listar')
+        .then(response => response.json())
+        .then(data => {
+            if (data.exito) {
+                const select = document.getElementById('edit_usuario_rol');
+                let html = '<option value="">Seleccionar rol...</option>';
+
+                data.roles.forEach(r => {
+                    const selected = r.nombre === rolActual ? 'selected' : '';
+                    html += `<option value="${r.nombre}" ${selected}>${r.nombre.charAt(0).toUpperCase() + r.nombre.slice(1)}</option>`;
+                });
+
+                select.innerHTML = html;
+                toggleCamposEditarUsuario();
+            }
+        });
+}
+
+// Cargar médicos en el select
+function cargarMedicosSelect(medicoIdActual) {
+    fetch('../controllers/medicos_list.php')
+        .then(response => response.json())
+        .then(data => {
+            if (data.exito) {
+                const select = document.getElementById('edit_usuario_medico_asociado');
+                let html = '<option value="">Sin médico asociado</option>';
+
+                data.datos.forEach(m => {
+                    const selected = m.medico_id == medicoIdActual ? 'selected' : '';
+                    html += `<option value="${m.medico_id}" ${selected}>${escapeHtml(m.nombre)}</option>`;
+                });
+
+                select.innerHTML = html;
+            }
+        });
+}
+
+// Mostrar/ocultar campos según rol seleccionado
+function toggleCamposEditarUsuario() {
+    const rol = document.getElementById('edit_usuario_rol').value;
+    const camposMedico = document.getElementById('edit_campos_medico');
+    const camposSecretaria = document.getElementById('edit_campos_secretaria');
+
+    camposMedico.style.display = 'none';
+    camposSecretaria.style.display = 'none';
+
+    if (rol === 'medico') {
+        camposMedico.style.display = 'block';
+    } else if (rol === 'secretaria') {
+        camposSecretaria.style.display = 'block';
     }
+}
 
-    /**
-     * Cambiar estado Activaro Desactivar
-     */
-    async function cambiarEstado(id, nuevoEstado) {
-        const formData = new FormData();
-        formData.append('accion', 'cambiar_estado');
-        formData.append('usuario_id', id);
-        formData.append('activo', nuevoEstado);
+// Guardar cambios
+function actualizarUsuario() {
+    const form = document.getElementById('form_editar_usuario');
+    const formData = new FormData(form);
+    formData.append('accion', 'editar');
 
-        try {
-            const respuesta = await fetch('../controllers/usuarios.php', {
-                method: 'POST',
-                body: formData
-            });
+    const btn = document.getElementById('btn_actualizar_usuario');
+    const textoOriginal = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<i class="bi bi-hourglass-split"></i> Guardando...';
 
-            const datos = await respuesta.json();
-
-            if (datos.exito) {
+    fetch('../controllers/usuarios.php', {
+        method: 'POST',
+        body: formData
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.exito) {
+                mostrarExito('Usuario actualizado exitosamente');
+                cerrarModal('modal_editar_usuario');
                 cargarUsuarios();
-                mostrarNotificacion(datos.mensaje, 'success');
             } else {
-                mostrarNotificacion(datos.error, 'error');
+                mostrarError(data.error || 'Error al actualizar usuario');
             }
-        } catch (error) {
+        })
+        .catch(error => {
             console.error('Error:', error);
-        }
-    }
+            mostrarError('Error de conexión');
+        })
+        .finally(() => {
+            btn.disabled = false;
+            btn.innerHTML = textoOriginal;
+        });
+}
 
-    /**
-     * Utilidades de UI
-     */
-    function togglePassword() {
-        const input = document.getElementById('password');
-        const icon = document.querySelector('#div_password i.bi-eye, #div_password i.bi-eye-slash');
+// Cambiar estado (activar/desactivar)
+function cambiarEstadoUsuario(usuarioId, nuevoEstado) {
+    const accion = nuevoEstado == 1 ? 'activar' : 'desactivar';
 
-        if (input.type === 'password') {
-            input.type = 'text';
-            icon.classList.replace('bi-eye', 'bi-eye-slash');
-        } else {
-            input.type = 'password';
-            icon.classList.replace('bi-eye-slash', 'bi-eye');
-        }
-    }
+    if (!confirm(`¿Estás seguro que deseas ${accion} este usuario?`)) return;
 
-    function toggleCamposRol() {
-        const rol = selectRol.value;
-        divMedico.classList.add('d-none');
-        divPaciente.classList.add('d-none');
+    const formData = new FormData();
+    formData.append('accion', 'cambiar_estado');
+    formData.append('usuario_id', usuarioId);
+    formData.append('activo', nuevoEstado);
 
-        if (rol === 'doctor') {
-            divMedico.classList.remove('d-none');
-        } else if (rol === 'paciente') {
-            divPaciente.classList.remove('d-none');
-        }
-    }
+    fetch('../controllers/usuarios.php', {
+        method: 'POST',
+        body: formData
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.exito) {
+                mostrarExito(`Usuario ${accion}do exitosamente`);
+                cargarUsuarios();
+            } else {
+                mostrarError(data.error);
+            }
+        })
+        .catch(error => {
+            mostrarError('Error de conexión');
+        });
+}
 
-    function mapRolToValue(rolNombre) {
-        // Ajustar según los nombres exactos en BD vs values en HTML
-        const map = {
-            'Super Admin': 'super_admin',
-            'Doctor': 'doctor',
-            'Secretaria': 'secretaria',
-            'Paciente': 'paciente'
-        };
-        return map[rolNombre] || rolNombre.toLowerCase();
-    }
+// Eliminar usuario
+function eliminarUsuario(usuarioId) {
+    if (!confirm('¿Estás seguro que deseas eliminar este usuario permanentemente? Esta acción no se puede deshacer.')) return;
 
-    function actualizarStats() {
-        document.getElementById('total_usuarios').textContent = usuarios.length;
-        document.getElementById('total_activos').textContent = usuarios.filter(u => u.activo == 1).length;
-        // Roles es estático por ahora, o se puede calcular dinámicamente
-    }
+    const formData = new FormData();
+    formData.append('accion', 'eliminar');
+    formData.append('usuario_id', usuarioId);
 
-    function mostrarNotificacion(mensaje, tipo) {
-        // Implementación simple de alerta, idealmente usar un toast
-        alert(mensaje);
-    }
+    fetch('../controllers/usuarios.php', {
+        method: 'POST',
+        body: formData
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.exito) {
+                mostrarExito('Usuario eliminado exitosamente');
+                cargarUsuarios();
+            } else {
+                mostrarError(data.error);
+            }
+        })
+        .catch(error => {
+            mostrarError('Error de conexión');
+        });
+}
 
-})();
+// Utilidades
+function escapeHtml(text) {
+    if (!text) return '';
+    return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+function formatearFecha(fecha) {
+    if (!fecha) return '-';
+    return new Date(fecha).toLocaleDateString('es-ES', {
+        year: 'numeric', month: 'short', day: 'numeric'
+    });
+}
+
+// Helpers para mostrar mensajes (si no existen globalmente)
+if (typeof mostrarExito !== 'function') {
+    window.mostrarExito = function (mensaje) {
+        alert('bien ' + mensaje);
+    };
+}
+
+if (typeof mostrarError !== 'function') {
+    window.mostrarError = function (mensaje) {
+        alert('mal ' + mensaje);
+    };
+}
