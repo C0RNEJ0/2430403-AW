@@ -195,12 +195,11 @@
       </div>
       <div class="modal-footer justify-content-between">
         <button type="button" id="btn_registrar_cobro" class="btn-modal-primary"
-          style="display: none; background: linear-gradient(135deg, #28a745 0%, #218838 100%); box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);">
+          style="display: none; background: linear-gradient(135deg, #53c56d 0%, #218838 100%); box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);">
           <i class="bi bi-cash-coin"></i> Registrar Cobro
         </button>
         <div>
-          <button type="button" class="btn-modal-secondary" data-modal-close
-            onclick="cerrarModal('modal_paciente')">Cancelar</button>
+          <button type="button" class="btn-modal-secondary" data-modal-close>Cancelar</button>
           <button type="submit" form="formulario_paciente" class="btn-modal-primary">
             <i class="bi bi-save"></i> Guardar paciente
           </button>
@@ -216,7 +215,7 @@
       <div class="modal-header">
         <i class="bi bi-cash-coin"></i>
         <h3>Registrar Cobro</h3>
-        <button class="modal-close" data-modal-close onclick="cerrarModal('modal_cobro')">
+        <button class="modal-close" data-modal-close>
           <i class="bi bi-x-lg"></i>
         </button>
       </div>
@@ -255,8 +254,7 @@
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn-modal-secondary" data-modal-close
-          onclick="cerrarModal('modal_cobro')">Cancelar</button>
+        <button type="button" class="btn-modal-secondary" data-modal-close>Cancelar</button>
         <button type="submit" form="formulario_cobro" class="btn-modal-primary">
           <i class="bi bi-check-lg"></i> Registrar Pago
         </button>
@@ -266,7 +264,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script src="../assets/js/load-sidebar.js"></script>
-  <script src="../assets/js/modal-utils.js"></script>
+  <script src="../assets/js/modal-handler.js"></script>
   <script src="../assets/js/pacientes.js"></script>
   <!-- Modal Agendamiento -->
   <div id="modal_agendar" class="modal-modern">
@@ -323,7 +321,7 @@
       <div class="modal-header">
         <i class="bi bi-exclamation-triangle text-danger"></i>
         <h3>Confirmar Eliminación</h3>
-        <button class="modal-close" data-modal-close onclick="cerrarModal('modal_eliminar_paciente')">
+        <button class="modal-close" data-modal-close>
           <i class="bi bi-x-lg"></i>
         </button>
       </div>
@@ -333,8 +331,7 @@
         <input type="hidden" id="eliminar_paciente_id">
       </div>
       <div class="modal-footer">
-        <button class="btn-modal-secondary" data-modal-close
-          onclick="cerrarModal('modal_eliminar_paciente')">Cancelar</button>
+        <button class="btn-modal-secondary" data-modal-close>Cancelar</button>
         <button id="btn_confirmar_eliminar" class="btn-modal-danger" onclick="ejecutarEliminacionPaciente()">
           <i class="bi bi-trash"></i> Eliminar
         </button>
