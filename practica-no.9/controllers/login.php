@@ -88,6 +88,10 @@ function login() {
     // Crear sesión en BD
     crearSesionBD($usuario['usuario_id']);
     
+    // Registrar log de login
+    require_once __DIR__ . '/../config/bitacoras_helpers.php';
+    registrar_log('login', 'usuarios', $usuario['usuario_id'], 'Inicio de sesión exitoso');
+    
     // Retornar datos del usuario
     echo json_encode([
         'exito' => true,

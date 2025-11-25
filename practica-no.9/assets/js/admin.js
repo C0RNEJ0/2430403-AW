@@ -228,7 +228,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
     };
 
-    // --- FUNCIONES COMUNES ---
+    // --- FUNCIONES ---
 
     window.prepararEliminar = function (id, tipo) {
         idEliminar = id;

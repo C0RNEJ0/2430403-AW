@@ -46,7 +46,6 @@
         <td><span class="badge bg-${obtenerColorAccion(log.accion)}">${log.accion}</span></td>
         <td>${log.tabla_afectada || 'N/A'}</td>
         <td>${log.detalles || 'Sin detalles'}</td>
-        <td>${log.ip || 'N/A'}</td>
         <td>${fechaFormateada}</td>
       `;
 
@@ -112,7 +111,6 @@
         <td><span class="badge bg-${obtenerColorAccion(log.accion)}">${log.accion}</span></td>
         <td>${log.tabla_afectada || 'N/A'}</td>
         <td>${log.detalles || 'Sin detalles'}</td>
-        <td>${log.ip || 'N/A'}</td>
         <td>${fechaFormateada}</td>
       `;
 

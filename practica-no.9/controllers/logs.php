@@ -33,7 +33,6 @@ try {
                 b.tabla_afectada,
                 b.registro_id,
                 b.detalles,
-                b.ip,
                 b.user_agent,
                 b.creado_en
             FROM bitacora b

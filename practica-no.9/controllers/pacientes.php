@@ -2,6 +2,7 @@
 require_once __DIR__ . '/../config/bd_huevos.php';
 require_once __DIR__ . '/../config/auth.php';
 require_once __DIR__ . '/pacientes_actions.php';
+require_once __DIR__ . '/../config/bitacoras_helpers.php';
 
 // Requerir autenticación
 requerirAutenticacion();
@@ -29,12 +30,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $resultado = procesar_post_pacientes();
         
         // Si es una petición AJAX (o se espera JSON), devolver JSON
-        // Detectar si es AJAX o si el cliente espera JSON
         $isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
         
         // En este caso, como el JS usa fetch y espera JSON, forzamos JSON para POST
         header('Content-Type: application/json; charset=utf-8');
         if ($resultado['ok']) {
+            if ($accion === 'eliminar' && isset($_POST['id'])) {
+                $id = $_POST['id'];
+                registrar_log('eliminar', 'pacientes', $id, "Eliminación de paciente ID: $id");
+            }
             echo json_encode(['exito' => true, 'mensaje' => $resultado['mensaje'] ?? 'Operación exitosa']);
         } else {
             echo json_encode(['exito' => false, 'error' => $resultado['error'] ?? 'Error desconocido']);
