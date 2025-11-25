@@ -10,8 +10,9 @@ require_once BASE_PATH . '/config/bitacora.php';
 // Configurar headers
 header('Content-Type: application/json; charset=utf-8');
 
-// Requerir autenticación y rol de super admin
-requerirRol('super_admin');
+// aqui solo requerimos que el usuario este autenticado
+// luego verificamos el rol segun la accion
+requerirAutenticacion();
 
 // Obtener acción
 $accion = $_POST['accion'] ?? $_GET['accion'] ?? '';
@@ -92,8 +93,13 @@ function listarUsuarios() {
  * Crear nuevo usuario
  */
 function crearUsuario() {
-    $conn = getConnection();
+    // aqui verificamos que solo el super admin pueda crear usuarios
     $usuario_actual = obtenerUsuarioActual();
+    if ($usuario_actual['rol'] !== 'super_admin') {
+        throw new Exception('Solo el administrador puede crear usuarios');
+    }
+    
+    $conn = getConnection();
     
     // Validar datos
     $nombre = trim($_POST['nombre'] ?? '');
