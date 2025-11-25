@@ -29,11 +29,17 @@ class ModalHandler {
     initCloseButtons() {
         // Botones de cerrar con atributo data-modal-close
         document.querySelectorAll('[data-modal-close]').forEach(btn => {
+            // Evitar agregar múltiples listeners al mismo botón
+            if (btn._modalCloseListenerAdded) return;
+
             btn.addEventListener('click', (e) => {
                 e.preventDefault();
+                e.stopPropagation();
                 const modal = btn.closest('.modal-modern');
                 if (modal) this.closeModal(modal);
             });
+
+            btn._modalCloseListenerAdded = true;
         });
     }
 
