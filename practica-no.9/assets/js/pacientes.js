@@ -245,18 +245,12 @@ async function cargarPacientes() {
         btnEditar.onclick = function () { abrirModalEditar(paciente); };
         tdAcc.appendChild(btnEditar);
 
-        // Form eliminar
-        var f = document.createElement('form'); f.method = 'post'; f.action = '/practica-no.9/controllers/pacientes.php'; f.style.display = 'inline-block'; f.style.margin = '0';
-        var inpAcc = document.createElement('input'); inpAcc.type = 'hidden'; inpAcc.name = 'accion'; inpAcc.value = 'eliminar';
-        var inpId = document.createElement('input'); inpId.type = 'hidden'; inpId.name = 'id'; inpId.value = paciente.paciente_id;
-        var btn = document.createElement('button'); btn.type = 'submit'; btn.className = 'btn btn-sm btn-outline-danger'; btn.textContent = 'Eliminar';
-        f.appendChild(inpAcc); f.appendChild(inpId); f.appendChild(btn);
-
-        // confirmar al enviar
-        f.addEventListener('submit', function (e) {
-          if (!confirm('¿Eliminar paciente?')) { e.preventDefault(); }
-        });
-        tdAcc.appendChild(f);
+        // Botón eliminar
+        var btnEliminar = document.createElement('button');
+        btnEliminar.className = 'btn btn-sm btn-outline-danger';
+        btnEliminar.textContent = 'Eliminar';
+        btnEliminar.onclick = function () { abrirModalEliminar(paciente.paciente_id); };
+        tdAcc.appendChild(btnEliminar);
         tr.appendChild(tdAcc);
         tbody.appendChild(tr);
       });
@@ -300,12 +294,50 @@ function abrirModalEditar(paciente) {
     }
   }
 
-  // Abrir modal
-  var modal = document.getElementById('modal_paciente');
-  if (modal) {
-    modal.classList.add('show');
-    modal.style.display = 'flex';
+  // Abrir modal usando modal-utils
+  if (typeof abrirModal === 'function') {
+    abrirModal('modal_paciente');
+  } else {
+    // Fallback
+    var modal = document.getElementById('modal_paciente');
+    if (modal) {
+      modal.classList.add('show');
+      modal.style.display = 'flex';
+    }
   }
+}
+
+// Funciones para eliminar
+function abrirModalEliminar(id) {
+  document.getElementById('eliminar_paciente_id').value = id;
+  if (typeof abrirModal === 'function') {
+    abrirModal('modal_eliminar_paciente');
+  }
+}
+
+function ejecutarEliminacionPaciente() {
+  const id = document.getElementById('eliminar_paciente_id').value;
+  if (!id) return;
+
+  const formData = new FormData();
+  formData.append('accion', 'eliminar');
+  formData.append('id', id);
+
+  fetch('/practica-no.9/controllers/pacientes.php', {
+    method: 'POST',
+    body: formData
+  })
+    .then(res => res.json())
+    .then(data => {
+      if (data.exito) {
+        alert('Paciente eliminado correctamente');
+        if (typeof cerrarModal === 'function') cerrarModal('modal_eliminar_paciente');
+        cargarPacientes();
+      } else {
+        alert('Error al eliminar: ' + data.error);
+      }
+    })
+    .catch(err => alert('Error de red: ' + err));
 }
 
 function escaparHtml(s) { return String(s || '').replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }

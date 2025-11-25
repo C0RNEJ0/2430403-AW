@@ -253,6 +253,32 @@
       </div>
     </div>
   </div>
+
+  <!-- Modal Eliminar Paciente -->
+  <div id="modal_eliminar_paciente" class="modal-modern">
+    <div class="modal-overlay"></div>
+    <div class="modal-container modal-small">
+      <div class="modal-header">
+        <i class="bi bi-exclamation-triangle text-danger"></i>
+        <h3>Confirmar Eliminación</h3>
+        <button class="modal-close" data-modal-close onclick="cerrarModal('modal_eliminar_paciente')">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>¿Estás seguro que deseas eliminar este paciente?</p>
+        <p class="text-muted" style="font-size: 13px;">Esta acción no se puede deshacer.</p>
+        <input type="hidden" id="eliminar_paciente_id">
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-secondary" data-modal-close
+          onclick="cerrarModal('modal_eliminar_paciente')">Cancelar</button>
+        <button id="btn_confirmar_eliminar" class="btn-modal-danger" onclick="ejecutarEliminacionPaciente()">
+          <i class="bi bi-trash"></i> Eliminar
+        </button>
+      </div>
+    </div>
+  </div>
 </body>
 
 </html>
