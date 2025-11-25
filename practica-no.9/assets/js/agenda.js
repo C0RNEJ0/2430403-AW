@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', function () {
       .then(res => res.json())
       .then(data => {
         medicos = data.datos || [];
-        llenarSelect('cita_medico', medicos, 'medico_id', 'nombres', 'apellidos');
+        llenarSelectMedicos('cita_medico', medicos);
       });
 
     // Cargar citas y mostrar calendario
@@ -100,6 +100,17 @@ document.addEventListener('DOMContentLoaded', function () {
     let html = '<option value="">Seleccionar...</option>';
     datos.forEach(item => {
       html += `<option value="${item[idField]}">${item[nombreField]} ${item[apellidoField] || ''}</option>`;
+    });
+    select.innerHTML = html;
+  }
+
+  function llenarSelectMedicos(idSelect, datos) {
+    const select = document.getElementById(idSelect);
+    if (!select) return;
+
+    let html = '<option value="">Seleccionar médico...</option>';
+    datos.forEach(item => {
+      html += `<option value="${item.medico_id}">${item.nombre}</option>`;
     });
     select.innerHTML = html;
   }

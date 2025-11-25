@@ -25,7 +25,7 @@ try {
                         c.fecha_hora_fin,
                         c.estado,
                         CONCAT(p.nombres, ' ', p.apellidos) as paciente_nombre,
-                        CONCAT(m.nombres, ' ', m.apellidos) as medico_nombre
+                        m.nombre as medico_nombre
                     FROM citas c
                     LEFT JOIN pacientes p ON c.paciente_id = p.paciente_id
                     LEFT JOIN medicos m ON c.medico_id = m.medico_id
