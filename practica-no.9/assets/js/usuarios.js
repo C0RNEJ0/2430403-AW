@@ -226,18 +226,26 @@ function cargarRolesSelect(rolActual) {
     fetch('../controllers/roles.php?accion=listar')
         .then(response => response.json())
         .then(data => {
-            if (data.exito) {
-                const select = document.getElementById('edit_usuario_rol');
-                let html = '<option value="">Seleccionar rol...</option>';
+            const select = document.getElementById('edit_usuario_rol');
+            if (!select) return;
 
-                data.roles.forEach(r => {
+            let html = '<option value="">Seleccionar rol...</option>';
+
+            // aqui verificamos que los datos existan antes de hacer el forEach
+            if (data.exito && data.datos && Array.isArray(data.datos)) {
+                data.datos.forEach(r => {
                     const selected = r.nombre === rolActual ? 'selected' : '';
                     html += `<option value="${r.nombre}" ${selected}>${r.nombre.charAt(0).toUpperCase() + r.nombre.slice(1)}</option>`;
                 });
-
-                select.innerHTML = html;
-                toggleCamposEditarUsuario();
+            } else {
+                console.error('Error al cargar roles:', data.error || 'Sin datos');
             }
+
+            select.innerHTML = html;
+            toggleCamposEditarUsuario();
+        })
+        .catch(error => {
+            console.error('Error en cargarRolesSelect:', error);
         });
 }
 

@@ -8,8 +8,9 @@ header('Content-Type: application/json; charset=utf-8');
 
 require_once __DIR__ . '/../config/auth.php';
 
-// Verificar autenticación y rol de super_admin
-requerirRol('super_admin');
+// aqui solo requerimos autenticacion
+// la verificacion de rol se hace en cada funcion segun sea necesario
+requerirAutenticacion();
 
 // Obtener conexión
 $bd = obtener_conexion();
