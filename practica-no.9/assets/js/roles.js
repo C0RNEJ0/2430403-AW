@@ -346,7 +346,8 @@ function escapeHtml(text) {
 function abrirModal(modalId) {
     const modal = document.getElementById(modalId);
     if (modal) {
-        modal.classList.add('active');
+        modal.classList.add('show');
+        modal.style.display = 'flex';
     }
 }
 
@@ -354,7 +355,10 @@ function abrirModal(modalId) {
 function cerrarModal(modalId) {
     const modal = document.getElementById(modalId);
     if (modal) {
-        modal.classList.remove('active');
+        modal.classList.remove('show');
+        setTimeout(() => {
+            modal.style.display = 'none';
+        }, 300);
     }
 }
 
@@ -363,14 +367,20 @@ document.addEventListener('click', function (e) {
     if (e.target.matches('[data-modal-close]') || e.target.closest('[data-modal-close]')) {
         const modal = e.target.closest('.modal-modern');
         if (modal) {
-            modal.classList.remove('active');
+            modal.classList.remove('show');
+            setTimeout(() => {
+                modal.style.display = 'none';
+            }, 300);
         }
     }
 
     if (e.target.matches('.modal-overlay')) {
         const modal = e.target.closest('.modal-modern');
         if (modal) {
-            modal.classList.remove('active');
+            modal.classList.remove('show');
+            setTimeout(() => {
+                modal.style.display = 'none';
+            }, 300);
         }
     }
 });
