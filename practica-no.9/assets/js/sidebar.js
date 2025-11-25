@@ -48,24 +48,32 @@
 
   // Cargar info del usuario
   function cargarInfoUsuario() {
+    // Escuchar evento de sesión verificada (disparado por auth-guard.js)
+    document.addEventListener('sesionVerificada', function (e) {
+      const usuario = e.detail;
+      actualizarSidebar(usuario);
+    });
+
+    // Si auth-guard ya corrió y guardó la sesión globalmente
+    if (window.usuarioGlobal) {
+      actualizarSidebar(window.usuarioGlobal);
+    }
+  }
+
+  function actualizarSidebar(usuario) {
     const userName = document.getElementById('sidebar_user_name');
     const userRole = document.getElementById('sidebar_user_role');
 
-    const usuarioEmail = localStorage.getItem('usuario_email') || 'Usuario';
-    const usuarioRol = localStorage.getItem('usuario_rol') || 'Administrador';
-
     if (userName) {
-      // Si es email, tomar la parte antes del @
-      const nombre = usuarioEmail.includes('@') ? usuarioEmail.split('@')[0] : usuarioEmail;
-      userName.textContent = nombre.charAt(0).toUpperCase() + nombre.slice(1);
+      userName.textContent = usuario.nombre || 'Usuario';
     }
 
     if (userRole) {
-      userRole.textContent = usuarioRol.charAt(0).toUpperCase() + usuarioRol.slice(1);
+      userRole.textContent = (usuario.rol || 'Rol').charAt(0).toUpperCase() + (usuario.rol || '').slice(1);
     }
 
     // Filtrar menú por rol
-    filtrarMenuPorRol(usuarioRol);
+    filtrarMenuPorRol(usuario.rol);
   }
 
   // Filtrar menú según el rol del usuario
