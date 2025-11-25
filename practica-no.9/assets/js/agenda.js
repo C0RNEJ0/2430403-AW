@@ -29,6 +29,11 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('cita_id').value = '';
     document.getElementById('accion_cita').value = 'crear';
     document.getElementById('titulo_modal_cita').innerText = 'Nueva Cita';
+
+    // Ocultar botón eliminar
+    const btnEliminar = document.getElementById('btn_eliminar_cita');
+    if (btnEliminar) btnEliminar.style.display = 'none';
+
     document.getElementById('modal_cita').style.display = 'flex';
   };
 
@@ -50,7 +55,36 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('cita_notas').value = cita.notas || '';
 
     document.getElementById('titulo_modal_cita').innerText = 'Editar Cita';
+
+    // Mostrar botón eliminar
+    const btnEliminar = document.getElementById('btn_eliminar_cita');
+    if (btnEliminar) {
+      btnEliminar.style.display = 'inline-block';
+      btnEliminar.onclick = function () { eliminarCita(id); };
+    }
+
     document.getElementById('modal_cita').style.display = 'flex';
+  };
+
+  window.eliminarCita = function (id) {
+    if (!confirm('¿Estás seguro de que deseas eliminar esta cita?')) return;
+
+    const formData = new FormData();
+    formData.append('accion', 'eliminar');
+    formData.append('cita_id', id);
+
+    fetch('/practica-no.9/controllers/citas.php', { method: 'POST', body: formData })
+      .then(res => res.json())
+      .then(data => {
+        if (data.exito) {
+          alert('Cita eliminada correctamente');
+          document.getElementById('modal_cita').style.display = 'none';
+          cargarCitas();
+        } else {
+          alert('Error al eliminar: ' + data.error);
+        }
+      })
+      .catch(err => alert('Error de red: ' + err));
   };
 
   // Botón nueva cita
