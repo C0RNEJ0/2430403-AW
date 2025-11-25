@@ -143,7 +143,7 @@
   // Manejar botón de cerrar sesión con delegación de eventos
   document.addEventListener('click', function (e) {
     // Buscar si el clic fue en el botón de logout o dentro de él
-    const logoutLink = e.target.closest('a[onclick*="modal_logout"]');
+    const logoutLink = e.target.closest('#btn_logout');
 
     if (logoutLink) {
       e.preventDefault();
