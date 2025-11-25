@@ -219,9 +219,66 @@ $medicos = listar_medicos();
             </div>
         </form>
       </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" id="btn_registrar_cobro" class="btn-modal-primary" style="display: none; background: linear-gradient(135deg, #28a745 0%, #218838 100%); box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);">
+          <i class="bi bi-cash-coin"></i> Registrar Cobro
+        </button>
+        <div>
+            <button class="btn-modal-secondary" onclick="cerrarModal('modal_paciente')">Cancelar</button>
+            <button type="submit" form="formulario_paciente" class="btn-modal-primary">Guardar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Registrar Cobro -->
+  <div id="modal_cobro" class="modal-modern">
+    <div class="modal-overlay"></div>
+    <div class="modal-container modal-small">
+      <div class="modal-header">
+        <i class="bi bi-cash-coin"></i>
+        <h3>Registrar Cobro</h3>
+        <button class="modal-close" onclick="cerrarModal('modal_cobro')">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="formulario_cobro">
+          <input type="hidden" name="accion" value="guardar_pago">
+          <input type="hidden" id="cobro_paciente_id" name="paciente_id">
+          
+          <div class="mb-3">
+            <label class="form-label">Monto *</label>
+            <div class="input-group">
+                <span class="input-group-text">$</span>
+                <input type="number" class="form-control" id="cobro_monto" name="monto" step="0.01" min="0" required>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Método de Pago</label>
+            <select class="form-control" id="cobro_metodo" name="metodo_pago">
+                <option value="efectivo">Efectivo</option>
+                <option value="tarjeta">Tarjeta</option>
+                <option value="transferencia">Transferencia</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Referencia (Opcional)</label>
+            <input type="text" class="form-control" id="cobro_referencia" name="referencia" placeholder="Folio, autorización, etc.">
+          </div>
+          
+          <div class="alert alert-info" style="font-size: 0.85rem;">
+            <i class="bi bi-info-circle"></i> El pago se asociará a la última cita del paciente si no se especifica otra.
+          </div>
+        </form>
+      </div>
       <div class="modal-footer">
-        <button class="btn-modal-secondary" onclick="cerrarModal('modal_paciente')">Cancelar</button>
-        <button type="submit" form="formulario_paciente" class="btn-modal-primary">Guardar</button>
+        <button type="button" class="btn-modal-secondary" onclick="cerrarModal('modal_cobro')">Cancelar</button>
+        <button type="submit" form="formulario_cobro" class="btn-modal-primary">
+          <i class="bi bi-check-lg"></i> Registrar Pago
+        </button>
       </div>
     </div>
   </div>

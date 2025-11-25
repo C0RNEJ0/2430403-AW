@@ -83,6 +83,11 @@ document.addEventListener('DOMContentLoaded', function () {
       var pid = document.getElementById('paciente_id'); if (pid) pid.value = '';
       var form = document.getElementById('formulario_paciente'); if (form) form.reset();
       var modal = document.getElementById('modal_paciente');
+
+      // Ocultar botón de cobro
+      var btnCobro = document.getElementById('btn_registrar_cobro');
+      if (btnCobro) btnCobro.style.display = 'none';
+
       if (modal) {
         modal.classList.add('show');
         modal.style.display = 'flex';
@@ -294,6 +299,15 @@ function abrirModalEditar(paciente) {
     }
   }
 
+  // Mostrar botón de cobro y configurar evento
+  var btnCobro = document.getElementById('btn_registrar_cobro');
+  if (btnCobro) {
+    btnCobro.style.display = 'inline-flex';
+    btnCobro.onclick = function () {
+      abrirModalCobro(paciente.paciente_id);
+    };
+  }
+
   // Abrir modal usando modal-utils
   if (typeof abrirModal === 'function') {
     abrirModal('modal_paciente');
@@ -304,6 +318,19 @@ function abrirModalEditar(paciente) {
       modal.classList.add('show');
       modal.style.display = 'flex';
     }
+  }
+}
+
+// Función para abrir modal de cobro
+function abrirModalCobro(pacienteId) {
+  // Cerrar modal de paciente primero (opcional, o mantener ambos)
+  // cerrarModal('modal_paciente'); 
+
+  document.getElementById('formulario_cobro').reset();
+  document.getElementById('cobro_paciente_id').value = pacienteId;
+
+  if (typeof abrirModal === 'function') {
+    abrirModal('modal_cobro');
   }
 }
 
