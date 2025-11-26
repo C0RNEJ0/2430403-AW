@@ -11,8 +11,8 @@ $bd = obtener_conexion();
 // Obtenemos la accion
 $accion = $_REQUEST['accion'] ?? '';
 
-// Si la accion es listar traemos las tarifas
-if ($accion === 'listar') {
+// aqui si no hay accion o es listar traemos las tarifas
+if ($accion === 'listar' || $accion === '') {
     try {
         // Traemos todas las tarifas ordenadas por nombre
         $sql = "SELECT * FROM tarifas ORDER BY nombre_servicio ASC";
@@ -24,6 +24,7 @@ if ($accion === 'listar') {
     } catch (Exception $e) {
         echo json_encode(['exito' => false, 'error' => $e->getMessage()]);
     }
+    exit;
 }
 // Si la accion es crear guardamos una nueva tarifa
 else if ($accion === 'crear') {
