@@ -82,15 +82,21 @@ document.addEventListener('DOMContentLoaded', function () {
       var acc = document.getElementById('accion_form'); if (acc) acc.value = 'crear';
       var pid = document.getElementById('paciente_id'); if (pid) pid.value = '';
       var form = document.getElementById('formulario_paciente'); if (form) form.reset();
-      var modal = document.getElementById('modal_paciente');
 
       // Ocultar botón de cobro
       var btnCobro = document.getElementById('btn_registrar_cobro');
       if (btnCobro) btnCobro.style.display = 'none';
 
-      if (modal) {
-        modal.classList.add('show');
-        modal.style.display = 'flex';
+      // aqui usamos la funcion abrirModal para que se inicialicen los event listeners
+      if (typeof abrirModal === 'function') {
+        abrirModal('modal_paciente');
+      } else {
+        // fallback por si no existe la funcion
+        var modal = document.getElementById('modal_paciente');
+        if (modal) {
+          modal.classList.add('show');
+          modal.style.display = 'flex';
+        }
       }
     });
   }
