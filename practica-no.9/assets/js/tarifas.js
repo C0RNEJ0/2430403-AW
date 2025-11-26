@@ -52,11 +52,17 @@
 
   // guardar desde formulario
   async function handleGuardar(e) {
-    e.preventDefault && e.preventDefault();
+    console.log('handleGuardar llamado', e);
+    if (e && e.preventDefault) {
+      e.preventDefault();
+    }
+
     const id = q('#tarifa_id') ? q('#tarifa_id').value : '';
     const esp = q('#tarifa_especialidad') ? q('#tarifa_especialidad').value.trim() : '';
     const serv = q('#tarifa_servicio') ? q('#tarifa_servicio').value.trim() : '';
     const precio = q('#tarifa_precio') ? parseFloat(q('#tarifa_precio').value) || 0 : 0;
+
+    console.log('Datos a guardar:', { id, esp, serv, precio });
 
     if (!esp || !serv) {
       alert('Especialidad y servicio requeridos');
@@ -75,7 +81,10 @@
     fd.append('servicio', serv);
     fd.append('precio', precio);
 
+    console.log('Enviando al servidor...');
     const res = await guardarServidor(fd);
+    console.log('Respuesta del servidor:', res);
+
     if (res && res.exito) {
       cerrarModal();
       renderizarTabla();
@@ -88,7 +97,12 @@
   function bind() {
     const btn = btnNuevo(); if (btn && !btn._bound) { btn.addEventListener('click', prepararNuevo); btn._bound = true; }
     const tbody = tablaBody(); if (tbody && !tbody._bound) { tbody.addEventListener('click', (e) => { const btn = e.target.closest('button'); if (!btn) return; const id = btn.getAttribute('data-id'); if (btn.classList.contains('btn-delete')) borrar(id); if (btn.classList.contains('btn-edit')) prepararEditar(id); }); tbody._bound = true; }
-    const formEl = form(); if (formEl && !formEl._bound) { formEl.addEventListener('submit', handleGuardar); formEl._bound = true; }
+    const formEl = form();
+    if (formEl && !formEl._bound) {
+      console.log('Vinculando evento submit al formulario');
+      formEl.addEventListener('submit', handleGuardar);
+      formEl._bound = true;
+    }
     const buscador = q('#buscar_tarifas'); if (buscador && !buscador._bound) { buscador.addEventListener('input', () => renderizarTabla(buscador.value)); buscador._bound = true; }
   }
 
