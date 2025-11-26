@@ -1,105 +1,146 @@
-(function(){
-  function q(sel,root=document){ return root.querySelector(sel); }
-  async function cargar(desde, hasta){ try{ const url = `../controllers/reportes.php?desde=${encodeURIComponent(desde)}&hasta=${encodeURIComponent(hasta)}`; const r = await fetch(url); return await r.json(); }catch(e){ console.error(e); return { exito:false }; } }
-  function renderTransacciones(lista){ const tbody = q('#tabla_reportes tbody'); if(!tbody) return; tbody.innerHTML=''; lista.forEach(t=>{ const tr = document.createElement('tr'); tr.innerHTML = `<td>${t.fecha}</td><td>${t.paciente}</td><td>${t.medico||''}</td><td>${t.servicio||''}</td><td>$ ${Number(t.monto).toFixed(2)}</td>`; tbody.appendChild(tr); }); }
-  function renderKPIs(obj){ if(q('#kpi_ingresos')) q('#kpi_ingresos').textContent = '$' + Number(obj.total||0).toFixed(2); if(q('#kpi_citas')) q('#kpi_citas').textContent = obj.citas || 0; if(q('#kpi_pacientes')) q('#kpi_pacientes').textContent = obj.pacientes_nuevos || 0; }
-  async function init(){
-    // Cargar todos los reportes sin pedir rango (
-    const desde = '0000-01-01';
-    const hasta = '9999-12-31';
+(function () {
+  // cargar datos del servidor
+  async function cargar_datos() {
+    try {
+      const respuesta = await fetch('../controllers/reportes.php?tipo=dashboard');
+      const datos = await respuesta.json();
 
-    // mostrar etiqueta indicando que se están mostrando todos los reportes
-    try{
-      const encabezado = document.querySelector('.page-content h1') || document.querySelector('h1');
-      if(encabezado){
-        let etiqueta = document.getElementById('reportes_rango');
-        if(!etiqueta){
-          etiqueta = document.createElement('div');
-          etiqueta.id = 'reportes_rango';
-          etiqueta.style.fontSize = '0.95rem';
-          etiqueta.style.opacity = '0.85';
-          etiqueta.style.marginTop = '6px';
-          encabezado.insertAdjacentElement('afterend', etiqueta);
-        }
-        etiqueta.textContent = 'Rango: Todos los reportes';
+      if (datos.exito) {
+        renderizar_dashboard(datos.datos);
+      } else {
+        console.error('Error al cargar reportes:', datos.error);
       }
-    }catch(e){ /* no bloquear si falla */ }
-
-    const data = await cargar(desde,hasta);
-    if(!data.exito){ console.error('Error cargando reportes', data); return; }
-    renderTransacciones(data.datos.transacciones);
-    renderKPIs(data.datos);
-    // render por medico
-    const cont = document.createElement('div'); cont.style.marginTop='16px';
-    data.datos.por_medico.forEach(m=>{ const card = document.createElement('div'); card.className='p-2 bg-light rounded mb-2'; card.innerHTML = `<strong>${m.medico||'Sin médico'}</strong>: $ ${Number(m.total_medico||0).toFixed(2)}`; cont.appendChild(card); });
-    const targetCard = document.querySelector('.page-content .card:last-of-type');
-    if(targetCard) targetCard.appendChild(cont);
-  }
-  document.addEventListener('DOMContentLoaded', init);
-})();
-(function(){
-  // reportes de citas, pagos y pacientes 
-  const CL_CITAS = 'citas';
-  const CL_PAGOS = 'pagos';
-  const CL_PAC = 'cs_pacientes_v1';
-
-  function cargar(cl){ try{ return JSON.parse(localStorage.getItem(cl)) || []; }catch(e){ return []; } }
-  function guardar(cl, data){ try{ localStorage.setItem(cl, JSON.stringify(data)); }catch(e){} }
-
-  // seed ejemplo de datos pre cargados
-  function seed(){
-    const citas = cargar(CL_CITAS);
-    const pagos = cargar(CL_PAGOS);
-    const pacs = cargar(CL_PAC);
-    if(!citas.length){
-      const hoy = new Date(); const a = hoy.toISOString().slice(0,10);
-      citas.push({ id:1, pacienteId:1, medicoId:10, medicoName:'Dr. Perez', fecha: a, hora:'09:00' });
-      citas.push({ id:2, pacienteId:2, medicoId:11, medicoName:'Dra. Ruiz', fecha: a, hora:'11:00' });
-      const m2 = new Date(); m2.setDate(hoy.getDate()+1);
-      citas.push({ id:3, pacienteId:3, medicoId:10, medicoName:'Dr. Perez', fecha: m2.toISOString().slice(0,10), hora:'14:00' });
-      guardar(CL_CITAS, citas);
-    }
-    if(!pagos.length){
-      pagos.push({ id:1, citaId:1, pacienteId:1, fecha: new Date().toISOString().slice(0,10), monto:250.00, servicio:'Consulta general' });
-      pagos.push({ id:2, citaId:2, pacienteId:2, fecha: new Date().toISOString().slice(0,10), monto:300.00, servicio:'Consulta pediátrica' });
-      pagos.push({ id:3, citaId:3, pacienteId:3, fecha: new Date().toISOString().slice(0,10), monto:400.00, servicio:'Consulta dermatológica' });
-      guardar(CL_PAGOS, pagos);
-    }
-    if(!pacs.length){
-      pacs.push({ id:1, nombre:'Ana Perez' }); pacs.push({ id:2, nombre:'Luis Gomez' }); pacs.push({ id:3, nombre:'Maria Lopez' }); guardar(CL_PAC, pacs);
+    } catch (error) {
+      console.error('Error en la peticion de reportes:', error);
     }
   }
 
-  function q(s){ return document.querySelector(s); }
-          //  indicadores clave de rendimiento
-  function renderKpis(){ 
-    const pagos = cargar(CL_PAGOS); // pagos
-    const citas = cargar(CL_CITAS); // citas
-    const pacs = cargar(CL_PAC); // pacientes
-    const total = pagos.reduce((sum,p)=> sum + (Number(p.monto)||0), 0);
-    q('#kpi_ingresos').textContent = '$' + total.toFixed(2); // ingresos
-    q('#kpi_citas').textContent = citas.length; // citas
-    q('#kpi_pacientes').textContent = pacs.length; // pacientes
+  // mostrar datos en la pantalla
+  function renderizar_dashboard(datos) {
+    // KPIs
+    document.getElementById('kpi_ingresos').textContent = '$' + Number(datos.total).toFixed(2);
+    document.getElementById('kpi_citas').textContent = datos.citas;
+    document.getElementById('kpi_pacientes').textContent = datos.pacientes_nuevos;
+
+    // Tabla de transacciones
+    const tabla_cuerpo = document.querySelector('#tabla_reportes tbody');
+    if (tabla_cuerpo) {
+      tabla_cuerpo.innerHTML = '';
+      datos.transacciones.forEach(t => {
+        const fila = document.createElement('tr');
+        fila.innerHTML = `
+          <td>${t.fecha}</td>
+          <td>${t.paciente}</td>
+          <td>${t.medico || 'N/A'}</td>
+          <td>${t.servicio || 'N/A'}</td>
+          <td>$${Number(t.monto).toFixed(2)}</td>
+        `;
+        tabla_cuerpo.appendChild(fila);
+      });
+    }
+
+    // Ingresos por medico (opcional, si queremos mostrarlo en algun lado)
+    // Por ahora solo lo dejamos disponible en memoria por si se necesita
   }
 
-  function renderTabla(){
-    const pagos = cargar(CL_PAGOS); 
-    const pacs = cargar(CL_PAC);
-    const citas = cargar(CL_CITAS);
-    const tbody = q('#tabla_reportes tbody'); if(!tbody) return; tbody.innerHTML = '';
-    pagos.forEach(p=>{
-      const pac = pacs.find(x=> Number(x.id) === Number(p.pacienteId)) || {};
-      const cita = citas.find(x=> Number(x.id)===Number(p.citaId)) || {};
-      const tr = document.createElement('tr');
-      tr.innerHTML = `<td>${p.fecha}</td><td>${pac.nombre||('Paciente '+p.pacienteId)}</td><td>${cita.medicoName||('Dr.'+p.medicoId||'')}</td><td>${p.servicio||''}</td><td>$ ${Number(p.monto).toFixed(2)}</td>`;
-      tbody.appendChild(tr); // fin forEach
+  // exportar a Excel
+  function exportar_excel() {
+    const tabla = document.querySelector('#tabla_reportes tbody');
+    const filas = tabla.querySelectorAll('tr');
+
+    if (filas.length === 0) {
+      alert('No hay datos para exportar');
+      return;
+    }
+
+    let csv = 'REPORTE DE INGRESOS\n\n';
+    csv += 'Fecha,Paciente,Médico,Servicio,Monto\n';
+
+    filas.forEach(fila => {
+      const celdas = fila.querySelectorAll('td');
+      const valores = [];
+      celdas.forEach(celda => {
+        let texto = celda.textContent.trim();
+        if (texto.includes(',')) texto = `"${texto}"`;
+        valores.push(texto);
+      });
+      csv += valores.join(',') + '\n';
     });
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `reporte_ingresos_${new Date().toISOString().split('T')[0]}.csv`;
+    link.click();
   }
 
-  function bind(){
-    const btn = q('#btn_export'); if(btn) btn.addEventListener('click', ()=> alert('Export no implementado por ahora'));
+  // exportar a PDF (HTML simple)
+  function exportar_pdf() {
+    const tabla = document.querySelector('#tabla_reportes tbody');
+    const filas = tabla.querySelectorAll('tr');
+
+    if (filas.length === 0) {
+      alert('No hay datos para exportar');
+      return;
+    }
+
+    let html = '<html><head><style>';
+    html += 'body { font-family: Arial; margin: 30px; }';
+    html += 'h1 { text-align: center; }';
+    html += 'table { width: 100%; border-collapse: collapse; margin-top: 20px; }';
+    html += 'th, td { border: 1px solid black; padding: 5px; font-size: 12px; }';
+    html += 'th { background-color: #ddd; }';
+    html += '</style></head><body>';
+    html += '<h1>REPORTE DE INGRESOS</h1>';
+    html += `<p>Fecha: ${new Date().toLocaleDateString()}</p>`;
+    html += '<table>';
+    html += '<tr><th>Fecha</th><th>Paciente</th><th>Médico</th><th>Servicio</th><th>Monto</th></tr>';
+
+    filas.forEach(fila => {
+      const celdas = fila.querySelectorAll('td');
+      html += '<tr>';
+      celdas.forEach(celda => {
+        html += `<td>${celda.textContent.trim()}</td>`;
+      });
+      html += '</tr>';
+    });
+
+    html += '</table></body></html>';
+
+    const blob = new Blob([html], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `reporte_ingresos_${new Date().toISOString().split('T')[0]}.html`;
+    link.click();
+
+    alert('Archivo HTML descargado. Ábrelo y guárdalo como PDF (Ctrl+P)');
   }
 
-  document.addEventListener('DOMContentLoaded', ()=>{ seed(); renderKpis(); renderTabla(); bind(); });
+  // inicializar
+  document.addEventListener('DOMContentLoaded', () => {
+    cargar_datos();
 
+    // conectar boton de exportar (si existe, o agregar botones si faltan)
+    const btn_export = document.getElementById('btn_export');
+    if (btn_export) {
+      // Reemplazar el boton unico por dos botones (PDF y Excel)
+      const contenedor = btn_export.parentElement;
+
+      const btn_pdf = document.createElement('button');
+      btn_pdf.className = 'btn btn-danger me-2';
+      btn_pdf.innerHTML = '<i class="bi bi-file-pdf"></i> PDF';
+      btn_pdf.onclick = exportar_pdf;
+
+      const btn_excel = document.createElement('button');
+      btn_excel.className = 'btn btn-success';
+      btn_excel.innerHTML = '<i class="bi bi-file-excel"></i> Excel';
+      btn_excel.onclick = exportar_excel;
+
+      contenedor.innerHTML = '';
+      contenedor.appendChild(btn_pdf);
+      contenedor.appendChild(btn_excel);
+    }
+  });
 })();
