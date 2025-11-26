@@ -369,6 +369,7 @@ SELECT
     DATE_FORMAT(p.fecha_pago, '%Y-%m-%d %H:%i') as fecha,
     CONCAT(pac.nombres, ' ', pac.apellidos) as paciente,
     m.nombre as medico,
+    c.medico_id,
     COALESCE(e.nombre, p.concepto, 'Servicio General') as servicio,
     p.monto,
     p.metodo as metodo_pago
@@ -378,6 +379,29 @@ LEFT JOIN citas c ON p.cita_id = c.cita_id
 LEFT JOIN medicos m ON c.medico_id = m.medico_id
 LEFT JOIN especialidades e ON m.especialidad_id = e.especialidad_id
 ORDER BY p.fecha_pago DESC;
+
+USE clinica_cornejo;
+
+CREATE OR REPLACE VIEW vw_pagos_ui AS
+SELECT 
+    p.pago_id,
+    DATE_FORMAT(p.fecha_pago, '%Y-%m-%d %H:%i') as fecha,
+    CONCAT(pac.nombres, ' ', pac.apellidos) as paciente,
+    m.nombre as medico,
+    c.medico_id,
+    COALESCE(e.nombre, p.concepto, 'Servicio General') as servicio,
+    p.monto,
+    p.metodo as metodo_pago
+FROM pagos p
+LEFT JOIN pacientes pac ON p.paciente_id = pac.paciente_id
+LEFT JOIN citas c ON p.cita_id = c.cita_id
+LEFT JOIN medicos m ON c.medico_id = m.medico_id
+LEFT JOIN especialidades e ON m.especialidad_id = e.especialidad_id
+ORDER BY p.fecha_pago DESC;
+
+SELECT 'Vista vw_pagos_ui actualizada correctamente' AS mensaje;
+
+
 
 -- aqui damos todos los permisos al usuario super admin (usuario_id = 1)
 INSERT INTO permisos_usuario (usuario_id, modulo) 

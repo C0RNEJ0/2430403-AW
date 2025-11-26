@@ -15,15 +15,23 @@ if (session_status() === PHP_SESSION_NONE) {
 $usuario_rol = $_SESSION['usuario_rol'] ?? null;
 $usuario_id = $_SESSION['usuario_id'] ?? null;
 
-// si es medico obtenemos su medico_id
+// si es medico o secretaria obtenemos su medico_id para filtrar
+// admin ve todos los datos
+// secretaria ve solo del medico asociado
+// medico ve solo sus propios datos
 $medico_id = null;
-if ($usuario_rol === 'medico' && $usuario_id) {
+$es_medico = ($usuario_rol === 'medico');
+$es_secretaria = ($usuario_rol === 'secretaria');
+$filtrar_por_medico = false;
+
+if (($es_medico || $es_secretaria) && $usuario_id) {
   $stmt_medico = $bd->prepare('SELECT medico_id FROM usuarios WHERE usuario_id = :uid LIMIT 1');
   $stmt_medico->bindValue(':uid', $usuario_id, PDO::PARAM_INT);
   $stmt_medico->execute();
   $medico_data = $stmt_medico->fetch();
-  if ($medico_data) {
+  if ($medico_data && $medico_data['medico_id']) {
     $medico_id = $medico_data['medico_id'];
+    $filtrar_por_medico = true;
   }
 }
 
@@ -71,7 +79,7 @@ try {
     // Si piden reporte general (dashboard)
     if ($tipo === 'dashboard' || $tipo === '') {
         // 1. Obtener transacciones (pagos) usando la vista corregida
-        if ($usuario_rol === 'medico' && $medico_id) {
+        if ($filtrar_por_medico) {
           $sql_pagos = "SELECT pago_id, fecha, paciente, medico, servicio, monto, metodo_pago as metodo 
                         FROM vw_pagos_ui 
                         WHERE medico_id = :medico_id 
@@ -88,7 +96,7 @@ try {
 
         // 2. Calcular KPIs
         // Total ingresos
-        if ($usuario_rol === 'medico' && $medico_id) {
+        if ($filtrar_por_medico) {
           $sql_ingresos = "SELECT SUM(p.monto) as total FROM pagos p 
                           JOIN citas c ON p.cita_id = c.cita_id 
                           WHERE p.estatus = 'pagado' AND c.medico_id = :medico_id";
@@ -102,7 +110,7 @@ try {
         $total_ingresos = $stmt_ingresos->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
 
         // Citas totales (en rango o total historico)
-        if ($usuario_rol === 'medico' && $medico_id) {
+        if ($filtrar_por_medico) {
           $sql_citas = "SELECT COUNT(*) as total FROM citas WHERE medico_id = :medico_id";
           $stmt_citas = $bd->prepare($sql_citas);
           $stmt_citas->bindValue(':medico_id', $medico_id, PDO::PARAM_INT);
@@ -114,7 +122,7 @@ try {
         $total_citas = $stmt_citas->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
 
         // Pacientes nuevos (total)
-        if ($usuario_rol === 'medico' && $medico_id) {
+        if ($filtrar_por_medico) {
           $sql_pacientes = "SELECT COUNT(DISTINCT c.paciente_id) as total FROM citas c WHERE c.medico_id = :medico_id";
           $stmt_pacientes = $bd->prepare($sql_pacientes);
           $stmt_pacientes->bindValue(':medico_id', $medico_id, PDO::PARAM_INT);
@@ -126,7 +134,7 @@ try {
         $total_pacientes = $stmt_pacientes->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
 
         // Ingresos por medico
-        if ($usuario_rol === 'medico' && $medico_id) {
+        if ($filtrar_por_medico) {
           $sql_medicos = "SELECT m.nombre as medico, SUM(p.monto) as total_medico
                           FROM pagos p
                           JOIN citas c ON p.cita_id = c.cita_id
@@ -162,7 +170,7 @@ try {
     // Si piden reporte de pagos especifico
     else if ($tipo === 'pagos') {
         // Traemos pagos con nombres de pacientes usando la vista
-        if ($usuario_rol === 'medico' && $medico_id) {
+        if ($filtrar_por_medico) {
           $sql = "SELECT * FROM vw_pagos_ui WHERE medico_id = :medico_id ORDER BY fecha DESC";
           $stmt = $bd->prepare($sql);
           $stmt->bindValue(':medico_id', $medico_id, PDO::PARAM_INT);

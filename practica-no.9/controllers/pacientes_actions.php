@@ -129,14 +129,14 @@ function procesar_post_pacientes(){
       $usuario_rol = $_SESSION['usuario_rol'] ?? null;
       $usuario_id = $_SESSION['usuario_id'] ?? null;
       
-      // si es medico verificamos que el paciente sea suyo
-      if ($usuario_rol === 'medico' && $usuario_id) {
+      // si es medico o secretaria verificamos que el paciente sea del medico asociado
+      if (($usuario_rol === 'medico' || $usuario_rol === 'secretaria') && $usuario_id) {
         $stmt_medico = $bd->prepare('SELECT medico_id FROM usuarios WHERE usuario_id = :uid LIMIT 1');
         $stmt_medico->bindValue(':uid', $usuario_id, PDO::PARAM_INT);
         $stmt_medico->execute();
         $medico_data = $stmt_medico->fetch();
         
-        if ($medico_data) {
+        if ($medico_data && $medico_data['medico_id']) {
           $medico_id = $medico_data['medico_id'];
           // verificamos que el paciente tenga citas con este medico
           $check_permiso = $bd->prepare('SELECT COUNT(*) AS cnt FROM citas WHERE paciente_id = :pid AND medico_id = :mid');
@@ -177,14 +177,14 @@ function procesar_post_pacientes(){
       $usuario_rol = $_SESSION['usuario_rol'] ?? null;
       $usuario_id = $_SESSION['usuario_id'] ?? null;
       
-      // si es medico verificamos que el paciente sea suyo
-      if ($usuario_rol === 'medico' && $usuario_id) {
+      // si es medico o secretaria verificamos que el paciente sea del medico asociado
+      if (($usuario_rol === 'medico' || $usuario_rol === 'secretaria') && $usuario_id) {
         $stmt_medico = $bd->prepare('SELECT medico_id FROM usuarios WHERE usuario_id = :uid LIMIT 1');
         $stmt_medico->bindValue(':uid', $usuario_id, PDO::PARAM_INT);
         $stmt_medico->execute();
         $medico_data = $stmt_medico->fetch();
         
-        if ($medico_data) {
+        if ($medico_data && $medico_data['medico_id']) {
           $medico_id = $medico_data['medico_id'];
           // verificamos que el paciente tenga citas con este medico
           $check_permiso = $bd->prepare('SELECT COUNT(*) AS cnt FROM citas WHERE paciente_id = :pid AND medico_id = :mid');
@@ -272,7 +272,7 @@ function procesar_post_pacientes(){
 }
 
 // aqui listamos los pacientes pero filtramos segun el rol del usuario
-// si es medico solo ve sus pacientes, si es admin ve todos
+// medico y secretaria ven solo del medico asociado, admin ve todos
 function listar_pacientes($limit = 200){
   $bd = obtener_conexion();
   if(!$bd) return ['error' => 'No se pudo conectar a la BD.'];
@@ -286,21 +286,24 @@ function listar_pacientes($limit = 200){
     $usuario_rol = $_SESSION['usuario_rol'] ?? null;
     $usuario_id = $_SESSION['usuario_id'] ?? null;
     
-    // si es medico necesitamos su medico_id para filtrar
+    // si es medico o secretaria obtenemos su medico_id para filtrar
     $medico_id = null;
-    if ($usuario_rol === 'medico' && $usuario_id) {
+    $filtrar_por_medico = false;
+    
+    if (($usuario_rol === 'medico' || $usuario_rol === 'secretaria') && $usuario_id) {
       $stmt_medico = $bd->prepare('SELECT medico_id FROM usuarios WHERE usuario_id = :uid LIMIT 1');
       $stmt_medico->bindValue(':uid', $usuario_id, PDO::PARAM_INT);
       $stmt_medico->execute();
       $medico_data = $stmt_medico->fetch();
-      if ($medico_data) {
+      if ($medico_data && $medico_data['medico_id']) {
         $medico_id = $medico_data['medico_id'];
+        $filtrar_por_medico = true;
       }
     }
     
-    // aqui armamos la consulta segun el rol
-    if ($usuario_rol === 'medico' && $medico_id) {
-      // el medico solo ve pacientes que tiene asignados
+    // aqui armamos la consulta segun el filtro
+    if ($filtrar_por_medico) {
+      // el medico o secretaria solo ve pacientes del medico asignado
       $sql = 'SELECT DISTINCT p.paciente_id, p.nombres, p.apellidos, p.sexo, p.fecha_nacimiento, p.telefono, p.email, p.ciudad, p.prioridad 
               FROM pacientes p
               INNER JOIN citas c ON p.paciente_id = c.paciente_id
@@ -310,7 +313,7 @@ function listar_pacientes($limit = 200){
       $sentencia->bindValue(':medico_id', $medico_id, PDO::PARAM_INT);
       $sentencia->bindValue(':lim', (int)$limit, PDO::PARAM_INT);
     } else {
-      // el admin o secretaria ven todos los pacientes
+      // el admin ve todos los pacientes
       $sql = 'SELECT paciente_id, nombres, apellidos, sexo, fecha_nacimiento, telefono, email, ciudad, prioridad FROM pacientes ORDER BY paciente_id DESC LIMIT :lim';
       $sentencia = $bd->prepare($sql);
       $sentencia->bindValue(':lim', (int)$limit, PDO::PARAM_INT);
@@ -336,30 +339,34 @@ function obtener_paciente($id){
     $usuario_rol = $_SESSION['usuario_rol'] ?? null;
     $usuario_id = $_SESSION['usuario_id'] ?? null;
     
-    // si es medico necesitamos verificar que el paciente sea suyo
-    if ($usuario_rol === 'medico' && $usuario_id) {
+    // si es medico o secretaria verificamos que el paciente sea del medico asociado
+    $filtrar_por_medico = false;
+    $medico_id = null;
+    
+    if (($usuario_rol === 'medico' || $usuario_rol === 'secretaria') && $usuario_id) {
       $stmt_medico = $bd->prepare('SELECT medico_id FROM usuarios WHERE usuario_id = :uid LIMIT 1');
       $stmt_medico->bindValue(':uid', $usuario_id, PDO::PARAM_INT);
       $stmt_medico->execute();
       $medico_data = $stmt_medico->fetch();
       
-      if ($medico_data) {
+      if ($medico_data && $medico_data['medico_id']) {
         $medico_id = $medico_data['medico_id'];
-        // solo traemos el paciente si tiene citas con este medico
-        $sql = 'SELECT DISTINCT p.* 
-                FROM pacientes p
-                INNER JOIN citas c ON p.paciente_id = c.paciente_id
-                WHERE p.paciente_id = :id AND c.medico_id = :medico_id
-                LIMIT 1';
-        $sentencia = $bd->prepare($sql);
-        $sentencia->bindValue(':id', (int)$id, PDO::PARAM_INT);
-        $sentencia->bindValue(':medico_id', $medico_id, PDO::PARAM_INT);
-      } else {
-        // si no encontramos el medico_id no devolvemos nada
-        return null;
+        $filtrar_por_medico = true;
       }
+    }
+    
+    if ($filtrar_por_medico) {
+      // solo traemos el paciente si tiene citas con este medico
+      $sql = 'SELECT DISTINCT p.* 
+              FROM pacientes p
+              INNER JOIN citas c ON p.paciente_id = c.paciente_id
+              WHERE p.paciente_id = :id AND c.medico_id = :medico_id
+              LIMIT 1';
+      $sentencia = $bd->prepare($sql);
+      $sentencia->bindValue(':id', (int)$id, PDO::PARAM_INT);
+      $sentencia->bindValue(':medico_id', $medico_id, PDO::PARAM_INT);
     } else {
-      // admin o secretaria pueden ver cualquier paciente
+      // admin puede ver cualquier paciente
       $sentencia = $bd->prepare('SELECT * FROM pacientes WHERE paciente_id = :id LIMIT 1');
       $sentencia->bindValue(':id', (int)$id, PDO::PARAM_INT);
     }
