@@ -149,9 +149,18 @@
 
   // abrir modal de nuevo pago
   function abrir_modal_pago() {
-    document.getElementById('form_pago').reset();
-    document.getElementById('pago_fecha').value = new Date().toISOString().split('T')[0];
-    abrirModal('modal_pago');
+    const form = document.getElementById('form_pago');
+    if (form) form.reset();
+
+    const fecha = document.getElementById('pago_fecha');
+    if (fecha) fecha.value = new Date().toISOString().split('T')[0];
+
+    const modal = document.getElementById('modal_pago');
+    if (modal) {
+      modal.style.display = 'flex';
+      modal.classList.add('show');
+      document.body.classList.add('modal-open');
+    }
   }
 
   // guardar pago
