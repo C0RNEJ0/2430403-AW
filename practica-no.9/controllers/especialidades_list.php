@@ -5,8 +5,8 @@ require_once __DIR__ . '/../config/auth.php';
 header('Content-Type: application/json; charset=utf-8');
 
 // Verificar autenticación
-session_start();
-if (!isset($_SESSION['usuario_id'])) {
+iniciarSesionSegura();
+if (!estaAutenticado()) {
     echo json_encode(['exito' => false, 'error' => 'No autenticado']);
     exit;
 }
@@ -17,9 +17,9 @@ try {
   $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
   
   // Obtener rol e información del usuario
-  $usuario_id = $_SESSION['usuario_id'];
-  $rol = $_SESSION['rol'] ?? '';
-  $medico_id = $_SESSION['medico_id'] ?? null;
+  $usuario = obtenerUsuarioActual();
+  $rol = $usuario['rol'] ?? '';
+  $medico_id = $usuario['medico_id'] ?? null;
   
   if ($id>0) {
     // obtener especialidad por id

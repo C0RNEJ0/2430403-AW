@@ -9,7 +9,7 @@ if (!defined('BASE_PATH')) {
 
 require_once BASE_PATH . '/config/config.php';
 
-// Iniciar sesion simple
+// Iniciar sesion 
 function iniciarSesionSegura() {
     // Solo iniciamos sesion si no esta iniciada
     if (session_status() === PHP_SESSION_NONE) {
