@@ -43,6 +43,7 @@
             <div id="kpi_pacientes" style="font-weight:800; font-size:18px">0</div>
           </div>
           <div class="ms-auto">
+            <button id="btn_nuevo_pago" class="btn-registrar-medico me-2">Registrar Pago</button>
             <button id="btn_export" class="btn-registrar-medico">Exportar</button>
           </div>
         </div>
@@ -69,6 +70,83 @@
       </div>
 
 
+    </div>
+  </div>
+
+  <!-- Modal Registrar Pago -->
+  <div id="modal_pago" class="modal-modern" style="display: none;">
+    <div class="modal-overlay"></div>
+    <div class="modal-container modal-lg">
+      <div class="modal-header">
+        <h3 class="modal-title">Registrar Pago</h3>
+        <button class="modal-close" data-modal-close>
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="form_pago">
+          <input type="hidden" id="pago_id" name="id">
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label">Fecha</label>
+              <input type="date" class="form-control" id="pago_fecha" name="fecha" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Paciente</label>
+              <select class="form-select" id="pago_paciente" name="paciente_id" required>
+                <option value="">Seleccione...</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label">Médico (Opcional)</label>
+              <select class="form-select" id="pago_medico" name="medico">
+                <option value="">Seleccione...</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Servicio</label>
+              <input type="text" class="form-control" id="pago_servicio" name="servicio"
+                placeholder="Ej. Consulta General">
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-4">
+              <label class="form-label">Monto</label>
+              <div class="input-group">
+                <span class="input-group-text">$</span>
+                <input type="number" class="form-control" id="pago_monto" name="monto" step="0.01" required>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Método de Pago</label>
+              <select class="form-select" id="pago_metodo" name="metodo_pago">
+                <option value="efectivo">Efectivo</option>
+                <option value="tarjeta">Tarjeta</option>
+                <option value="transferencia">Transferencia</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Referencia</label>
+              <input type="text" class="form-control" id="pago_referencia" name="referencia">
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Nota</label>
+            <textarea class="form-control" id="pago_nota" name="nota" rows="2"></textarea>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn-modal-secondary" data-modal-close>Cancelar</button>
+            <button type="submit" class="btn-modal-primary">Guardar Pago</button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
   <!-- Modal Confirmación Cerrar Sesión -->

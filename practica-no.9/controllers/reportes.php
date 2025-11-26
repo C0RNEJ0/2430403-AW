@@ -10,8 +10,44 @@ $bd = obtener_conexion();
 
 // Obtenemos el tipo de reporte
 $tipo = $_GET['tipo'] ?? '';
+$metodo_http = $_SERVER['REQUEST_METHOD'];
 
 try {
+    // Si es una peticion POST, es para guardar un pago
+    if ($metodo_http === 'POST') {
+        // obtener datos del formulario
+        $id_pago = (int)($_POST['id'] ?? 0);
+        $fecha = $_POST['fecha'] ?? null;
+        $paciente_id = isset($_POST['paciente_id']) && $_POST['paciente_id'] !== '' ? (int)$_POST['paciente_id'] : null;
+        $monto = floatval($_POST['monto'] ?? 0);
+        $cita_id = isset($_POST['cita_id']) && $_POST['cita_id'] !== '' ? (int)$_POST['cita_id'] : null;
+        $metodo_pago = trim($_POST['metodo_pago'] ?? 'efectivo');
+        $referencia = trim($_POST['referencia'] ?? '');
+        $estatus = trim($_POST['estatus'] ?? 'pagado');
+        $servicio = trim($_POST['servicio'] ?? '');
+        
+        // validar datos requeridos
+        if (empty($paciente_id) || $monto <= 0) {
+            echo json_encode(['exito' => false, 'error' => 'paciente_id y monto son requeridos']);
+            exit;
+        }
+        
+        // normalizar fecha
+        $fecha_pago = $fecha ? ($fecha . ' 00:00:00') : date('Y-m-d H:i:s');
+        
+        // insertar pago
+        // Nota: Agregamos 'concepto' para guardar el servicio si no hay cita
+        $sql = "INSERT INTO pagos (paciente_id, cita_id, monto, moneda, metodo, estatus, referencia, fecha_pago, concepto) 
+                VALUES (?, ?, ?, 'MXN', ?, ?, ?, ?, ?)";
+        
+        // Usamos PDO
+        $stmt = $bd->prepare($sql);
+        $stmt->execute([$paciente_id, $cita_id, $monto, $metodo_pago, $estatus, $referencia, $fecha_pago, $servicio]);
+        
+        echo json_encode(['exito' => true, 'id' => $bd->lastInsertId()]);
+        exit;
+    }
+
     // Si piden reporte de pagos
     // Si piden reporte general (dashboard)
     if ($tipo === 'dashboard' || $tipo === '') {

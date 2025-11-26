@@ -118,9 +118,89 @@
     alert('Archivo HTML descargado. Ábrelo y guárdalo como PDF (Ctrl+P)');
   }
 
+  // cargar listas para el formulario
+  async function cargar_listas() {
+    try {
+      // Cargar pacientes
+      const res_pac = await fetch('../controllers/pacientes.php?api=listar');
+      const datos_pac = await res_pac.json();
+      const sel_pac = document.getElementById('pago_paciente');
+      if (sel_pac && datos_pac.exito) {
+        sel_pac.innerHTML = '<option value="">Seleccione...</option>';
+        datos_pac.datos.forEach(p => {
+          sel_pac.appendChild(new Option(`${p.nombres} ${p.apellidos}`, p.paciente_id));
+        });
+      }
+
+      // Cargar medicos
+      const res_med = await fetch('../controllers/medicos_list.php');
+      const datos_med = await res_med.json();
+      const sel_med = document.getElementById('pago_medico');
+      if (sel_med && datos_med.exito) {
+        sel_med.innerHTML = '<option value="">Seleccione...</option>';
+        datos_med.datos.forEach(m => {
+          sel_med.appendChild(new Option(m.nombre, m.medico_id));
+        });
+      }
+    } catch (e) {
+      console.error('Error cargando listas:', e);
+    }
+  }
+
+  // abrir modal de nuevo pago
+  function abrir_modal_pago() {
+    document.getElementById('form_pago').reset();
+    document.getElementById('pago_fecha').value = new Date().toISOString().split('T')[0];
+    abrirModal('modal_pago');
+  }
+
+  // guardar pago
+  async function guardar_pago(e) {
+    e.preventDefault();
+    const form = new FormData(e.target);
+
+    try {
+      const res = await fetch('../controllers/reportes.php', {
+        method: 'POST',
+        body: form
+      });
+      const datos = await res.json();
+
+      if (datos.exito) {
+        alert('Pago registrado correctamente');
+        // cerrar modal (usando bootstrap o estilo directo)
+        const modal = document.getElementById('modal_pago');
+        modal.style.display = 'none';
+        modal.classList.remove('active');
+        document.body.classList.remove('modal-open');
+
+        // recargar datos
+        cargar_datos();
+      } else {
+        alert('Error al guardar: ' + datos.error);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Error al guardar pago');
+    }
+  }
+
   // inicializar
   document.addEventListener('DOMContentLoaded', () => {
     cargar_datos();
+    cargar_listas();
+
+    // conectar boton de nuevo pago
+    const btn_nuevo = document.getElementById('btn_nuevo_pago');
+    if (btn_nuevo) {
+      btn_nuevo.addEventListener('click', abrir_modal_pago);
+    }
+
+    // conectar formulario
+    const form = document.getElementById('form_pago');
+    if (form) {
+      form.addEventListener('submit', guardar_pago);
+    }
 
     // conectar boton de exportar (si existe, o agregar botones si faltan)
     const btn_export = document.getElementById('btn_export');
