@@ -1,60 +1,161 @@
 (function () {
-  const CL_PAC = 'cs_pacientes_v1';
-  const CL_MED = 'medicos';
-  const CL_CITAS = 'citas';
-  const CL_PAGOS = 'pagos';
+  // aqui cargamos los datos reales de la base de datos
+  async function cargarDatos() {
+    try {
+      const respuesta = await fetch('../controllers/dashboard.php');
+      const json = await respuesta.json();
 
-  function cargar(cl) { try { return JSON.parse(localStorage.getItem(cl)) || []; } catch (e) { return []; } }
-  function guardar(cl, data) { try { localStorage.setItem(cl, JSON.stringify(data)); } catch (e) { } }
-
-  // seed de ejemplo
-  function seed() {
-    const pacs = cargar(CL_PAC);
-    const meds = cargar(CL_MED);
-    const citas = cargar(CL_CITAS);
-    const pagos = cargar(CL_PAGOS);
-    if (!pacs.length) { pacs.push({ id: 1, nombre: 'Ana Perez', edad: 28, prioridad: 'No urgente' }); pacs.push({ id: 2, nombre: 'Luis Gomez', edad: 35, prioridad: 'Urgente' }); pacs.push({ id: 3, nombre: 'Maria Lopez', edad: 42, prioridad: 'No urgente' }); guardar(CL_PAC, pacs); }
-    if (!meds.length) { meds.push({ id: 10, nombre: 'Dr. Perez', especialidad: 'General' }); meds.push({ id: 11, nombre: 'Dra. Ruiz', especialidad: 'Pediatría' }); guardar(CL_MED, meds); }
-    if (!citas.length) { const hoy = new Date(); const d1 = hoy.toISOString().slice(0, 10); const d2 = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate() + 1).toISOString().slice(0, 10); citas.push({ id: 1, pacienteId: 1, medicoId: 10, medicoName: 'Dr. Perez', fecha: d1, hora: '09:00' }); citas.push({ id: 2, pacienteId: 2, medicoId: 11, medicoName: 'Dra. Ruiz', fecha: d1, hora: '11:00' }); citas.push({ id: 3, pacienteId: 3, medicoId: 10, medicoName: 'Dr. Perez', fecha: d2, hora: '14:00' }); guardar(CL_CITAS, citas); }
-    if (!pagos.length) { const hoy = new Date().toISOString().slice(0, 10); pagos.push({ id: 1, citaId: 1, pacienteId: 1, fecha: hoy, monto: 250, servicio: 'Consulta general' }); pagos.push({ id: 2, citaId: 2, pacienteId: 2, fecha: hoy, monto: 300, servicio: 'Consulta pediátrica' }); pagos.push({ id: 3, citaId: 3, pacienteId: 3, fecha: hoy, monto: 400, servicio: 'Consulta dermatológica' }); guardar(CL_PAGOS, pagos); }
+      if (json.exito && json.datos) {
+        mostrarKpis(json.datos);
+        mostrarTransacciones(json.datos.transacciones);
+        mostrarGraficas(json.datos);
+      } else {
+        console.error('Error cargando datos del dashboard:', json.error);
+        mostrarDatosEjemplo();
+      }
+    } catch (error) {
+      console.error('Error de conexion:', error);
+      mostrarDatosEjemplo();
+    }
   }
 
-  // util
-  function q(s) { return document.querySelector(s); }
+  function mostrarKpis(datos) {
+    const kpiPacientes = document.getElementById('kpi_pacientes');
+    const kpiConsultas = document.getElementById('kpi_consultas');
+    const kpiDinero = document.getElementById('kpi_dinero');
+    const kpiMedicos = document.getElementById('kpi_medicos');
 
-  function calcularKpis() {
-    const pacs = cargar(CL_PAC); const citas = cargar(CL_CITAS); const pagos = cargar(CL_PAGOS); const meds = cargar(CL_MED);
-    q('#kpi_pacientes').textContent = pacs.length;
-    q('#kpi_consultas').textContent = citas.length;
-    const total = pagos.reduce((sum, p) => sum + (Number(p.monto) || 0), 0); q('#kpi_dinero').textContent = '$' + total.toFixed(2);
-    q('#kpi_medicos').textContent = meds.length;
+    if (kpiPacientes) kpiPacientes.textContent = datos.pacientes_nuevos || 0;
+    if (kpiConsultas) kpiConsultas.textContent = datos.citas || 0;
+    if (kpiDinero) kpiDinero.textContent = '$' + (parseFloat(datos.total) || 0).toFixed(2);
+    if (kpiMedicos) kpiMedicos.textContent = datos.por_medico ? datos.por_medico.length : 0;
   }
 
-  function renderPacientes() { const pacs = cargar(CL_PAC); const tbody = q('#tabla_pacientes tbody'); if (!tbody) return; tbody.innerHTML = ''; pacs.slice(0, 10).forEach(p => { const tr = document.createElement('tr'); tr.innerHTML = `<td>${p.nombre}</td><td>${p.edad || ''}</td><td>${p.prioridad || ''}</td>`; tbody.appendChild(tr); }); }
+  function mostrarTransacciones(transacciones) {
+    const tbody = document.querySelector('#tabla_pacientes tbody');
+    if (!tbody) return;
 
-  function renderMedicos() { const meds = cargar(CL_MED); const div = q('#lista_medicos'); if (!div) return; div.innerHTML = ''; meds.forEach(m => { const card = document.createElement('div'); card.className = 'd-flex align-items-center gap-2 mb-2'; card.innerHTML = `<div style="width:44px; height:44px; background:#e9ecef; border-radius:8px; display:flex; align-items:center; justify-content:center; font-weight:700">${(m.nombre || 'M').charAt(0)}</div><div><div style="font-weight:700">${m.nombre}</div><div style="font-size:12px;color:#666">${m.especialidad || ''}</div></div>`; div.appendChild(card); }); }
+    tbody.innerHTML = '';
 
-  // graficas 
-  let chartLine = null, chartPie = null;
-  function renderGraficas() {
-    const pagos = cargar(CL_PAGOS); const citas = cargar(CL_CITAS);
-    // linea: ingresos por dia ultimos 7 dias
+    if (!transacciones || transacciones.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="5" class="text-center">No hay transacciones registradas</td></tr>';
+      return;
+    }
+
+    transacciones.slice(0, 10).forEach(t => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${escaparHtml(t.fecha || '')}</td>
+        <td>${escaparHtml(t.paciente || '')}</td>
+        <td>${escaparHtml(t.medico || '')}</td>
+        <td>${escaparHtml(t.servicio || '')}</td>
+        <td>$${parseFloat(t.monto || 0).toFixed(2)}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  let chartLine = null;
+  let chartPie = null;
+
+  function mostrarGraficas(datos) {
+    if (!datos.transacciones) return;
+
+    // aqui agrupamos los ingresos por dia de los ultimos 7 dias
     const dias = [];
-    for (let i = 6; i >= 0; i--) { const d = new Date(); d.setDate(d.getDate() - i); dias.push(d.toISOString().slice(0, 10)); }
-    const ingresos = dias.map(d => pagos.filter(p => p.fecha === d).reduce((s, p) => s + Number(p.monto || 0), 0));
+    const ingresosPorDia = {};
 
-    const ctx = document.getElementById('chart_line').getContext('2d');
-    if (chartLine) chartLine.destroy();
-    chartLine = new Chart(ctx, { type: 'line', data: { labels: dias, datasets: [{ label: 'Ingresos', data: ingresos, borderColor: '#2b8a67', backgroundColor: 'rgba(43,138,103,0.15)', tension: 0.3 }] }, options: { responsive: true } });
+    for (let i = 6; i >= 0; i--) {
+      const fecha = new Date();
+      fecha.setDate(fecha.getDate() - i);
+      const diaStr = fecha.toISOString().slice(0, 10);
+      dias.push(diaStr);
+      ingresosPorDia[diaStr] = 0;
+    }
 
-    // pie: por servicio (pagos)
-    const servicios = {};
-    pagos.forEach(p => { const s = p.servicio || 'Otros'; servicios[s] = (servicios[s] || 0) + (Number(p.monto) || 0); });
-    const labels = Object.keys(servicios); const values = labels.map(l => servicios[l]);
-    const ctx2 = document.getElementById('chart_pie').getContext('2d'); if (chartPie) chartPie.destroy();
-    chartPie = new Chart(ctx2, { type: 'pie', data: { labels, datasets: [{ data: values, backgroundColor: ['#4a9a6a', '#72c08f', '#f6c85f', '#f97c6a'] }] }, options: { responsive: true } });
+    datos.transacciones.forEach(t => {
+      const fecha = t.fecha ? t.fecha.slice(0, 10) : '';
+      if (ingresosPorDia.hasOwnProperty(fecha)) {
+        ingresosPorDia[fecha] += parseFloat(t.monto || 0);
+      }
+    });
+
+    const ingresos = dias.map(d => ingresosPorDia[d]);
+
+    // grafica de linea de ingresos
+    const ctxLine = document.getElementById('chart_line');
+    if (ctxLine && typeof Chart !== 'undefined') {
+      if (chartLine) chartLine.destroy();
+      chartLine = new Chart(ctxLine.getContext('2d'), {
+        type: 'line',
+        data: {
+          labels: dias.map(d => {
+            const fecha = new Date(d + 'T00:00:00');
+            return fecha.toLocaleDateString('es-ES', { month: 'short', day: 'numeric' });
+          }),
+          datasets: [{
+            label: 'Ingresos',
+            data: ingresos,
+            borderColor: '#2b8a67',
+            backgroundColor: 'rgba(43,138,103,0.15)',
+            tension: 0.3
+          }]
+        },
+        options: { responsive: true }
+      });
+    }
+
+    // grafica de pie por medico
+    if (datos.por_medico && datos.por_medico.length > 0) {
+      const labels = datos.por_medico.map(m => m.medico);
+      const values = datos.por_medico.map(m => parseFloat(m.total_medico || 0));
+
+      const ctxPie = document.getElementById('chart_pie');
+      if (ctxPie && typeof Chart !== 'undefined') {
+        if (chartPie) chartPie.destroy();
+        chartPie = new Chart(ctxPie.getContext('2d'), {
+          type: 'pie',
+          data: {
+            labels: labels,
+            datasets: [{
+              data: values,
+              backgroundColor: ['#4a9a6a', '#72c08f', '#f6c85f', '#f97c6a', '#9b59b6', '#3498db']
+            }]
+          },
+          options: { responsive: true }
+        });
+      }
+    }
   }
 
-  document.addEventListener('DOMContentLoaded', () => { seed(); calcularKpis(); renderPacientes(); renderMedicos(); renderGraficas(); });
+  function mostrarDatosEjemplo() {
+    // datos de respaldo si falla la conexion
+    const kpiPacientes = document.getElementById('kpi_pacientes');
+    const kpiConsultas = document.getElementById('kpi_consultas');
+    const kpiDinero = document.getElementById('kpi_dinero');
+    const kpiMedicos = document.getElementById('kpi_medicos');
+
+    if (kpiPacientes) kpiPacientes.textContent = '0';
+    if (kpiConsultas) kpiConsultas.textContent = '0';
+    if (kpiDinero) kpiDinero.textContent = '$0.00';
+    if (kpiMedicos) kpiMedicos.textContent = '0';
+  }
+
+  function escaparHtml(texto) {
+    if (!texto) return '';
+    return String(texto).replace(/[&<>"']/g, m => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;'
+    }[m]));
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    cargarDatos();
+    // recargar cada 30 segundos
+    setInterval(cargarDatos, 30000);
+  });
 
 })();

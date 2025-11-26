@@ -130,15 +130,15 @@ function renderizarTablaUsuarios(usuarios) {
                 <td><span class="badge ${estadoClass}">${estadoTexto}</span></td>
                 <td class="text-end">
                     <div class="btn-group btn-group-sm">
-                        <button class="btn btn-outline-primary" onclick="abrirModalEditarUsuario(${u.usuario_id})" title="Editar">
+                        <button class="btn btn-primary" onclick="abrirModalEditarUsuario(${u.usuario_id})" title="Editar">
                             <i class="bi bi-pencil"></i>
                         </button>
-                        <button class="btn btn-outline-${u.activo == 1 ? 'warning' : 'success'}" 
+                        <button class="btn btn-${u.activo == 1 ? 'warning' : 'success'}" 
                                 onclick="cambiarEstadoUsuario(${u.usuario_id}, ${u.activo == 1 ? 0 : 1})" 
                                 title="${u.activo == 1 ? 'Desactivar' : 'Activar'}">
                             <i class="bi bi-${u.activo == 1 ? 'slash-circle' : 'check-circle'}"></i>
                         </button>
-                        <button class="btn btn-outline-danger" onclick="eliminarUsuario(${u.usuario_id})" title="Eliminar">
+                        <button class="btn btn-danger" onclick="eliminarUsuario(${u.usuario_id})" title="Eliminar">
                             <i class="bi bi-trash"></i>
                         </button>
                     </div>

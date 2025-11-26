@@ -269,15 +269,17 @@ async function cargarPacientes() {
 
         // Botón editar que abre el modal
         var btnEditar = document.createElement('button');
-        btnEditar.className = 'btn btn-sm btn-outline-primary me-1';
-        btnEditar.textContent = 'Editar';
+        btnEditar.className = 'btn btn-sm btn-primary me-1';
+        btnEditar.title = 'Editar';
+        btnEditar.innerHTML = '<i class="bi bi-pencil"></i>';
         btnEditar.onclick = function () { abrirModalEditar(paciente); };
         tdAcc.appendChild(btnEditar);
 
         // Botón eliminar
         var btnEliminar = document.createElement('button');
-        btnEliminar.className = 'btn btn-sm btn-outline-danger';
-        btnEliminar.textContent = 'Eliminar';
+        btnEliminar.className = 'btn btn-sm btn-danger';
+        btnEliminar.title = 'Eliminar';
+        btnEliminar.innerHTML = '<i class="bi bi-trash"></i>';
         btnEliminar.onclick = function () { abrirModalEliminar(paciente.paciente_id); };
         tdAcc.appendChild(btnEliminar);
         tr.appendChild(tdAcc);

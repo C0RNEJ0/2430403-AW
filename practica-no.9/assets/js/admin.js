@@ -34,8 +34,8 @@ document.addEventListener('DOMContentLoaded', function () {
                                 <td>${rol}</td>
                                 <td>${estado}</td>
                                 <td>
-                                    <button class="btn btn-sm btn-primary" onclick="editarUsuario(${u.usuario_id}, '${u.nombre}', '${u.email}', '${u.rol}', ${u.activo})">Editar</button>
-                                    <button class="btn btn-sm btn-danger" onclick="prepararEliminar(${u.usuario_id}, 'usuario')">Eliminar</button>
+                                    <button class="btn btn-sm btn-primary" onclick="editarUsuario(${u.usuario_id}, '${u.nombre}', '${u.email}', '${u.rol}', ${u.activo})" title="Editar"><i class="bi bi-pencil"></i></button>
+                                    <button class="btn btn-sm btn-danger" onclick="prepararEliminar(${u.usuario_id}, 'usuario')" title="Eliminar"><i class="bi bi-trash"></i></button>
                                 </td>
                             </tr>
                         `;
@@ -100,8 +100,8 @@ document.addEventListener('DOMContentLoaded', function () {
                                 <td>${p.telefono || '-'}</td>
                                 <td>${p.ciudad || '-'}</td>
                                 <td>
-                                    <button class="btn btn-sm btn-primary" onclick="editarPaciente(${p.paciente_id}, '${p.nombres}', '${p.apellidos}', '${p.email}', '${p.telefono}')">Editar</button>
-                                    <button class="btn btn-sm btn-danger" onclick="prepararEliminar(${p.paciente_id}, 'paciente')">Eliminar</button>
+                                    <button class="btn btn-sm btn-primary" onclick="editarPaciente(${p.paciente_id}, '${p.nombres}', '${p.apellidos}', '${p.email}', '${p.telefono}')" title="Editar"><i class="bi bi-pencil"></i></button>
+                                    <button class="btn btn-sm btn-danger" onclick="prepararEliminar(${p.paciente_id}, 'paciente')" title="Eliminar"><i class="bi bi-trash"></i></button>
                                 </td>
                             </tr>
                         `;
@@ -174,8 +174,8 @@ document.addEventListener('DOMContentLoaded', function () {
                                 <td>${m.medico_horario || '-'}</td>
                                 <td>${m.medico_telefono || '-'}</td>
                                 <td>
-                                    <button class="btn btn-sm btn-primary" onclick="editarMedico(${m.usuario_id}, '${m.nombre}', '${m.medico_especialidad}', '${m.medico_horario}', '${m.medico_telefono}')">Editar</button>
-                                    <button class="btn btn-sm btn-danger" onclick="prepararEliminar(${m.usuario_id}, 'medico')">Eliminar</button>
+                                    <button class="btn btn-sm btn-primary" onclick="editarMedico(${m.usuario_id}, '${m.nombre}', '${m.medico_especialidad}', '${m.medico_horario}', '${m.medico_telefono}')" title="Editar"><i class="bi bi-pencil"></i></button>
+                                    <button class="btn btn-sm btn-danger" onclick="prepararEliminar(${m.usuario_id}, 'medico')" title="Eliminar"><i class="bi bi-trash"></i></button>
                                 </td>
                             </tr>
                         `;
