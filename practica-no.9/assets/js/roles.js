@@ -182,35 +182,32 @@ function confirmarEliminarRol() {
 
 // Abrir modal para crear usuario con un rol específico
 function abrirModalCrearUsuario(nombreRol, rolId) {
+    // Limpiar inputs de texto primero (pero no los selects ni hidden inputs)
+    const form = document.getElementById('form_crear_usuario');
+    form.querySelectorAll('input:not([type="hidden"])').forEach(input => {
+        input.value = '';
+    });
+
     // Actualizar título
     document.getElementById('modal_usuario_titulo').textContent = `Crear Usuario - ${nombreRol.charAt(0).toUpperCase() + nombreRol.slice(1)}`;
+
+    // Establecer valores en hidden inputs
+    document.getElementById('usuario_rol_nombre').value = nombreRol;
 
     // Ocultar todos los campos específicos
     document.getElementById('campos_medico').style.display = 'none';
     document.getElementById('campos_secretaria').style.display = 'none';
 
-    // Mostrar campos según el rol y cargar datos primero
+    // Mostrar campos según el rol y cargar datos
     if (nombreRol === 'medico') {
         document.getElementById('usuario_accion').value = 'crear_medico';
         document.getElementById('campos_medico').style.display = 'block';
-        // Cargar especialidades ANTES de resetear
         cargarEspecialidades();
     } else if (nombreRol === 'secretaria') {
         document.getElementById('usuario_accion').value = 'crear_secretaria';
         document.getElementById('campos_secretaria').style.display = 'block';
-        // Cargar médicos ANTES de resetear
         cargarMedicosParaAsociar();
     }
-
-    // Resetear formulario DESPUÉS de cargar los selects
-    setTimeout(() => {
-        const form = document.getElementById('form_crear_usuario');
-        // Solo reseteamos los campos input, no los selects que ya cargamos
-        form.querySelectorAll('input:not([type="hidden"])').forEach(input => {
-            input.value = '';
-        });
-        document.getElementById('usuario_rol_nombre').value = nombreRol;
-    }, 100);
 
     abrirModal('modal_crear_usuario');
 }

@@ -126,18 +126,13 @@ function procesar_post_pacientes(){
       if (session_status() === PHP_SESSION_NONE) {
           session_start();
       }
-      $usuario_rol = $_SESSION['usuario_rol'] ?? null;
-      $usuario_id = $_SESSION['usuario_id'] ?? null;
+      $usuario_rol = $_SESSION['rol'] ?? null;
+      $medico_id_sesion = $_SESSION['medico_id'] ?? null;
       
       // si es medico o secretaria verificamos que el paciente sea del medico asociado
-      if (($usuario_rol === 'medico' || $usuario_rol === 'secretaria') && $usuario_id) {
-        $stmt_medico = $bd->prepare('SELECT medico_id FROM usuarios WHERE usuario_id = :uid LIMIT 1');
-        $stmt_medico->bindValue(':uid', $usuario_id, PDO::PARAM_INT);
-        $stmt_medico->execute();
-        $medico_data = $stmt_medico->fetch();
-        
-        if ($medico_data && $medico_data['medico_id']) {
-          $medico_id = $medico_data['medico_id'];
+      if (($usuario_rol === 'medico' || $usuario_rol === 'secretaria') && $medico_id_sesion) {
+        $medico_id = $medico_id_sesion;
+        if ($medico_id) {
           // verificamos que el paciente tenga citas con este medico
           $check_permiso = $bd->prepare('SELECT COUNT(*) AS cnt FROM citas WHERE paciente_id = :pid AND medico_id = :mid');
           $check_permiso->bindValue(':pid', $id, PDO::PARAM_INT);
@@ -174,18 +169,13 @@ function procesar_post_pacientes(){
       if (session_status() === PHP_SESSION_NONE) {
           session_start();
       }
-      $usuario_rol = $_SESSION['usuario_rol'] ?? null;
-      $usuario_id = $_SESSION['usuario_id'] ?? null;
+      $usuario_rol = $_SESSION['rol'] ?? null;
+      $medico_id_sesion = $_SESSION['medico_id'] ?? null;
       
       // si es medico o secretaria verificamos que el paciente sea del medico asociado
-      if (($usuario_rol === 'medico' || $usuario_rol === 'secretaria') && $usuario_id) {
-        $stmt_medico = $bd->prepare('SELECT medico_id FROM usuarios WHERE usuario_id = :uid LIMIT 1');
-        $stmt_medico->bindValue(':uid', $usuario_id, PDO::PARAM_INT);
-        $stmt_medico->execute();
-        $medico_data = $stmt_medico->fetch();
-        
-        if ($medico_data && $medico_data['medico_id']) {
-          $medico_id = $medico_data['medico_id'];
+      if (($usuario_rol === 'medico' || $usuario_rol === 'secretaria') && $medico_id_sesion) {
+        $medico_id = $medico_id_sesion;
+        if ($medico_id) {
           // verificamos que el paciente tenga citas con este medico
           $check_permiso = $bd->prepare('SELECT COUNT(*) AS cnt FROM citas WHERE paciente_id = :pid AND medico_id = :mid');
           $check_permiso->bindValue(':pid', $id, PDO::PARAM_INT);
@@ -283,22 +273,16 @@ function listar_pacientes($limit = 200){
     if (session_status() === PHP_SESSION_NONE) {
         session_start();
     }
-    $usuario_rol = $_SESSION['usuario_rol'] ?? null;
-    $usuario_id = $_SESSION['usuario_id'] ?? null;
+    $usuario_rol = $_SESSION['rol'] ?? null;
+    $medico_id_sesion = $_SESSION['medico_id'] ?? null;
     
-    // si es medico o secretaria obtenemos su medico_id para filtrar
+    // si es medico o secretaria filtramos por su medico_id
     $medico_id = null;
     $filtrar_por_medico = false;
     
-    if (($usuario_rol === 'medico' || $usuario_rol === 'secretaria') && $usuario_id) {
-      $stmt_medico = $bd->prepare('SELECT medico_id FROM usuarios WHERE usuario_id = :uid LIMIT 1');
-      $stmt_medico->bindValue(':uid', $usuario_id, PDO::PARAM_INT);
-      $stmt_medico->execute();
-      $medico_data = $stmt_medico->fetch();
-      if ($medico_data && $medico_data['medico_id']) {
-        $medico_id = $medico_data['medico_id'];
-        $filtrar_por_medico = true;
-      }
+    if (($usuario_rol === 'medico' || $usuario_rol === 'secretaria') && $medico_id_sesion) {
+      $medico_id = $medico_id_sesion;
+      $filtrar_por_medico = true;
     }
     
     // aqui armamos la consulta segun el filtro
@@ -336,23 +320,16 @@ function obtener_paciente($id){
     if (session_status() === PHP_SESSION_NONE) {
         session_start();
     }
-    $usuario_rol = $_SESSION['usuario_rol'] ?? null;
-    $usuario_id = $_SESSION['usuario_id'] ?? null;
+    $usuario_rol = $_SESSION['rol'] ?? null;
+    $medico_id_sesion = $_SESSION['medico_id'] ?? null;
     
     // si es medico o secretaria verificamos que el paciente sea del medico asociado
     $filtrar_por_medico = false;
     $medico_id = null;
     
-    if (($usuario_rol === 'medico' || $usuario_rol === 'secretaria') && $usuario_id) {
-      $stmt_medico = $bd->prepare('SELECT medico_id FROM usuarios WHERE usuario_id = :uid LIMIT 1');
-      $stmt_medico->bindValue(':uid', $usuario_id, PDO::PARAM_INT);
-      $stmt_medico->execute();
-      $medico_data = $stmt_medico->fetch();
-      
-      if ($medico_data && $medico_data['medico_id']) {
-        $medico_id = $medico_data['medico_id'];
-        $filtrar_por_medico = true;
-      }
+    if (($usuario_rol === 'medico' || $usuario_rol === 'secretaria') && $medico_id_sesion) {
+      $medico_id = $medico_id_sesion;
+      $filtrar_por_medico = true;
     }
     
     if ($filtrar_por_medico) {
