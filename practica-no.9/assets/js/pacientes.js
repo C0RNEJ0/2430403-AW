@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function () {
       if (json.exito && Array.isArray(json.datos)) {
         select.appendChild(new Option('Seleccione', ''));
         json.datos.forEach(function (m) {
-          var texto = (m.nombres || '') + ' ' + (m.apellidos || '');
+          var texto = m.nombre || '';
           var valor = m.medico_id || m.id || '';
           select.appendChild(new Option(texto, valor));
         });

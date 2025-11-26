@@ -50,9 +50,10 @@
                   <option value="transferencia">Transferencia</option>
                 </select>
               </div>
-              <div class="col-md-4 d-flex align-items-end gap-2">
+              <div class="col-md-4 d-flex align-items-end gap-2 flex-wrap">
                 <button id="btn_filtrar" class="btn btn-primary">Filtrar</button>
-                <button id="btn_corte_caja" class="btn btn-success">Corte de Caja</button>
+                <button id="btn_corte_dia15" class="btn btn-info">Corte Día 15</button>
+                <button id="btn_corte_mes" class="btn btn-warning">Corte del Mes</button>
                 <button id="btn_nuevo_pago" class="btn-registrar-medico">Registrar pago</button>
               </div>
             </div>
@@ -84,56 +85,56 @@
 
     </div><!-- /page-content -->
 
-      <!-- Modal registrar pago -->
-      <div class="modal fade" id="modal_pago" tabindex="-1">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <form id="form_pago">
-              <div class="modal-header">
-                <h5 class="modal-title">Registrar pago</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+    <!-- Modal registrar pago -->
+    <div class="modal fade" id="modal_pago" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <form id="form_pago">
+            <div class="modal-header">
+              <h5 class="modal-title">Registrar pago</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+              <input type="hidden" id="pago_id">
+              <input type="hidden" id="pago_paciente_id">
+              <div class="mb-2"><label class="form-label">Fecha</label><input id="pago_fecha" class="form-control"
+                  type="date" required></div>
+              <div class="mb-2"><label class="form-label">Paciente</label>
+                <select id="pago_paciente" class="form-select" required>
+                  <option value="">Seleccione</option>
+                </select>
               </div>
-              <div class="modal-body">
-                <input type="hidden" id="pago_id">
-                <input type="hidden" id="pago_paciente_id">
-                <div class="mb-2"><label class="form-label">Fecha</label><input id="pago_fecha" class="form-control"
-                    type="date" required></div>
-                <div class="mb-2"><label class="form-label">Paciente</label>
-                  <select id="pago_paciente" class="form-select" required>
-                    <option value="">Seleccione</option>
-                  </select>
-                </div>
-                <div class="mb-2"><label class="form-label">Médico</label>
-                  <select id="pago_medico" class="form-select">
-                    <option value="">Seleccione</option>
-                  </select>
-                </div>
-                <div class="mb-2"><label class="form-label">Servicio</label><input id="pago_servicio"
-                    class="form-control"></div>
-                <div class="mb-2"><label class="form-label">ID cita (opcional)</label><input id="pago_cita_id"
-                    class="form-control" placeholder="ID de cita"></div>
-                <div class="mb-2"><label class="form-label">Método de pago</label>
-                  <select id="pago_metodo" class="form-select">
-                    <option value="">Seleccione</option>
-                    <option value="efectivo">Efectivo</option>
-                    <option value="tarjeta">Tarjeta</option>
-                    <option value="transferencia">Transferencia</option>
-                  </select>
-                </div>
-                <div class="mb-2"><label class="form-label">Referencia</label><input id="pago_referencia"
-                    class="form-control" placeholder="(opcional)"></div>
-                <div class="mb-2"><label class="form-label">Nota</label><textarea id="pago_nota" class="form-control"
-                    rows="2"></textarea></div>
+              <div class="mb-2"><label class="form-label">Médico</label>
+                <select id="pago_medico" class="form-select">
+                  <option value="">Seleccione</option>
+                </select>
               </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="submit" class="btn btn-primary">Guardar</button>
+              <div class="mb-2"><label class="form-label">Servicio</label><input id="pago_servicio"
+                  class="form-control"></div>
+              <div class="mb-2"><label class="form-label">ID cita (opcional)</label><input id="pago_cita_id"
+                  class="form-control" placeholder="ID de cita"></div>
+              <div class="mb-2"><label class="form-label">Método de pago</label>
+                <select id="pago_metodo" class="form-select">
+                  <option value="">Seleccione</option>
+                  <option value="efectivo">Efectivo</option>
+                  <option value="tarjeta">Tarjeta</option>
+                  <option value="transferencia">Transferencia</option>
+                </select>
               </div>
-            </form>
-          </div>
+              <div class="mb-2"><label class="form-label">Referencia</label><input id="pago_referencia"
+                  class="form-control" placeholder="(opcional)"></div>
+              <div class="mb-2"><label class="form-label">Nota</label><textarea id="pago_nota" class="form-control"
+                  rows="2"></textarea></div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-primary">Guardar</button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
+  </div>
   </div>
 
   <!-- Modal Corte de Caja -->
@@ -201,8 +202,11 @@
       </div>
       <div class="modal-footer">
         <button class="btn-modal-secondary" data-modal-close>Cerrar</button>
-        <button id="btn_imprimir_corte" class="btn-modal-primary">
-          <i class="bi bi-printer"></i> Imprimir
+        <button id="btn_exportar_excel" class="btn btn-success">
+          <i class="bi bi-file-earmark-excel"></i> Exportar Excel
+        </button>
+        <button id="btn_exportar_pdf" class="btn btn-danger">
+          <i class="bi bi-file-earmark-pdf"></i> Exportar PDF
         </button>
       </div>
     </div>
@@ -226,7 +230,7 @@
       </div>
       <div class="modal-footer">
         <button class="btn-modal-secondary" data-modal-close>Cancelar</button>
-        <button id="boton_cerrar_sesion" class="btn-modal-danger">
+        <button id="boton_cerrar_sesion" class="btn-modal-danger" onclick="cerrar_sesion(); return false;">
           <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
         </button>
       </div>
@@ -238,7 +242,7 @@
   <script src="../assets/js/pagos.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script src="../assets/js/load-sidebar.js"></script>
-<script src="../assets/js/auth-guard.js"></script>
+  <script src="../assets/js/auth-guard.js"></script>
 </body>
 
 </html>

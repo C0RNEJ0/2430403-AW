@@ -398,6 +398,173 @@
     }
   }
 
+  // aqui generamos el corte del dia 15 del mes actual
+  async function generar_corte_dia15() {
+    const hoy = new Date();
+    const anio = hoy.getFullYear();
+    const mes = String(hoy.getMonth() + 1).padStart(2, '0');
+    const fecha_dia15 = `${anio}-${mes}-15`;
+
+    // ponemos las fechas en los campos
+    document.getElementById('fecha_inicio').value = fecha_dia15;
+    document.getElementById('fecha_fin').value = fecha_dia15;
+
+    // generamos el corte para ese dia
+    try {
+      const url = `../controllers/pagos.php?accion=corte_caja&fecha_inicio=${fecha_dia15}&fecha_fin=${fecha_dia15}`;
+      const respuesta = await fetch(url);
+      const datos = await respuesta.json();
+
+      if (datos.exito) {
+        mostrar_modal_corte(datos.datos);
+      } else {
+        alert('Error al generar corte del día 15: ' + datos.error);
+      }
+    } catch (error) {
+      console.error('Error al generar corte del día 15:', error);
+      alert('Error al generar corte del día 15');
+    }
+  }
+
+  // aqui generamos el corte del mes completo
+  async function generar_corte_mes() {
+    const hoy = new Date();
+    const anio = hoy.getFullYear();
+    const mes = String(hoy.getMonth() + 1).padStart(2, '0');
+    const primer_dia = `${anio}-${mes}-01`;
+    const ultimo_dia = new Date(anio, hoy.getMonth() + 1, 0).getDate();
+    const fecha_fin = `${anio}-${mes}-${String(ultimo_dia).padStart(2, '0')}`;
+
+    // ponemos las fechas en los campos
+    document.getElementById('fecha_inicio').value = primer_dia;
+    document.getElementById('fecha_fin').value = fecha_fin;
+
+    // generamos el corte para todo el mes
+    try {
+      const url = `../controllers/pagos.php?accion=corte_caja&fecha_inicio=${primer_dia}&fecha_fin=${fecha_fin}`;
+      const respuesta = await fetch(url);
+      const datos = await respuesta.json();
+
+      if (datos.exito) {
+        mostrar_modal_corte(datos.datos);
+      } else {
+        alert('Error al generar corte del mes: ' + datos.error);
+      }
+    } catch (error) {
+      console.error('Error al generar corte del mes:', error);
+      alert('Error al generar corte del mes');
+    }
+  }
+
+  // aqui exportamos el corte a Excel
+  function exportar_excel() {
+    // obtenemos los datos del corte actual
+    const periodo = document.getElementById('corte_periodo').textContent;
+    const total_efectivo = document.getElementById('total_efectivo').textContent;
+    const total_tarjeta = document.getElementById('total_tarjeta').textContent;
+    const total_general = document.getElementById('total_general').textContent;
+
+    // obtenemos las filas de la tabla
+    const tabla_desglose = document.getElementById('tabla_corte_desglose');
+    const filas = tabla_desglose.querySelectorAll('tr');
+
+    // creamos el contenido CSV
+    let contenido_csv = 'CORTE DE CAJA\n';
+    contenido_csv += `Periodo: ${periodo}\n\n`;
+    contenido_csv += 'TOTALES\n';
+    contenido_csv += `Total Efectivo,${total_efectivo}\n`;
+    contenido_csv += `Total Tarjeta,${total_tarjeta}\n`;
+    contenido_csv += `Total General,${total_general}\n\n`;
+    contenido_csv += 'DESGLOSE DE PAGOS\n';
+    contenido_csv += 'Fecha,Paciente,Médico,Servicio,Método,Monto\n';
+
+    filas.forEach(fila => {
+      const celdas = fila.querySelectorAll('td');
+      if (celdas.length > 0) {
+        const valores = Array.from(celdas).map(celda => {
+          let texto = celda.textContent.trim();
+          // si tiene comas, lo ponemos entre comillas
+          if (texto.includes(',')) {
+            texto = `"${texto}"`;
+          }
+          return texto;
+        });
+        contenido_csv += valores.join(',') + '\n';
+      }
+    });
+
+    // creamos el archivo y lo descargamos
+    const blob = new Blob([contenido_csv], { type: 'text/csv;charset=utf-8;' });
+    const enlace = document.createElement('a');
+    const url_descarga = URL.createObjectURL(blob);
+    enlace.setAttribute('href', url_descarga);
+    enlace.setAttribute('download', `corte_caja_${periodo.replace(/\s/g, '_')}.csv`);
+    enlace.style.visibility = 'hidden';
+    document.body.appendChild(enlace);
+    enlace.click();
+    document.body.removeChild(enlace);
+  }
+
+  // aqui exportamos el corte a PDF
+  function exportar_pdf() {
+    // obtenemos los datos del corte
+    const periodo = document.getElementById('corte_periodo').textContent;
+    const total_efectivo = document.getElementById('total_efectivo').textContent;
+    const total_tarjeta = document.getElementById('total_tarjeta').textContent;
+    const total_general = document.getElementById('total_general').textContent;
+
+    // obtenemos las filas de la tabla
+    const tabla_desglose = document.getElementById('tabla_corte_desglose');
+    const filas = tabla_desglose.querySelectorAll('tr');
+
+    // creamos el contenido HTML para el PDF
+    let contenido_html = '<html><head><style>';
+    contenido_html += 'body { font-family: Arial; margin: 30px; }';
+    contenido_html += 'h1 { text-align: center; }';
+    contenido_html += 'p { margin: 5px 0; }';
+    contenido_html += 'table { width: 100%; border-collapse: collapse; margin-top: 20px; }';
+    contenido_html += 'th, td { border: 1px solid black; padding: 5px; }';
+    contenido_html += 'th { background-color: #ddd; }';
+    contenido_html += '</style></head><body>';
+    contenido_html += '<h1>CORTE DE CAJA</h1>';
+    contenido_html += `<p><strong>Periodo:</strong> ${periodo}</p>`;
+    contenido_html += '<br>';
+    contenido_html += `<p><strong>Total Efectivo:</strong> ${total_efectivo}</p>`;
+    contenido_html += `<p><strong>Total Tarjeta:</strong> ${total_tarjeta}</p>`;
+    contenido_html += `<p><strong>Total General:</strong> ${total_general}</p>`;
+    contenido_html += '<br>';
+    contenido_html += '<h3>Desglose de Pagos</h3>';
+    contenido_html += '<table>';
+    contenido_html += '<tr><th>Fecha</th><th>Paciente</th><th>Médico</th><th>Servicio</th><th>Método</th><th>Monto</th></tr>';
+
+    // agregamos las filas de la tabla
+    filas.forEach(fila => {
+      const celdas = fila.querySelectorAll('td');
+      if (celdas.length > 0) {
+        contenido_html += '<tr>';
+        celdas.forEach(celda => {
+          contenido_html += `<td>${celda.textContent.trim()}</td>`;
+        });
+        contenido_html += '</tr>';
+      }
+    });
+
+    contenido_html += '</table></body></html>';
+
+    // creamos un blob con el contenido HTML
+    const blob = new Blob([contenido_html], { type: 'text/html' });
+    const enlace = document.createElement('a');
+    const url_descarga = URL.createObjectURL(blob);
+    enlace.setAttribute('href', url_descarga);
+    enlace.setAttribute('download', `corte_caja_${periodo.replace(/\s/g, '_')}.html`);
+    enlace.style.visibility = 'hidden';
+    document.body.appendChild(enlace);
+    enlace.click();
+    document.body.removeChild(enlace);
+
+    alert('Archivo HTML descargado. Puedes abrirlo en tu navegador y guardarlo como PDF desde ahí (Ctrl+P → Guardar como PDF)');
+  }
+
   // conectar eventos a los botones y campos
   function conectar_eventos() {
     // boton de filtrar por fecha
@@ -407,11 +574,32 @@
       boton_filtrar._conectado = true;
     }
 
-    // boton de corte de caja
-    const boton_corte = document.getElementById('btn_corte_caja');
-    if (boton_corte && !boton_corte._conectado) {
-      boton_corte.addEventListener('click', generar_corte_caja);
-      boton_corte._conectado = true;
+    // boton de corte del dia 15
+    const boton_corte_dia15 = document.getElementById('btn_corte_dia15');
+    if (boton_corte_dia15 && !boton_corte_dia15._conectado) {
+      boton_corte_dia15.addEventListener('click', generar_corte_dia15);
+      boton_corte_dia15._conectado = true;
+    }
+
+    // boton de corte del mes
+    const boton_corte_mes = document.getElementById('btn_corte_mes');
+    if (boton_corte_mes && !boton_corte_mes._conectado) {
+      boton_corte_mes.addEventListener('click', generar_corte_mes);
+      boton_corte_mes._conectado = true;
+    }
+
+    // boton de exportar a Excel
+    const boton_excel = document.getElementById('btn_exportar_excel');
+    if (boton_excel && !boton_excel._conectado) {
+      boton_excel.addEventListener('click', exportar_excel);
+      boton_excel._conectado = true;
+    }
+
+    // boton de exportar a PDF
+    const boton_pdf = document.getElementById('btn_exportar_pdf');
+    if (boton_pdf && !boton_pdf._conectado) {
+      boton_pdf.addEventListener('click', exportar_pdf);
+      boton_pdf._conectado = true;
     }
 
     // boton de nuevo pago
@@ -419,13 +607,6 @@
     if (boton_nuevo && !boton_nuevo._conectado) {
       boton_nuevo.addEventListener('click', preparar_nuevo_pago);
       boton_nuevo._conectado = true;
-    }
-
-    // boton de imprimir corte
-    const boton_imprimir = document.getElementById('btn_imprimir_corte');
-    if (boton_imprimir && !boton_imprimir._conectado) {
-      boton_imprimir.addEventListener('click', imprimir_corte);
-      boton_imprimir._conectado = true;
     }
 
     // buscador de pagos
