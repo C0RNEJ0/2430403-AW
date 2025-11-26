@@ -52,9 +52,36 @@
 
   // guardar desde formulario
   async function handleGuardar(e) {
-    e.preventDefault && e.preventDefault(); const id = q('#tarifa_id') ? q('#tarifa_id').value : ''; const esp = q('#tarifa_especialidad') ? q('#tarifa_especialidad').value.trim() : ''; const serv = q('#tarifa_servicio') ? q('#tarifa_servicio').value.trim() : ''; const precio = q('#tarifa_precio') ? parseFloat(q('#tarifa_precio').value) || 0 : 0; if (!esp || !serv) { alert('Especialidad y servicio requeridos'); return; }
-    const fd = new FormData(); if (id) fd.append('id', id); fd.append('especialidad', esp); fd.append('servicio', serv); fd.append('precio', precio);
-    const res = await guardarServidor(fd); if (res && res.exito) { cerrarModal(); renderizarTabla(); } else alert('Error guardando tarifa');
+    e.preventDefault && e.preventDefault();
+    const id = q('#tarifa_id') ? q('#tarifa_id').value : '';
+    const esp = q('#tarifa_especialidad') ? q('#tarifa_especialidad').value.trim() : '';
+    const serv = q('#tarifa_servicio') ? q('#tarifa_servicio').value.trim() : '';
+    const precio = q('#tarifa_precio') ? parseFloat(q('#tarifa_precio').value) || 0 : 0;
+
+    if (!esp || !serv) {
+      alert('Especialidad y servicio requeridos');
+      return;
+    }
+
+    const fd = new FormData();
+    // aqui agregamos la accion segun si es nuevo o edicion
+    if (id) {
+      fd.append('accion', 'editar');
+      fd.append('id', id);
+    } else {
+      fd.append('accion', 'crear');
+    }
+    fd.append('especialidad', esp);
+    fd.append('servicio', serv);
+    fd.append('precio', precio);
+
+    const res = await guardarServidor(fd);
+    if (res && res.exito) {
+      cerrarModal();
+      renderizarTabla();
+    } else {
+      alert('Error guardando tarifa: ' + (res.error || 'Error desconocido'));
+    }
   }
 
   // bind eventos
