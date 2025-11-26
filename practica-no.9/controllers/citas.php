@@ -19,29 +19,17 @@ try {
     switch ($accion) {
         case 'listar':
             // aqui listamos las citas pero filtramos segun el rol
-            // si es medico solo ve sus citas, si es admin ve todas
+            // si es medico solo ve sus citas, si es secretaria ve del medico asociado, admin ve todas
             // verificamos si la sesion ya esta iniciada
             if (session_status() === PHP_SESSION_NONE) {
                 session_start();
             }
-            $usuario_rol = $_SESSION['usuario_rol'] ?? null;
-            $usuario_id = $_SESSION['usuario_id'] ?? null;
-            
-            // si es medico necesitamos su medico_id
-            $medico_id = null;
-            if ($usuario_rol === 'medico' && $usuario_id) {
-                $stmt_medico = $bd->prepare('SELECT medico_id FROM usuarios WHERE usuario_id = :uid LIMIT 1');
-                $stmt_medico->bindValue(':uid', $usuario_id, PDO::PARAM_INT);
-                $stmt_medico->execute();
-                $medico_data = $stmt_medico->fetch();
-                if ($medico_data) {
-                    $medico_id = $medico_data['medico_id'];
-                }
-            }
+            $usuario_rol = $_SESSION['rol'] ?? null;
+            $medico_id = $_SESSION['medico_id'] ?? null;
             
             // aqui armamos la consulta segun el rol
-            if ($usuario_rol === 'medico' && $medico_id) {
-                // el medico solo ve sus propias citas
+            if (($usuario_rol === 'medico' || $usuario_rol === 'secretaria') && $medico_id) {
+                // el medico o secretaria solo ve citas de su medico asociado
                 $sql = "SELECT 
                             c.cita_id,
                             c.paciente_id,
@@ -61,7 +49,7 @@ try {
                 $stmt = $bd->prepare($sql);
                 $stmt->bindValue(':medico_id', $medico_id, PDO::PARAM_INT);
             } else {
-                // el admin o secretaria ven todas las citas
+                // el admin ve todas las citas
                 $sql = "SELECT 
                             c.cita_id,
                             c.paciente_id,

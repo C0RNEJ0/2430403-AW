@@ -12,25 +12,17 @@ $bd = obtener_conexion();
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-$usuario_rol = $_SESSION['usuario_rol'] ?? null;
-$usuario_id = $_SESSION['usuario_id'] ?? null;
+$usuario_rol = $_SESSION['rol'] ?? null;
+$medico_id = $_SESSION['medico_id'] ?? null;
 
-// si es medico o secretaria obtenemos su medico_id para filtrar
+// si es medico o secretaria filtramos por medico_id de la sesion
 // admin ve todos los datos
 // secretaria ve solo del medico asociado
 // medico ve solo sus propios datos
-$medico_id = null;
 $filtrar_por_medico = false;
 
-if (($usuario_rol === 'medico' || $usuario_rol === 'secretaria') && $usuario_id) {
-  $stmt_medico = $bd->prepare('SELECT medico_id FROM usuarios WHERE usuario_id = :uid LIMIT 1');
-  $stmt_medico->bindValue(':uid', $usuario_id, PDO::PARAM_INT);
-  $stmt_medico->execute();
-  $medico_data = $stmt_medico->fetch();
-  if ($medico_data && $medico_data['medico_id']) {
-    $medico_id = $medico_data['medico_id'];
-    $filtrar_por_medico = true;
-  }
+if (($usuario_rol === 'medico' || $usuario_rol === 'secretaria') && $medico_id) {
+  $filtrar_por_medico = true;
 }
 
 try {
