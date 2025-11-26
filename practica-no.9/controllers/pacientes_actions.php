@@ -216,7 +216,10 @@ function listar_pacientes($limit = 200){
   
   try{
     // aqui obtenemos el usuario actual de la sesion
-    session_start();
+    // verificamos si la sesion ya esta iniciada antes de llamar session_start
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
     $usuario_rol = $_SESSION['usuario_rol'] ?? null;
     $usuario_id = $_SESSION['usuario_id'] ?? null;
     

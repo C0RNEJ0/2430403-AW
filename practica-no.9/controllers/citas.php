@@ -20,7 +20,10 @@ try {
         case 'listar':
             // aqui listamos las citas pero filtramos segun el rol
             // si es medico solo ve sus citas, si es admin ve todas
-            session_start();
+            // verificamos si la sesion ya esta iniciada
+            if (session_status() === PHP_SESSION_NONE) {
+                session_start();
+            }
             $usuario_rol = $_SESSION['usuario_rol'] ?? null;
             $usuario_id = $_SESSION['usuario_id'] ?? null;
             
