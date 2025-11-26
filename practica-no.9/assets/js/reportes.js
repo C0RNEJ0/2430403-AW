@@ -214,9 +214,7 @@
     // conectar boton de exportar (si existe, o agregar botones si faltan)
     const btn_export = document.getElementById('btn_export');
     if (btn_export) {
-      // Reemplazar el boton unico por dos botones (PDF y Excel)
-      const contenedor = btn_export.parentElement;
-
+      // Crear botones PDF y Excel
       const btn_pdf = document.createElement('button');
       btn_pdf.className = 'btn btn-danger me-2';
       btn_pdf.innerHTML = '<i class="bi bi-file-pdf"></i> PDF';
@@ -227,9 +225,8 @@
       btn_excel.innerHTML = '<i class="bi bi-file-excel"></i> Excel';
       btn_excel.onclick = exportar_excel;
 
-      contenedor.innerHTML = '';
-      contenedor.appendChild(btn_pdf);
-      contenedor.appendChild(btn_excel);
+      // Reemplazar solo el botón de exportar, no todo el contenedor
+      btn_export.replaceWith(btn_pdf, btn_excel);
     }
   });
 })();
