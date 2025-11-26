@@ -15,6 +15,11 @@ $metodo_http = $_SERVER['REQUEST_METHOD'];
 // obtener conexion a la base de datos
 $conexion = obtener_conexion_mysqli();
 
+if (!$conexion) {
+    echo json_encode(['exito' => false, 'error' => 'Error de conexion a la base de datos']);
+    exit;
+}
+
 // manejar las diferentes acciones
 switch ($accion) {
     case 'listar':
@@ -227,6 +232,11 @@ function eliminar_pago($conexion) {
 // funcion para guardar pago (nuevo o editar)
 function guardar_pago($conexion) {
     try {
+        // LOGGING PARA DEPURACION
+        $log_data = date('Y-m-d H:i:s') . " - Intento de guardar pago:\n";
+        $log_data .= "POST: " . print_r($_POST, true) . "\n";
+        file_put_contents(__DIR__ . '/../debug_pagos.log', $log_data, FILE_APPEND);
+
         // obtener datos del formulario
         $id_pago = (int)($_POST['id'] ?? 0);
         $fecha = $_POST['fecha'] ?? null;
@@ -236,6 +246,9 @@ function guardar_pago($conexion) {
         $metodo_pago = trim($_POST['metodo_pago'] ?? 'efectivo');
         $referencia = trim($_POST['referencia'] ?? '');
         $estatus = trim($_POST['estatus'] ?? 'pagado');
+        
+        // LOGGING DE DATOS PROCESADOS
+        file_put_contents(__DIR__ . '/../debug_pagos.log', "Datos procesados: paciente_id=$paciente_id, monto=$monto, cita_id=$cita_id\n", FILE_APPEND);
         
         // si no se envia cita_id, intentar obtener la ultima cita del paciente
         if (empty($cita_id) && $paciente_id) {
@@ -294,6 +307,7 @@ function guardar_pago($conexion) {
             echo json_encode(['exito' => true, 'id' => $conexion->insert_id]);
         }
     } catch (Exception $error) {
+        file_put_contents(__DIR__ . '/../debug_pagos.log', "ERROR EXCEPCION: " . $error->getMessage() . "\n", FILE_APPEND);
         echo json_encode(['exito' => false, 'error' => $error->getMessage()]);
     }
 }
