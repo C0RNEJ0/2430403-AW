@@ -41,18 +41,6 @@ class ModalHandler {
 
             btn._modalCloseListenerAdded = true;
         });
-
-        // aqui buscamos el boton especifico de cerrar sesion del modal
-        const botonCerrarSesion = document.getElementById('boton_cerrar_sesion');
-        if (botonCerrarSesion && !botonCerrarSesion._logoutListenerAdded) {
-            botonCerrarSesion.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                // aqui llamamos la funcion que cierra la sesion
-                cerrar_sesion();
-            });
-            botonCerrarSesion._logoutListenerAdded = true;
-        }
     }
 
     /**
@@ -60,12 +48,14 @@ class ModalHandler {
      * @param {string} modalId - el ID del modal que queremos abrir
      */
     openModal(modalId) {
+        console.log('Intentando abrir modal:', modalId);
         const modal = document.getElementById(modalId);
         if (!modal) {
             console.error(`Modal con ID "${modalId}" no encontrado`);
             return;
         }
 
+        console.log('Modal encontrado, agregando clase show');
         // le ponemos la clase show para que se vea
         modal.classList.add('show');
         this.activeModals.add(modalId);
@@ -85,6 +75,24 @@ class ModalHandler {
 
         // volvemos a preparar los botones de cerrar por si el modal es nuevo
         this.initCloseButtons();
+
+        // aqui agregamos el listener al boton de cerrar sesion si estamos abriendo ese modal
+        if (modalId === 'modal_logout') {
+            console.log('Es el modal de logout, buscando boton...');
+            const botonCerrarSesion = document.getElementById('boton_cerrar_sesion');
+            console.log('Boton encontrado:', botonCerrarSesion);
+            if (botonCerrarSesion && !botonCerrarSesion._logoutListenerAdded) {
+                console.log('Agregando listener al boton de cerrar sesion');
+                botonCerrarSesion.addEventListener('click', (e) => {
+                    console.log('Click en boton de cerrar sesion!');
+                    e.preventDefault();
+                    e.stopPropagation();
+                    // aqui llamamos la funcion que cierra la sesion
+                    cerrar_sesion();
+                });
+                botonCerrarSesion._logoutListenerAdded = true;
+            }
+        }
     }
 
     /**

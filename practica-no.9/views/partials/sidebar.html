@@ -118,8 +118,8 @@
 
       <!-- Cerrar Sesión: Todos -->
       <li class="nav-item">
-        <a href="#" class="nav-link text-danger-custom" id="btn_logout"
-          data-roles="super_admin,medico,secretaria,paciente">
+        <a href="javascript:void(0)" class="nav-link text-danger-custom" id="btn_logout"
+          onclick="abrirModal('modal_logout'); return false;" data-roles="super_admin,medico,secretaria,paciente">
           <i class="bi bi-box-arrow-right"></i>
           <span>Cerrar Sesión</span>
         </a>
