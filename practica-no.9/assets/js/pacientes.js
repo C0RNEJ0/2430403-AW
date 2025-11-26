@@ -386,4 +386,27 @@ function ejecutarEliminacionPaciente() {
 function escaparHtml(s) { return String(s || '').replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
 
 // iniciar carga de pacientes
-document.addEventListener('DOMContentLoaded', function () { cargarPacientes(); });
+document.addEventListener('DOMContentLoaded', function () {
+  cargarPacientes();
+
+  // aqui nos aseguramos que los botones de cerrar funcionen
+  setTimeout(() => {
+    // boton de cerrar modal de paciente
+    const btnCerrarPaciente = document.querySelector('#modal_paciente .modal-close');
+    if (btnCerrarPaciente) {
+      btnCerrarPaciente.addEventListener('click', () => cerrarModal('modal_paciente'));
+    }
+
+    // boton de cerrar modal de cobro
+    const btnCerrarCobro = document.querySelector('#modal_cobro .modal-close');
+    if (btnCerrarCobro) {
+      btnCerrarCobro.addEventListener('click', () => cerrarModal('modal_cobro'));
+    }
+
+    // boton de cerrar modal de eliminar
+    const btnCerrarEliminar = document.querySelector('#modal_eliminar_paciente .modal-close');
+    if (btnCerrarEliminar) {
+      btnCerrarEliminar.addEventListener('click', () => cerrarModal('modal_eliminar_paciente'));
+    }
+  }, 500);
+});
