@@ -7,8 +7,12 @@
     filas.forEach(f => {
       const tr = document.createElement('tr');
       tr.innerHTML = `<td>${escaparHtml(f.nombre)}</td><td>${escaparHtml(f.especialidad)}</td><td>${escaparHtml(f.horario)}</td><td>
-        <button class="accion-editar" data-id="${f.medico_id}">Editar</button>
-        <button class="accion-eliminar" data-id="${f.medico_id}">Eliminar</button>
+        <button class="btn btn-sm btn-primary accion-editar" data-id="${f.medico_id}" title="Editar">
+          <i class="bi bi-pencil"></i>
+        </button>
+        <button class="btn btn-sm btn-danger accion-eliminar" data-id="${f.medico_id}" title="Eliminar">
+          <i class="bi bi-trash"></i>
+        </button>
       </td>`;
       tbody.appendChild(tr);
     });
