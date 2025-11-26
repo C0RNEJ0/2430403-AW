@@ -39,16 +39,18 @@ function renderizarTablaRoles(roles) {
                     ${rol.total_usuarios} usuario${rol.total_usuarios !== 1 ? 's' : ''}
                 </span>
             </td>
-            <td class="text-end table-actions">
-                <button class="btn btn-sm btn-success" onclick="abrirModalCrearUsuario('${escapeHtml(rol.nombre)}', ${rol.rol_id})" title="Crear Usuario">
-                    <i class="bi bi-person-plus"></i>
-                </button>
-                <button class="btn btn-sm btn-outline-primary" onclick="abrirModalEditarRol(${rol.rol_id})" title="Editar">
-                    <i class="bi bi-pencil"></i>
-                </button>
-                <button class="btn btn-sm btn-outline-danger" onclick="eliminarRol(${rol.rol_id})" title="Eliminar">
-                    <i class="bi bi-trash"></i>
-                </button>
+            <td class="text-end">
+                <div class="btn-group btn-group-sm">
+                    <button class="btn btn-success" onclick="abrirModalCrearUsuario('${escapeHtml(rol.nombre)}', ${rol.rol_id})" title="Crear Usuario">
+                        <i class="bi bi-person-plus"></i>
+                    </button>
+                    <button class="btn btn-primary" onclick="abrirModalEditarRol(${rol.rol_id})" title="Editar">
+                        <i class="bi bi-pencil"></i>
+                    </button>
+                    <button class="btn btn-danger" onclick="eliminarRol(${rol.rol_id})" title="Eliminar">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </div>
             </td>
         </tr>
     `).join('');
@@ -180,10 +182,6 @@ function confirmarEliminarRol() {
 
 // Abrir modal para crear usuario con un rol específico
 function abrirModalCrearUsuario(nombreRol, rolId) {
-    // Resetear formulario
-    document.getElementById('form_crear_usuario').reset();
-    document.getElementById('usuario_rol_nombre').value = nombreRol;
-
     // Actualizar título
     document.getElementById('modal_usuario_titulo').textContent = `Crear Usuario - ${nombreRol.charAt(0).toUpperCase() + nombreRol.slice(1)}`;
 
@@ -191,16 +189,28 @@ function abrirModalCrearUsuario(nombreRol, rolId) {
     document.getElementById('campos_medico').style.display = 'none';
     document.getElementById('campos_secretaria').style.display = 'none';
 
-    // Mostrar campos según el rol
+    // Mostrar campos según el rol y cargar datos primero
     if (nombreRol === 'medico') {
         document.getElementById('usuario_accion').value = 'crear_medico';
         document.getElementById('campos_medico').style.display = 'block';
+        // Cargar especialidades ANTES de resetear
         cargarEspecialidades();
     } else if (nombreRol === 'secretaria') {
         document.getElementById('usuario_accion').value = 'crear_secretaria';
         document.getElementById('campos_secretaria').style.display = 'block';
+        // Cargar médicos ANTES de resetear
         cargarMedicosParaAsociar();
     }
+
+    // Resetear formulario DESPUÉS de cargar los selects
+    setTimeout(() => {
+        const form = document.getElementById('form_crear_usuario');
+        // Solo reseteamos los campos input, no los selects que ya cargamos
+        form.querySelectorAll('input:not([type="hidden"])').forEach(input => {
+            input.value = '';
+        });
+        document.getElementById('usuario_rol_nombre').value = nombreRol;
+    }, 100);
 
     abrirModal('modal_crear_usuario');
 }
