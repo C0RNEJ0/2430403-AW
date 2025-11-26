@@ -98,6 +98,24 @@ document.addEventListener('DOMContentLoaded', function () {
           modal.style.display = 'flex';
         }
       }
+
+      // aqui nos aseguramos que el boton X funcione
+      setTimeout(() => {
+        const btnCerrar = document.querySelector('#modal_paciente .modal-close');
+        if (btnCerrar) {
+          btnCerrar.onclick = function () {
+            if (typeof cerrarModal === 'function') {
+              cerrarModal('modal_paciente');
+            } else {
+              const modal = document.getElementById('modal_paciente');
+              if (modal) {
+                modal.classList.remove('show');
+                modal.style.display = 'none';
+              }
+            }
+          };
+        }
+      }, 100);
     });
   }
 
