@@ -252,8 +252,8 @@ function guardar_pago($conexion) {
         }
         
         // validar datos requeridos
-        if (empty($cita_id) || $monto <= 0) {
-            echo json_encode(['exito' => false, 'error' => 'cita_id y monto son requeridos']);
+        if (empty($paciente_id) || $monto <= 0) {
+            echo json_encode(['exito' => false, 'error' => 'paciente_id y monto son requeridos']);
             return;
         }
         
@@ -278,18 +278,18 @@ function guardar_pago($conexion) {
         
         if ($id_pago > 0) {
             // actualizar pago existente
-            $consulta = 'UPDATE pagos SET cita_id = ?, monto = ?, moneda = ?, metodo = ?, estatus = ?, referencia = ?, fecha_pago = ? WHERE pago_id = ?';
+            $consulta = 'UPDATE pagos SET paciente_id = ?, cita_id = ?, monto = ?, moneda = ?, metodo = ?, estatus = ?, referencia = ?, fecha_pago = ? WHERE pago_id = ?';
             $moneda = 'MXN';
             $stmt = $conexion->prepare($consulta);
-            $stmt->bind_param('idsssssi', $cita_id, $monto, $moneda, $metodo_pago, $estatus, $referencia, $fecha_pago, $id_pago);
+            $stmt->bind_param('iidsssssi', $paciente_id, $cita_id, $monto, $moneda, $metodo_pago, $estatus, $referencia, $fecha_pago, $id_pago);
             $stmt->execute();
             echo json_encode(['exito' => true]);
         } else {
             // crear nuevo pago
-            $consulta = 'INSERT INTO pagos (cita_id, monto, moneda, metodo, estatus, referencia, fecha_pago) VALUES (?, ?, ?, ?, ?, ?, ?)';
+            $consulta = 'INSERT INTO pagos (paciente_id, cita_id, monto, moneda, metodo, estatus, referencia, fecha_pago) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
             $moneda = 'MXN';
             $stmt = $conexion->prepare($consulta);
-            $stmt->bind_param('idsssss', $cita_id, $monto, $moneda, $metodo_pago, $estatus, $referencia, $fecha_pago);
+            $stmt->bind_param('iidsssss', $paciente_id, $cita_id, $monto, $moneda, $metodo_pago, $estatus, $referencia, $fecha_pago);
             $stmt->execute();
             echo json_encode(['exito' => true, 'id' => $conexion->insert_id]);
         }
