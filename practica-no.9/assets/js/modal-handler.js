@@ -7,7 +7,7 @@ class ModalHandler {
     }
 
     init() {
-        // Cerrar modales al hacer clic en overlay
+        // si el usuario hace clic en el fondo oscuro, cerramos el modal
         document.addEventListener('click', (e) => {
             if (e.target.classList.contains('modal-overlay')) {
                 const modal = e.target.closest('.modal-modern');
@@ -15,21 +15,21 @@ class ModalHandler {
             }
         });
 
-        // Cerrar modales con tecla Esc
+        // si el usuario presiona la tecla Escape, cerramos todos los modales
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 this.closeAllModals();
             }
         });
 
-        // Inicializar botones de cerrar cuando el DOM esté listo
+        // aqui preparamos todos los botones de cerrar
         this.initCloseButtons();
     }
 
     initCloseButtons() {
-        // Botones de cerrar con atributo data-modal-close
+        // aqui buscamos todos los botones que cierran modales
         document.querySelectorAll('[data-modal-close]').forEach(btn => {
-            // Evitar agregar múltiples listeners al mismo botón
+            // si ya le pusimos el evento antes, no lo hacemos otra vez
             if (btn._modalCloseListenerAdded) return;
 
             btn.addEventListener('click', (e) => {
@@ -41,11 +41,23 @@ class ModalHandler {
 
             btn._modalCloseListenerAdded = true;
         });
+
+        // aqui buscamos el boton especifico de cerrar sesion del modal
+        const botonCerrarSesion = document.getElementById('boton_cerrar_sesion');
+        if (botonCerrarSesion && !botonCerrarSesion._logoutListenerAdded) {
+            botonCerrarSesion.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                // aqui llamamos la funcion que cierra la sesion
+                cerrar_sesion();
+            });
+            botonCerrarSesion._logoutListenerAdded = true;
+        }
     }
 
     /**
-     * Abrir un modal por ID
-     * @param {string} modalId - ID del modal a abrir
+     * aqui abrimos un modal usando su ID
+     * @param {string} modalId - el ID del modal que queremos abrir
      */
     openModal(modalId) {
         const modal = document.getElementById(modalId);
@@ -54,16 +66,16 @@ class ModalHandler {
             return;
         }
 
-        // Agregar clase show
+        // le ponemos la clase show para que se vea
         modal.classList.add('show');
         this.activeModals.add(modalId);
 
-        // Prevenir scroll del body
+        // evitamos que la pagina se pueda hacer scroll cuando el modal esta abierto
         if (this.activeModals.size === 1) {
             document.body.style.overflow = 'hidden';
         }
 
-        // Focus en primer input después de la animación
+        // despues de que se abra el modal, ponemos el cursor en el primer campo
         setTimeout(() => {
             const firstInput = modal.querySelector('input:not([type="hidden"]), select, textarea');
             if (firstInput && !firstInput.disabled) {
@@ -71,13 +83,13 @@ class ModalHandler {
             }
         }, 350);
 
-        // Re-inicializar botones de cerrar por si el modal fue creado dinámicamente
+        // volvemos a preparar los botones de cerrar por si el modal es nuevo
         this.initCloseButtons();
     }
 
     /**
-     * Cerrar un modal
-     * @param {string|HTMLElement} modal - ID del modal o elemento del modal
+     * aqui cerramos un modal
+     * @param {string|HTMLElement} modal - el ID del modal o el modal mismo
      */
     closeModal(modal) {
         if (typeof modal === 'string') {
@@ -86,19 +98,19 @@ class ModalHandler {
 
         if (!modal) return;
 
-        // Remover clase show
+        // le quitamos la clase show para que se esconda
         modal.classList.remove('show');
         this.activeModals.delete(modal.id);
 
-        // Restaurar scroll del body si no hay más modales abiertos
+        // dejamos que la pagina se pueda hacer scroll otra vez si ya no hay modales abiertos
         if (this.activeModals.size === 0) {
             document.body.style.overflow = '';
         }
 
-        // Limpiar formularios si existen
+        // si el modal tiene un formulario, lo limpiamos
         const form = modal.querySelector('form');
         if (form) {
-            // Esperar a que termine la animación antes de limpiar
+            // esperamos un poquito para que termine la animacion antes de limpiar
             setTimeout(() => {
                 form.reset();
             }, 300);
@@ -106,7 +118,7 @@ class ModalHandler {
     }
 
     /**
-     * Cerrar todos los modales abiertos
+     * aqui cerramos todos los modales que esten abiertos
      */
     closeAllModals() {
         document.querySelectorAll('.modal-modern.show').forEach(modal => {
@@ -115,8 +127,8 @@ class ModalHandler {
     }
 
     /**
-     * Verificar si un modal está abierto
-     * @param {string} modalId - ID del modal
+     * aqui verificamos si un modal esta abierto o no
+     * @param {string} modalId - el ID del modal que queremos verificar
      * @returns {boolean}
      */
     isOpen(modalId) {
@@ -124,10 +136,10 @@ class ModalHandler {
     }
 }
 
-// Inicializar el manejador de modales
+// aqui creamos el manejador de modales
 const modalHandler = new ModalHandler();
 
-// Funciones globales para compatibilidad con código existente
+// estas funciones las usamos en todo el codigo para abrir y cerrar modales
 function abrirModal(modalId) {
     modalHandler.openModal(modalId);
 }
@@ -137,11 +149,11 @@ function cerrarModal(modalId) {
 }
 
 /**
- * Cerrar sesión del usuario
- * Limpia los datos de sesión y redirige al login
+ * aqui cerramos la sesion del usuario
+ * borramos todos los datos guardados y lo mandamos al login
  */
 function cerrar_sesion() {
-    // Enviar petición al backend para destruir sesión PHP
+    // le avisamos al servidor que cierre la sesion
     fetch('../controllers/login.php', {
         method: 'POST',
         headers: {
@@ -151,28 +163,29 @@ function cerrar_sesion() {
     })
         .then(response => response.json())
         .then(data => {
-            console.log('Sesión cerrada en servidor:', data);
+            console.log('Sesion cerrada en el servidor:', data);
         })
         .catch(error => {
-            console.error('Error al cerrar sesión en servidor:', error);
+            console.error('Error al cerrar sesion en el servidor:', error);
         })
         .finally(() => {
-            // Limpiar datos locales y redirigir siempre
+            // borramos todo lo que guardamos del usuario
             localStorage.removeItem('usuario_actual');
             localStorage.removeItem('usuario_email');
             localStorage.removeItem('usuario_rol');
             sessionStorage.clear();
+            // mandamos al usuario a la pagina de login
             window.location.href = '../views/login/login.html';
         });
 }
 
-// Exponer funciones y objetos globalmente
+// aqui hacemos que las funciones se puedan usar en toda la pagina
 window.modalHandler = modalHandler;
 window.abrirModal = abrirModal;
 window.cerrarModal = cerrarModal;
 window.cerrar_sesion = cerrar_sesion;
 
-// Exportar para uso en módulos
+// esto es para que funcione si usamos modulos
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = { ModalHandler, modalHandler, abrirModal, cerrarModal, cerrar_sesion };
 }
