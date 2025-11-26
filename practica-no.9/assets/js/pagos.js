@@ -343,7 +343,9 @@
     const nota = document.getElementById('pago_nota') ? document.getElementById('pago_nota').value : '';
 
     // validar campos requeridos
-    if (!fecha || !paciente_nombre || !monto) {
+    console.log('Datos del formulario:', { fecha, paciente_id, paciente_nombre, monto, cita_id, metodo });
+
+    if (!fecha || !paciente_id || !monto) {
       alert('Fecha, paciente y monto son requeridos');
       return;
     }
@@ -364,14 +366,18 @@
     datos_formulario.append('referencia', referencia);
     datos_formulario.append('nota', nota);
 
+    console.log('Enviando datos al servidor...');
+
     try {
       const respuesta = await fetch('../controllers/pagos.php', {
         method: 'POST',
         body: datos_formulario
       });
       const resultado = await respuesta.json();
+      console.log('Respuesta del servidor:', resultado);
 
       if (resultado && resultado.exito) {
+        alert('Pago guardado correctamente');
         // cerrar modal
         const modal_elemento = document.getElementById('modal_pago');
         if (modal_elemento) {
@@ -390,6 +396,7 @@
         // recargar lista de pagos
         cargar_pagos();
       } else {
+        console.error('Error del servidor:', resultado);
         alert('Error al guardar pago: ' + (resultado && resultado.error));
       }
     } catch (error) {
