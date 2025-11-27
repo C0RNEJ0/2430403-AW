@@ -1,7 +1,7 @@
 
 
 document.addEventListener('DOMContentLoaded', function () {
-  // Mostrar mensajes desde querystring
+  // Procesar y mostrar mensajes de estado desde URL query string
   (function () {
     try {
       var params = new URLSearchParams(window.location.search);
@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function () {
     } catch (e) { /* silencioso */ }
   })();
 
-  // Confirmar eliminación
+  // Validar confirmación de eliminación antes de enviar formulario
   document.querySelectorAll('form').forEach(function (formulario) {
     var inAcc = formulario.querySelector('input[name="accion"]');
     if (inAcc && inAcc.value === 'eliminar') {
@@ -30,7 +30,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
-  // Funciones para cargar especialidades y medicos
+  /**
+   * Carga el listado de especialidades desde el controlador
+   * @async
+   * @returns {Promise<void>}
+   */
   async function cargarEspecialidades() {
     try {
       var respuesta = await fetch('/practica-no.9/controllers/especialidades_list.php');
@@ -51,6 +55,11 @@ document.addEventListener('DOMContentLoaded', function () {
     } catch (err) { console.error('especialidades:', err); }
   }
 
+  /**
+   * Carga el listado de médicos desde el controlador
+   * @async
+   * @returns {Promise<void>}
+   */
   async function cargarMedicos() {
     try {
       var respuesta = await fetch('/practica-no.9/controllers/medicos_list.php');
@@ -71,11 +80,11 @@ document.addEventListener('DOMContentLoaded', function () {
     } catch (err) { console.error('medicos:', err); }
   }
 
-  // iniciar y refrescar cada 10s
+  // Cargar datos iniciales y configurar recarga periódica cada 10 segundos
   cargarEspecialidades(); cargarMedicos();
   setInterval(function () { cargarEspecialidades(); cargarMedicos(); }, 10000);
 
-  // manejar abrir modal en Agregar paciente
+  // Configurar modal para creación de nuevo paciente
   var botonAgregar = document.getElementById('btn_agregar_paciente');
   if (botonAgregar) {
     botonAgregar.addEventListener('click', function () {
@@ -83,15 +92,15 @@ document.addEventListener('DOMContentLoaded', function () {
       var pid = document.getElementById('paciente_id'); if (pid) pid.value = '';
       var form = document.getElementById('formulario_paciente'); if (form) form.reset();
 
-      // Ocultar botón de cobro
+      // Ocultar sección de cobro en modo creación
       var btnCobro = document.getElementById('btn_registrar_cobro');
       if (btnCobro) btnCobro.style.display = 'none';
 
-      // aqui usamos la funcion abrirModal para que se inicialicen los event listeners
+      // Invocar función global de apertura de modal con inicialización de eventos
       if (typeof abrirModal === 'function') {
         abrirModal('modal_paciente');
       } else {
-        // fallback por si no existe la funcion
+        // Alternativa de apertura manual si no existe la función global
         var modal = document.getElementById('modal_paciente');
         if (modal) {
           modal.classList.add('show');
@@ -99,7 +108,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       }
 
-      // aqui nos aseguramos que el boton X funcione
+      // Garantizar funcionalidad del botón de cierre del modal
       setTimeout(() => {
         const btnCerrar = document.querySelector('#modal_paciente .modal-close');
         if (btnCerrar) {
@@ -119,7 +128,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // Manejar submit del formulario de paciente
+  // Procesar envío del formulario de paciente
   var formPaciente = document.getElementById('formulario_paciente');
   console.log('Form paciente encontrado:', formPaciente);
   if (formPaciente) {
@@ -128,7 +137,7 @@ document.addEventListener('DOMContentLoaded', function () {
       e.preventDefault();
       e.stopPropagation();
 
-      // Validar campos requeridos
+      // Validación de campos obligatorios y formatos
       var nombre = formPaciente.querySelector('[name="nombres"]');
       var apellidos = formPaciente.querySelector('[name="apellidos"]');
       var email = formPaciente.querySelector('[name="email"]');
@@ -159,7 +168,7 @@ document.addEventListener('DOMContentLoaded', function () {
         return false;
       }
 
-      // Validar email si se proporciona
+      // Validación de formato de email si se proporciona
       if (email && email.value.trim() !== '') {
         var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email.value.trim())) {
@@ -174,7 +183,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       }
 
-      // Validar teléfono si se proporciona
+      // Validación de formato de teléfono si se proporciona
       if (telefono && telefono.value.trim() !== '') {
         var telefonoRegex = /^[\d\s\-\(\)\+]+$/;
         if (!telefonoRegex.test(telefono.value.trim())) {
@@ -189,7 +198,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       }
 
-      // Validar fecha de nacimiento si se proporciona
+      // Validación de fecha de nacimiento si se proporciona
       if (fechaNac && fechaNac.value.trim() !== '') {
         var fechaObj = new Date(fechaNac.value);
         var hoy = new Date();
@@ -200,7 +209,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       }
 
-      // Enviar formulario
+      // Enviar datos del formulario mediante AJAX
       try {
         console.log('Sending AJAX request...');
         var formData = new FormData(formPaciente);
@@ -211,7 +220,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         console.log('Response received:', response);
 
-        // Verificar si la respuesta es JSON
+        // Procesar respuesta JSON del servidor
         var contentType = response.headers.get('content-type');
         if (contentType && contentType.includes('application/json')) {
           var data = await response.json();
@@ -225,7 +234,7 @@ document.addEventListener('DOMContentLoaded', function () {
             alert('Error: ' + (data.error || 'Error desconocido'));
           }
         } else {
-          // Si no es JSON, mostrar mensaje
+          // Manejo de respuestas no JSON con recarga de página
           console.log('Response is not JSON, content-type:', contentType);
           alert('Paciente guardado. Recargando página...');
           window.location.reload();
@@ -244,7 +253,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 
-// Cargar pacientes via API y renderizar en #pacientes_grid
+/**
+ * Carga el listado de pacientes desde el controlador y renderiza la tabla
+ * @async
+ * @returns {Promise<void>}
+ */
 async function cargarPacientes() {
   try {
     var respuesta = await fetch('/practica-no.9/controllers/pacientes.php?api=listar');
@@ -267,7 +280,7 @@ async function cargarPacientes() {
           '<td>' + escaparHtml(paciente.prioridad || '') + '</td>';
         var tdAcc = document.createElement('td');
 
-        // Botón editar que abre el modal
+        // Botón para editar paciente
         var btnEditar = document.createElement('button');
         btnEditar.className = 'btn btn-sm btn-primary me-1';
         btnEditar.title = 'Editar';
@@ -275,7 +288,7 @@ async function cargarPacientes() {
         btnEditar.onclick = function () { abrirModalEditar(paciente); };
         tdAcc.appendChild(btnEditar);
 
-        // Botón eliminar
+        // Botón para eliminar paciente
         var btnEliminar = document.createElement('button');
         btnEliminar.className = 'btn btn-sm btn-danger';
         btnEliminar.title = 'Eliminar';
@@ -291,57 +304,60 @@ async function cargarPacientes() {
   } catch (err) { console.error('cargarPacientes', err); }
 }
 
-// aqui abrimos el modal para editar un paciente que ya existe
+/**
+ * Abre el modal de edición y carga los datos del paciente seleccionado
+ * @param {Object} paciente - Objeto con los datos del paciente
+ */
 function abrirModalEditar(paciente) {
-  // primero cambiamos la accion del formulario a editar
+  // Configurar formulario en modo edición
   var acc = document.getElementById('accion_form');
   if (acc) acc.value = 'editar';
 
-  // guardamos el id del paciente que vamos a editar
+  // Establecer ID del paciente a editar
   var pid = document.getElementById('paciente_id');
   if (pid) pid.value = paciente.paciente_id;
 
-  // ahora llenamos todos los campos del formulario con los datos del paciente
+  // Poblar campos del formulario con datos del paciente
   var form = document.getElementById('formulario_paciente');
   if (form) {
-    // aqui ponemos el nombre y apellidos
+    // Datos personales básicos
     form.querySelector('[name="nombres"]').value = paciente.nombres || '';
     form.querySelector('[name="apellidos"]').value = paciente.apellidos || '';
 
-    // datos basicos como sexo y fecha de nacimiento
+    // Datos demográficos y fecha de nacimiento
     form.querySelector('[name="sexo"]').value = paciente.sexo || '';
     form.querySelector('[name="fecha_nacimiento"]').value = paciente.fecha_nacimiento || '';
 
-    // informacion de contacto
+    // Información de contacto
     form.querySelector('[name="telefono"]').value = paciente.telefono || '';
     form.querySelector('[name="email"]').value = paciente.email || '';
 
-    // direccion completa del paciente
+    // Datos de ubicación completos
     form.querySelector('[name="direccion"]').value = paciente.direccion || '';
     form.querySelector('[name="ciudad"]').value = paciente.ciudad || '';
     form.querySelector('[name="estado"]').value = paciente.estado || '';
     form.querySelector('[name="cp"]').value = paciente.cp || '';
 
-    // prioridad y datos medicos
+    // Clasificación de prioridad y datos médicos
     form.querySelector('[name="prioridad"]').value = paciente.prioridad || 'Baja';
     form.querySelector('[name="tipo_sangre"]').value = paciente.tipo_sangre || '';
     form.querySelector('[name="alergias"]').value = paciente.alergias || '';
     form.querySelector('[name="notas"]').value = paciente.notas || '';
 
-    // si tiene especialidad asignada la seleccionamos
+    // Seleccionar especialidad asignada si existe
     var espSelect = document.getElementById('p_especialidad');
     if (espSelect && paciente.especialidad) {
       espSelect.value = paciente.especialidad;
     }
 
-    // lo mismo con el medico asignado
+    // Seleccionar médico asignado si existe
     var medSelect = document.getElementById('p_medico_asignado');
     if (medSelect && paciente.medico_asignado) {
       medSelect.value = paciente.medico_asignado;
     }
   }
 
-  // mostramos el boton de cobro porque estamos editando un paciente existente
+  // Mostrar botón de cobro en modo edición
   var btnCobro = document.getElementById('btn_registrar_cobro');
   if (btnCobro) {
     btnCobro.style.display = 'inline-flex';
@@ -350,11 +366,11 @@ function abrirModalEditar(paciente) {
     };
   }
 
-  // finalmente abrimos el modal con toda la info cargada
+  // Abrir modal con datos cargados
   if (typeof abrirModal === 'function') {
     abrirModal('modal_paciente');
   } else {
-    // por si acaso no existe la funcion abrirModal
+    // Apertura manual del modal si la función global no existe
     var modal = document.getElementById('modal_paciente');
     if (modal) {
       modal.classList.add('show');
@@ -363,9 +379,12 @@ function abrirModalEditar(paciente) {
   }
 }
 
-// Función para abrir modal de cobro
+/**
+ * Abre el modal de registro de cobro para un paciente específico
+ * @param {number} pacienteId - ID del paciente
+ */
 function abrirModalCobro(pacienteId) {
-  // Cerrar modal de paciente primero (opcional, o mantener ambos)
+  // Opción: cerrar modal de paciente antes de abrir el de cobro
   // cerrarModal('modal_paciente'); 
 
   document.getElementById('formulario_cobro').reset();
@@ -376,7 +395,10 @@ function abrirModalCobro(pacienteId) {
   }
 }
 
-// Funciones para eliminar
+/**
+ * Abre el modal de confirmación para eliminar un paciente
+ * @param {number} id - ID del paciente a eliminar
+ */
 function abrirModalEliminar(id) {
   document.getElementById('eliminar_paciente_id').value = id;
   if (typeof abrirModal === 'function') {
@@ -384,6 +406,9 @@ function abrirModalEliminar(id) {
   }
 }
 
+/**
+ * Ejecuta la eliminación del paciente mediante AJAX
+ */
 function ejecutarEliminacionPaciente() {
   const id = document.getElementById('eliminar_paciente_id').value;
   if (!id) return;
@@ -409,27 +434,32 @@ function ejecutarEliminacionPaciente() {
     .catch(err => alert('Error de red: ' + err));
 }
 
+/**
+ * Escapa caracteres HTML para prevenir inyección de código
+ * @param {string} s - Cadena a escapar
+ * @returns {string} Cadena escapada
+ */
 function escaparHtml(s) { return String(s || '').replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
 
-// iniciar carga de pacientes
+// Cargar datos iniciales de pacientes al cargar el DOM
 document.addEventListener('DOMContentLoaded', function () {
   cargarPacientes();
 
-  // aqui nos aseguramos que los botones de cerrar funcionen
+  // Vincular eventos de cierre de modales con timeout
   setTimeout(() => {
-    // boton de cerrar modal de paciente
+    // Evento de cierre del modal de paciente
     const btnCerrarPaciente = document.querySelector('#modal_paciente .modal-close');
     if (btnCerrarPaciente) {
       btnCerrarPaciente.addEventListener('click', () => cerrarModal('modal_paciente'));
     }
 
-    // boton de cerrar modal de cobro
+    // Evento de cierre del modal de cobro
     const btnCerrarCobro = document.querySelector('#modal_cobro .modal-close');
     if (btnCerrarCobro) {
       btnCerrarCobro.addEventListener('click', () => cerrarModal('modal_cobro'));
     }
 
-    // boton de cerrar modal de eliminar
+    // Evento de cierre del modal de eliminación
     const btnCerrarEliminar = document.querySelector('#modal_eliminar_paciente .modal-close');
     if (btnCerrarEliminar) {
       btnCerrarEliminar.addEventListener('click', () => cerrarModal('modal_eliminar_paciente'));

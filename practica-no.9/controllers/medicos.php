@@ -1,24 +1,24 @@
 <?php
-// Esto llama a la conexion
+// Incluir módulo de conexión a base de datos
 require_once __DIR__ . '/../config/bd_huevos.php';
 
-// Esto configura el json
+// Establecer cabeceras de respuesta JSON
 header('Content-Type: application/json; charset=utf-8');
 
-// Aqui conectamos a la base
+// Inicializar conexión PDO a la base de datos
 $bd = obtener_conexion();
 
-// Requerir autenticación y rol de super admin
+// Validar autenticación y permisos de super admin
 require_once __DIR__ . '/../config/auth.php';
 requerirRol('super_admin');
 
-// Obtenemos la accion
+// Obtener acción desde parámetros de solicitud
 $accion = $_REQUEST['accion'] ?? '';
 
-// Si la accion es listar json traemos los medicos
+// Listar médicos activos con sus especialidades
 if ($accion === 'listar_json') {
     try {
-        // Preparamos la consulta con especialidades
+        // Consulta con JOIN para obtener nombre de especialidad
         $sql = "SELECT m.*, e.nombre as especialidad_nombre 
                 FROM medicos m 
                 LEFT JOIN especialidades e ON m.especialidad_id = e.especialidad_id 
@@ -27,24 +27,24 @@ if ($accion === 'listar_json') {
         $stmt = $bd->query($sql);
         $medicos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
-        // Devolvemos los datos
+        // Devolver datos en formato JSON
         echo json_encode(['exito' => true, 'datos' => $medicos]);
     } catch (Exception $e) {
         echo json_encode(['exito' => false, 'error' => $e->getMessage()]);
     }
 }
-// Si la accion es crear guardamos un nuevo medico
+// Crear registro de nuevo médico
 else if ($accion === 'crear') {
     try {
-        // Recogemos los datos
+        // Extraer campos del formulario POST
         $nombre = $_POST['nombre'];
         $email = $_POST['email'];
         $telefono = $_POST['telefono'] ?? '';
-        // El formulario envía 'especialidad', pero también  'especialidad_id' ya asi pude arreglar el pinche error
+        // Compatibilidad con múltiples nombres de campo para especialidad
         $especialidad = $_POST['especialidad'] ?? $_POST['especialidad_id'] ?? null;
         $horario = $_POST['horario'] ?? '';
         
-        // Insertamos en la base
+        // Insertar nuevo médico con estado activo
         $sql = "INSERT INTO medicos (nombre, email, telefono, especialidad_id, horario, activo) VALUES (?, ?, ?, ?, ?, 1)";
         $stmt = $bd->prepare($sql);
         $stmt->execute([$nombre, $email, $telefono, $especialidad, $horario]);
@@ -54,7 +54,7 @@ else if ($accion === 'crear') {
         echo json_encode(['exito' => false, 'error' => $e->getMessage()]);
     }
 }
-// Si la accion es editar actualizamos el medico
+// Actualizar datos de médico existente
 else if ($accion === 'editar') {
     try {
         $id = $_POST['medico_id'];
@@ -64,7 +64,7 @@ else if ($accion === 'editar') {
         $especialidad = $_POST['especialidad'] ?? $_POST['especialidad_id'] ?? null;
         $horario = $_POST['horario'] ?? '';
         
-        // Actualizamos los datos
+        // Ejecutar UPDATE en base de datos
         $sql = "UPDATE medicos SET nombre=?, email=?, telefono=?, especialidad_id=?, horario=? WHERE medico_id=?";
         $stmt = $bd->prepare($sql);
         $stmt->execute([$nombre, $email, $telefono, $especialidad, $horario, $id]);
@@ -74,17 +74,17 @@ else if ($accion === 'editar') {
         echo json_encode(['exito' => false, 'error' => $e->getMessage()]);
     }
 }
-// Si la accion es eliminar borramos el medico
+// Eliminar médico de la base de datos
 else if ($accion === 'eliminar') {
     try {
         $id = $_POST['id'];
-        // Intentamos eliminar físicamente 
+        // Eliminación física del registro 
         $stmt = $bd->prepare("DELETE FROM medicos WHERE medico_id = ?");
         $stmt->execute([$id]);
         
         echo json_encode(['exito' => true, 'mensaje' => 'Medico eliminado permanentemente']);
     } catch (PDOException $e) {
-        // Verificar si es error de constraint (citas asociadas)
+        // Manejo de error por restricción de llave foránea (citas asociadas)
         if ($e->getCode() == '23000') {
             echo json_encode(['exito' => false, 'error' => 'No se puede eliminar el médico porque tiene citas o registros asociados.']);
         } else {

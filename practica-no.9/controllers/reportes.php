@@ -1,24 +1,22 @@
 <?php
-// Esto llama a la conexion
+// llamar a la conexión
 require_once __DIR__ . '/../config/bd_huevos.php';
 
-// Esto configura el json
+// configurar JSON
 header('Content-Type: application/json; charset=utf-8');
 
-// Aqui conectamos a la base
+// conectar a la base
 $bd = obtener_conexion();
 
-// verificamos si la sesion ya esta iniciada antes de llamar session_start
+// verificar si la sesión ya está iniciada
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 $usuario_rol = $_SESSION['usuario_rol'] ?? null;
 $usuario_id = $_SESSION['usuario_id'] ?? null;
 
-// si es medico o secretaria obtenemos su medico_id para filtrar
-// admin ve todos los datos
-// secretaria ve solo del medico asociado
-// medico ve solo sus propios datos
+// obtener medico_id para filtrar según el rol
+// admin: ve todo, secretaria: ve del médico asociado, medico: ve solo sus datos
 $medico_id = null;
 $es_medico = ($usuario_rol === 'medico');
 $es_secretaria = ($usuario_rol === 'secretaria');
@@ -35,12 +33,12 @@ if (($es_medico || $es_secretaria) && $usuario_id) {
   }
 }
 
-// Obtenemos el tipo de reporte
+// obtener tipo de reporte
 $tipo = $_GET['tipo'] ?? '';
 $metodo_http = $_SERVER['REQUEST_METHOD'];
 
 try {
-    // Si es una peticion POST, es para guardar un pago
+    // si es POST, guardar un pago
     if ($metodo_http === 'POST') {
         // obtener datos del formulario
         $id_pago = (int)($_POST['id'] ?? 0);
@@ -63,11 +61,11 @@ try {
         $fecha_pago = $fecha ? ($fecha . ' 00:00:00') : date('Y-m-d H:i:s');
         
         // insertar pago
-        // Nota: Agregamos 'concepto' para guardar el servicio si no hay cita
+        // Nota: concepto se usa para guardar el servicio si no hay cita
         $sql = "INSERT INTO pagos (paciente_id, cita_id, monto, moneda, metodo, estatus, referencia, fecha_pago, concepto) 
                 VALUES (?, ?, ?, 'MXN', ?, ?, ?, ?, ?)";
         
-        // Usamos PDO
+        // ejecutar con PDO
         $stmt = $bd->prepare($sql);
         $stmt->execute([$paciente_id, $cita_id, $monto, $metodo_pago, $estatus, $referencia, $fecha_pago, $servicio]);
         
@@ -75,10 +73,9 @@ try {
         exit;
     }
 
-    // Si piden reporte de pagos
-    // Si piden reporte general (dashboard)
+    // reporte general (dashboard)
     if ($tipo === 'dashboard' || $tipo === '') {
-        // 1. Obtener transacciones (pagos) usando la vista corregida
+        // obtener transacciones (pagos)
         if ($filtrar_por_medico) {
           $sql_pagos = "SELECT pago_id, fecha, paciente, medico, servicio, monto, metodo_pago as metodo 
                         FROM vw_pagos_ui 
@@ -94,8 +91,8 @@ try {
         }
         $transacciones = $stmt_pagos->fetchAll(PDO::FETCH_ASSOC);
 
-        // 2. Calcular KPIs
-        // Total ingresos
+        // calcular KPIs
+        // total ingresos
         if ($filtrar_por_medico) {
           $sql_ingresos = "SELECT SUM(p.monto) as total FROM pagos p 
                           JOIN citas c ON p.cita_id = c.cita_id 
@@ -109,7 +106,7 @@ try {
         }
         $total_ingresos = $stmt_ingresos->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
 
-        // Citas totales (en rango o total historico)
+        // total citas
         if ($filtrar_por_medico) {
           $sql_citas = "SELECT COUNT(*) as total FROM citas WHERE medico_id = :medico_id";
           $stmt_citas = $bd->prepare($sql_citas);
@@ -121,7 +118,7 @@ try {
         }
         $total_citas = $stmt_citas->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
 
-        // Pacientes nuevos (total)
+        // total pacientes
         if ($filtrar_por_medico) {
           $sql_pacientes = "SELECT COUNT(DISTINCT c.paciente_id) as total FROM citas c WHERE c.medico_id = :medico_id";
           $stmt_pacientes = $bd->prepare($sql_pacientes);
@@ -133,7 +130,7 @@ try {
         }
         $total_pacientes = $stmt_pacientes->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
 
-        // Ingresos por medico
+        // ingresos por médico
         if ($filtrar_por_medico) {
           $sql_medicos = "SELECT m.nombre as medico, SUM(p.monto) as total_medico
                           FROM pagos p
@@ -153,7 +150,7 @@ try {
                           GROUP BY m.medico_id";
           $stmt_medicos = $bd->query($sql_medicos);
         }
-        // Nota: Si hay pagos sin cita, no saldran aqui, pero es correcto para ingresos por medico
+        // Nota: pagos sin cita no aparecen en esta lista
         $por_medico = $stmt_medicos->fetchAll(PDO::FETCH_ASSOC);
 
         echo json_encode([
@@ -167,9 +164,9 @@ try {
             ]
         ]);
     }
-    // Si piden reporte de pagos especifico
+    // reporte de pagos
     else if ($tipo === 'pagos') {
-        // Traemos pagos con nombres de pacientes usando la vista
+        // obtener pagos con nombres de pacientes
         if ($filtrar_por_medico) {
           $sql = "SELECT * FROM vw_pagos_ui WHERE medico_id = :medico_id ORDER BY fecha DESC";
           $stmt = $bd->prepare($sql);

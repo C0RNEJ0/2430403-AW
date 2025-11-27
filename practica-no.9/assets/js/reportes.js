@@ -17,12 +17,12 @@
 
   // mostrar datos en la pantalla
   function renderizar_dashboard(datos) {
-    // KPIs
+    // KPIs principales
     document.getElementById('kpi_ingresos').textContent = '$' + Number(datos.total).toFixed(2);
     document.getElementById('kpi_citas').textContent = datos.citas;
     document.getElementById('kpi_pacientes').textContent = datos.pacientes_nuevos;
 
-    // Tabla de transacciones
+    // tabla de transacciones
     const tabla_cuerpo = document.querySelector('#tabla_reportes tbody');
     if (tabla_cuerpo) {
       tabla_cuerpo.innerHTML = '';
@@ -39,8 +39,7 @@
       });
     }
 
-    // Ingresos por medico (opcional, si queremos mostrarlo en algun lado)
-    // Por ahora solo lo dejamos disponible en memoria por si se necesita
+    // ingresos por médico 
   }
 
   // exportar a Excel
@@ -75,7 +74,7 @@
     link.click();
   }
 
-  // exportar a PDF (HTML simple)
+  // exportar a PDF
   function exportar_pdf() {
     const tabla = document.querySelector('#tabla_reportes tbody');
     const filas = tabla.querySelectorAll('tr');
@@ -121,7 +120,7 @@
   // cargar listas para el formulario
   async function cargar_listas() {
     try {
-      // Cargar pacientes
+      // cargar pacientes
       const res_pac = await fetch('../controllers/pacientes.php?api=listar');
       const datos_pac = await res_pac.json();
       const sel_pac = document.getElementById('pago_paciente');
@@ -132,7 +131,7 @@
         });
       }
 
-      // Cargar medicos
+      // cargar médicos
       const res_med = await fetch('../controllers/medicos_list.php');
       const datos_med = await res_med.json();
       const sel_med = document.getElementById('pago_medico');
@@ -177,7 +176,7 @@
 
       if (datos.exito) {
         alert('Pago registrado correctamente');
-        // cerrar modal (usando bootstrap o estilo directo)
+        // cerrar modal
         const modal = document.getElementById('modal_pago');
         modal.style.display = 'none';
         modal.classList.remove('active');
@@ -199,7 +198,7 @@
     cargar_datos();
     cargar_listas();
 
-    // conectar boton de nuevo pago
+    // conectar botón de nuevo pago
     const btn_nuevo = document.getElementById('btn_nuevo_pago');
     if (btn_nuevo) {
       btn_nuevo.addEventListener('click', abrir_modal_pago);
@@ -211,10 +210,10 @@
       form.addEventListener('submit', guardar_pago);
     }
 
-    // conectar boton de exportar (si existe, o agregar botones si faltan)
+    // conectar botón de exportar
     const btn_export = document.getElementById('btn_export');
     if (btn_export) {
-      // Crear botones PDF y Excel
+      // crear botones PDF y Excel
       const btn_pdf = document.createElement('button');
       btn_pdf.className = 'btn btn-danger me-2';
       btn_pdf.innerHTML = '<i class="bi bi-file-pdf"></i> PDF';
@@ -225,7 +224,7 @@
       btn_excel.innerHTML = '<i class="bi bi-file-excel"></i> Excel';
       btn_excel.onclick = exportar_excel;
 
-      // Reemplazar solo el botón de exportar, no todo el contenedor
+      // reemplazar botón de exportar
       btn_export.replaceWith(btn_pdf, btn_excel);
     }
   });

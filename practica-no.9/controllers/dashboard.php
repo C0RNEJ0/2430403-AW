@@ -1,24 +1,22 @@
 <?php
-// Esto llama a la conexion
+// Incluir módulo de conexión a base de datos
 require_once __DIR__ . '/../config/bd_huevos.php';
 
-// Esto configura el json
+// Establecer cabeceras de respuesta JSON
 header('Content-Type: application/json; charset=utf-8');
 
-// Aqui conectamos a la base
+// Inicializar conexión PDO a la base de datos
 $bd = obtener_conexion();
 
-// verificamos si la sesion ya esta iniciada antes de llamar session_start
+// Iniciar sesión si no ha sido iniciada previamente
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 $usuario_rol = $_SESSION['rol'] ?? null;
 $medico_id = $_SESSION['medico_id'] ?? null;
 
-// si es medico o secretaria filtramos por medico_id de la sesion
-// admin ve todos los datos
-// secretaria ve solo del medico asociado
-// medico ve solo sus propios datos
+// Obtener ID de médico para filtrado basado en rol
+// Roles: admin (sin filtro), secretaria (médico asociado), médico (datos propios)
 $filtrar_por_medico = false;
 
 if (($usuario_rol === 'medico' || $usuario_rol === 'secretaria') && $medico_id) {
@@ -26,9 +24,9 @@ if (($usuario_rol === 'medico' || $usuario_rol === 'secretaria') && $medico_id) 
 }
 
 try {
-    // aqui obtenemos los datos del dashboard
+    // Obtener métricas y datos del dashboard
     
-    // 1. Obtener transacciones recientes
+    // 1. Transacciones de pago recientes
     if ($filtrar_por_medico) {
       $sql_pagos = "SELECT pago_id, fecha, paciente, medico, servicio, monto, metodo_pago as metodo 
                     FROM vw_pagos_ui 
@@ -104,7 +102,7 @@ try {
     }
     $por_medico = $stmt_medicos->fetchAll(PDO::FETCH_ASSOC);
 
-    // aqui devolvemos todos los datos
+    // Construir respuesta JSON con todas las métricas
     echo json_encode([
         'exito' => true, 
         'datos' => [

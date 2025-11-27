@@ -1,40 +1,40 @@
 <?php
-// Esto llama a la conexion
+// Incluir módulo de conexión a base de datos
 require_once __DIR__ . '/../config/bd_huevos.php';
 
-// Esto configura el json
+// Establecer cabeceras de respuesta JSON
 header('Content-Type: application/json; charset=utf-8');
 
-// Aqui conectamos a la base
+// Inicializar conexión PDO a la base de datos
 $bd = obtener_conexion();
 
-// Obtenemos la accion
+// Obtener acción desde parámetros de solicitud
 $accion = $_REQUEST['accion'] ?? '';
 
-// aqui si no hay accion o es listar traemos las tarifas
+// Listar todas las tarifas si no se especifica acción
 if ($accion === 'listar' || $accion === '') {
     try {
-        // Traemos todas las tarifas ordenadas por nombre
+        // Obtener tarifas ordenadas alfabéticamente
         $sql = "SELECT tarifa_id, nombre_servicio as especialidad, servicio, precio FROM tarifas ORDER BY nombre_servicio ASC";
         $stmt = $bd->query($sql);
         $tarifas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
-        // Devolvemos los datos
+        // Enviar respuesta JSON con datos de tarifas
         echo json_encode(['exito' => true, 'datos' => $tarifas]);
     } catch (Exception $e) {
         echo json_encode(['exito' => false, 'error' => $e->getMessage()]);
     }
     exit;
 }
-// Si la accion es crear guardamos una nueva tarifa
+// Crear una nueva tarifa
 else if ($accion === 'crear' || (!isset($_POST['id']) && !empty($_POST['especialidad']))) {
     try {
-        // aqui recogemos los datos que envia el JavaScript
+        // Extraer datos del formulario POST
         $especialidad = $_POST['especialidad'] ?? '';
         $servicio = $_POST['servicio'] ?? '';
         $precio = $_POST['precio'] ?? 0;
         
-        // Insertamos en la base
+        // Insertar nueva tarifa en la base de datos
         $sql = "INSERT INTO tarifas (nombre_servicio, servicio, precio) VALUES (?, ?, ?)";
         $stmt = $bd->prepare($sql);
         $stmt->execute([$especialidad, $servicio, $precio]);
@@ -45,7 +45,7 @@ else if ($accion === 'crear' || (!isset($_POST['id']) && !empty($_POST['especial
     }
     exit;
 }
-// Si la accion es editar actualizamos la tarifa
+// Actualizar tarifa existente
 else if ($accion === 'editar' || isset($_POST['id'])) {
     try {
         $id = $_POST['id'] ?? 0;
@@ -53,7 +53,7 @@ else if ($accion === 'editar' || isset($_POST['id'])) {
         $servicio = $_POST['servicio'] ?? '';
         $precio = $_POST['precio'] ?? 0;
         
-        // Actualizamos los datos
+        // Ejecutar UPDATE en base de datos
         $sql = "UPDATE tarifas SET nombre_servicio=?, servicio=?, precio=? WHERE tarifa_id=?";
         $stmt = $bd->prepare($sql);
         $stmt->execute([$especialidad, $servicio, $precio, $id]);
@@ -64,11 +64,11 @@ else if ($accion === 'editar' || isset($_POST['id'])) {
     }
     exit;
 }
-// Si la accion es eliminar borramos la tarifa
+// Eliminar tarifa permanentemente
 else if ($accion === 'eliminar') {
     try {
         $id = $_POST['id'] ?? 0;
-        // Borramos de la base
+        // Eliminar registro de la base de datos
         $stmt = $bd->prepare("DELETE FROM tarifas WHERE tarifa_id = ?");
         $stmt->execute([$id]);
         

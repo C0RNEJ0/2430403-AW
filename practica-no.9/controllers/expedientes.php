@@ -1,24 +1,24 @@
 <?php
-// Controlador de expedientes
-// Esto llama a la conexion
+// Controlador de expedientes médicos
+// Incluir módulo de conexión a base de datos
 require_once __DIR__ . '/../config/bd_huevos.php';
 require_once __DIR__ . '/pacientes_actions.php';
 
-// Esto configura el json
+// Establecer cabeceras de respuesta JSON
 header('Content-Type: application/json; charset=utf-8');
 
-// Aqui conectamos a la base
+// Inicializar conexión PDO a la base de datos
 $bd = obtener_conexion();
 if(!$bd){ echo json_encode(['exito'=>false,'error'=>'Sin conexion BD']); exit; }
 
-// verificamos si la sesion ya esta iniciada antes de llamar session_start
+// Iniciar sesión si no ha sido iniciada previamente
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 $usuario_rol = $_SESSION['usuario_rol'] ?? null;
 $usuario_id = $_SESSION['usuario_id'] ?? null;
 
-// si es medico o secretaria obtenemos su medico_id para filtrar
+// Obtener ID de médico para filtrado basado en rol
 $medico_id = null;
 $filtrar_por_medico = false;
 
@@ -33,47 +33,47 @@ if (($usuario_rol === 'medico' || $usuario_rol === 'secretaria') && $usuario_id)
   }
 }
 
-// Obtenemos lo que vamos a buscar
+// Obtener parámetro de búsqueda (ID o nombre de paciente)
 $buscar = trim($_GET['buscar'] ?? '');
 if($buscar === ''){ echo json_encode(['exito'=>false,'error'=>'No se indico paciente']); exit; }
 
 try{
-  // Si viene un numero buscamos por id
+  // Búsqueda por ID de paciente (numérico)
   if(ctype_digit($buscar)){
-    // Preparamos la consulta por id
+    // Consulta filtrada por permisos de usuario
     if ($filtrar_por_medico) {
-      // el medico o secretaria solo ve expedientes del medico asociado
+      // Médico y secretaria solo ven expedientes de su área
       $sql = 'SELECT c.cita_id, p.nombres, p.apellidos, c.motivo, c.creado_en AS fecha, c.notas FROM citas c JOIN pacientes p ON p.paciente_id = c.paciente_id WHERE p.paciente_id = :id AND c.medico_id = :medico_id ORDER BY c.creado_en DESC';
       $stmt = $bd->prepare($sql);
       $stmt->bindValue(':id', (int)$buscar, PDO::PARAM_INT);
       $stmt->bindValue(':medico_id', $medico_id, PDO::PARAM_INT);
     } else {
-      // admin ve todos los expedientes
+      // Administrador ve todos los expedientes
       $sql = 'SELECT c.cita_id, p.nombres, p.apellidos, c.motivo, c.creado_en AS fecha, c.notas FROM citas c JOIN pacientes p ON p.paciente_id = c.paciente_id WHERE p.paciente_id = :id ORDER BY c.creado_en DESC';
       $stmt = $bd->prepare($sql);
       $stmt->bindValue(':id', (int)$buscar, PDO::PARAM_INT);
     }
     $stmt->execute();
     $datos = $stmt->fetchAll();
-    // Devolvemos los datos
+    // Devolver resultados de búsqueda
     echo json_encode(['exito'=>true,'datos'=>$datos]); exit;
   } else {
-    // Si no es numero buscamos por nombre
+    // Búsqueda por nombre de paciente (texto)
     if ($filtrar_por_medico) {
-      // el medico o secretaria solo ve expedientes del medico asociado
+      // Médico y secretaria solo ven expedientes de su área
       $sql = "SELECT c.cita_id, p.nombres, p.apellidos, c.motivo, c.creado_en AS fecha, c.notas FROM citas c JOIN pacientes p ON p.paciente_id = c.paciente_id WHERE CONCAT(p.nombres,' ',p.apellidos) LIKE :q AND c.medico_id = :medico_id ORDER BY c.creado_en DESC";
       $stmt = $bd->prepare($sql);
       $stmt->bindValue(':q', '%'.$buscar.'%');
       $stmt->bindValue(':medico_id', $medico_id, PDO::PARAM_INT);
     } else {
-      // admin ve todos los expedientes
+      // Administrador ve todos los expedientes
       $sql = "SELECT c.cita_id, p.nombres, p.apellidos, c.motivo, c.creado_en AS fecha, c.notas FROM citas c JOIN pacientes p ON p.paciente_id = c.paciente_id WHERE CONCAT(p.nombres,' ',p.apellidos) LIKE :q ORDER BY c.creado_en DESC";
       $stmt = $bd->prepare($sql);
       $stmt->bindValue(':q', '%'.$buscar.'%');
     }
     $stmt->execute();
     $datos = $stmt->fetchAll();
-    // Devolvemos los datos encontrados
+    // Devolver resultados encontrados
     echo json_encode(['exito'=>true,'datos'=>$datos]); exit;
   }
 } catch(Exception $e){ echo json_encode(['exito'=>false,'error'=>$e->getMessage()]); }

@@ -1,11 +1,11 @@
 <?php
-// Esto inicia la sesion
+// Iniciar sesión para acceder a variables de sesión
 session_start();
 
-// Esto destruye todas las variables de sesion
+// Destruir todas las variables de sesión del usuario
 session_destroy();
 
-// Esto redirige al login
+// Redirigir al formulario de inicio de sesión
 header('Location: ../index.html');
 exit;
 ?>
