@@ -20,7 +20,7 @@ CREATE TABLE roles (
 
 -- Insertar roles básicos
 INSERT INTO roles (nombre, descripcion) VALUES
-('super_admin', 'Administrador del sistema con acceso total'),
+('super_admin', 'Administrador con acceso total'),
 ('medico', 'Médico con acceso a expedientes y agenda'),
 ('secretaria', 'Personal administrativo con acceso a citas y pacientes'),
 ('paciente', 'Paciente con acceso limitado a su información');
@@ -344,7 +344,7 @@ CREATE TABLE IF NOT EXISTS catalogo_permisos (
 
 -- aqui insertamos todos los modulos del sistema en el catalogo
 INSERT INTO catalogo_permisos (modulo, nombre_mostrar, descripcion, icono, orden) VALUES
-('dashboard', 'Dashboard', 'Panel principal con estadisticas y resumen del sistema', 'bi-speedometer2', 1),
+('dashboard', 'Dashboard', 'Panel principal con estadísticas y resumen', 'bi-speedometer2', 1),
 ('pacientes', 'Pacientes', 'Gestion de pacientes y sus datos personales', 'bi-people', 2),
 ('agenda', 'Agenda', 'Calendario de citas y programacion de consultas', 'bi-calendar3', 3),
 ('medicos', 'Médicos', 'Administracion de medicos y especialidades', 'bi-person-badge', 4),
@@ -352,9 +352,8 @@ INSERT INTO catalogo_permisos (modulo, nombre_mostrar, descripcion, icono, orden
 ('pagos', 'Pagos', 'Control de pagos y facturacion', 'bi-cash-coin', 6),
 ('tarifas', 'Tarifas', 'Configuracion de precios y tarifas de servicios', 'bi-currency-dollar', 7),
 ('reportes', 'Reportes', 'Generacion de reportes y estadisticas', 'bi-file-earmark-bar-graph', 8),
-('admin', 'Administración', 'Panel de administracion general del sistema', 'bi-gear', 9),
-('bitacoras', 'Bitácoras', 'Registro de actividades y auditoria del sistema', 'bi-journal-text', 10),
-('usuarios', 'Usuarios', 'Gestion de usuarios y roles del sistema', 'bi-person-circle', 11),
+('admin', 'Administración', 'Panel de administración general', 'bi-gear', 9),
+('usuarios', 'Usuarios', 'Gestion de usuarios y roles', 'bi-person-circle', 10),
 ('roles', 'Roles', 'Configuracion de roles y permisos', 'bi-shield-lock', 12),
 ('especialidades', 'Especialidades', 'Catalogo de especialidades medicas', 'bi-bookmark-star', 13)
 ON DUPLICATE KEY UPDATE 

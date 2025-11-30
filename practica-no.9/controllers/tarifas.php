@@ -11,6 +11,22 @@ $bd = obtener_conexion();
 // Obtener acción desde parámetros de solicitud
 $accion = $_REQUEST['accion'] ?? '';
 
+// Obtener una tarifa específica por id (cuando viene id por GET sin acción)
+if (isset($_GET['id']) && $accion === '') {
+    try {
+        $id = $_GET['id'];
+        $sql = "SELECT tarifa_id, nombre_servicio as especialidad, servicio, precio FROM tarifas WHERE tarifa_id = ?";
+        $stmt = $bd->prepare($sql);
+        $stmt->execute([$id]);
+        $tarifa = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        echo json_encode(['exito' => true, 'datos' => $tarifa]);
+    } catch (Exception $e) {
+        echo json_encode(['exito' => false, 'error' => $e->getMessage()]);
+    }
+    exit;
+}
+
 // Listar todas las tarifas si no se especifica acción
 if ($accion === 'listar' || $accion === '') {
     try {
@@ -46,7 +62,7 @@ else if ($accion === 'crear' || (!isset($_POST['id']) && !empty($_POST['especial
     exit;
 }
 // Actualizar tarifa existente
-else if ($accion === 'editar' || isset($_POST['id'])) {
+else if ($accion === 'editar' && isset($_POST['id'])) {
     try {
         $id = $_POST['id'] ?? 0;
         $especialidad = $_POST['especialidad'] ?? '';
