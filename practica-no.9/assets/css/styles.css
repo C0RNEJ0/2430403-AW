@@ -1546,3 +1546,29 @@ main {
     background-color: var(--accent) !important;
     color: white !important;
 }
+
+/* ============================================
+   ESTILOS PARA MODALES DE NOTIFICACIÓN
+   ============================================ */
+
+/* Headers de notificación con colores temáticos */
+.modal-header.header-success {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+}
+
+.modal-header.header-danger {
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+}
+
+.modal-header.header-warning {
+    background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+}
+
+.modal-header.header-info {
+    background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+}
+
+/* Iconos grandes en notificaciones */
+.modal-header i.bi {
+    font-size: 28px;
+}
