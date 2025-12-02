@@ -28,8 +28,19 @@ try {
             $medico_id = $_SESSION['medico_id'] ?? null;
             
             // aqui armamos la consulta segun el rol
+            $filtrar_por_medico = false;
+            $filtro_medico_id = null;
+
             if (($usuario_rol === 'medico' || $usuario_rol === 'secretaria') && $medico_id) {
-                // el medico o secretaria solo ve citas de su medico asociado
+                $filtrar_por_medico = true;
+                $filtro_medico_id = $medico_id;
+            } elseif ($usuario_rol === 'super_admin' && isset($_GET['medico_id']) && $_GET['medico_id'] !== '') {
+                $filtrar_por_medico = true;
+                $filtro_medico_id = (int)$_GET['medico_id'];
+            }
+
+            if ($filtrar_por_medico) {
+                // el medico o secretaria solo ve citas de su medico asociado, o admin filtrando
                 $sql = "SELECT 
                             c.cita_id,
                             c.paciente_id,
@@ -47,7 +58,7 @@ try {
                         WHERE c.medico_id = :medico_id
                         ORDER BY c.fecha_hora_inicio DESC";
                 $stmt = $bd->prepare($sql);
-                $stmt->bindValue(':medico_id', $medico_id, PDO::PARAM_INT);
+                $stmt->bindValue(':medico_id', $filtro_medico_id, PDO::PARAM_INT);
             } else {
                 // el admin ve todas las citas
                 $sql = "SELECT 
@@ -89,6 +100,20 @@ try {
                 exit;
             }
             
+            // Validar que la fecha no sea pasada
+            $hoy = date('Y-m-d');
+            if ($fecha < $hoy) {
+                echo json_encode(['exito' => false, 'error' => 'No se pueden agendar citas en fechas pasadas']);
+                exit;
+            }
+            
+            // Validar horario (7:00 AM - 5:00 PM)
+            $horaFormato = date('H:i', strtotime($hora));
+            if ($horaFormato < '07:00' || $horaFormato > '17:00') {
+                echo json_encode(['exito' => false, 'error' => 'El horario de citas es de 7:00 AM a 5:00 PM']);
+                exit;
+            }
+            
             $fecha_hora_inicio = $fecha . ' ' . $hora;
             $fecha_hora_fin = date('Y-m-d H:i:s', strtotime($fecha_hora_inicio . ' +30 minutes'));
             
@@ -122,6 +147,20 @@ try {
             
             if (!$cita_id || !$paciente_id || !$medico_id || !$fecha || !$hora) {
                 echo json_encode(['exito' => false, 'error' => 'Faltan campos requeridos']);
+                exit;
+            }
+            
+            // Validar que la fecha no sea pasada
+            $hoy = date('Y-m-d');
+            if ($fecha < $hoy) {
+                echo json_encode(['exito' => false, 'error' => 'No se pueden agendar citas en fechas pasadas']);
+                exit;
+            }
+            
+            // Validar horario (7:00 AM - 5:00 PM)
+            $horaFormato = date('H:i', strtotime($hora));
+            if ($horaFormato < '07:00' || $horaFormato > '17:00') {
+                echo json_encode(['exito' => false, 'error' => 'El horario de citas es de 7:00 AM a 5:00 PM']);
                 exit;
             }
             

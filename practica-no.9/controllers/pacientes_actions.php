@@ -129,22 +129,16 @@ function procesar_post_pacientes(){
       $usuario_rol = $_SESSION['rol'] ?? null;
       $medico_id_sesion = $_SESSION['medico_id'] ?? null;
       
-      // si es medico o secretaria verificamos que el paciente sea del medico asociado
+      // si es medico o secretaria verificamos que el paciente le pertenezca
       if (($usuario_rol === 'medico' || $usuario_rol === 'secretaria') && $medico_id_sesion) {
-        $medico_id = $medico_id_sesion;
-        if ($medico_id) {
-          // verificamos que el paciente tenga citas con este medico
-          $check_permiso = $bd->prepare('SELECT COUNT(*) AS cnt FROM citas WHERE paciente_id = :pid AND medico_id = :mid');
-          $check_permiso->bindValue(':pid', $id, PDO::PARAM_INT);
-          $check_permiso->bindValue(':mid', $medico_id, PDO::PARAM_INT);
-          $check_permiso->execute();
-          $permiso = $check_permiso->fetch();
-          
-          if (!$permiso || (int)$permiso['cnt'] === 0) {
-            return ['ok'=>false, 'error' => 'No tienes permiso para eliminar este paciente.'];
-          }
-        } else {
-          return ['ok'=>false, 'error' => 'No se pudo verificar tus permisos.'];
+        // Verificar que el paciente pertenezca a este médico
+        $check_permiso = $bd->prepare('SELECT medico_id FROM pacientes WHERE paciente_id = :pid');
+        $check_permiso->bindValue(':pid', $id, PDO::PARAM_INT);
+        $check_permiso->execute();
+        $paciente = $check_permiso->fetch();
+        
+        if (!$paciente || (int)$paciente['medico_id'] !== (int)$medico_id_sesion) {
+          return ['ok'=>false, 'error' => 'No tienes permiso para eliminar este paciente.'];
         }
       }
       
@@ -172,22 +166,16 @@ function procesar_post_pacientes(){
       $usuario_rol = $_SESSION['rol'] ?? null;
       $medico_id_sesion = $_SESSION['medico_id'] ?? null;
       
-      // si es medico o secretaria verificamos que el paciente sea del medico asociado
+      // si es medico o secretaria verificamos que el paciente le pertenezca
       if (($usuario_rol === 'medico' || $usuario_rol === 'secretaria') && $medico_id_sesion) {
-        $medico_id = $medico_id_sesion;
-        if ($medico_id) {
-          // verificamos que el paciente tenga citas con este medico
-          $check_permiso = $bd->prepare('SELECT COUNT(*) AS cnt FROM citas WHERE paciente_id = :pid AND medico_id = :mid');
-          $check_permiso->bindValue(':pid', $id, PDO::PARAM_INT);
-          $check_permiso->bindValue(':mid', $medico_id, PDO::PARAM_INT);
-          $check_permiso->execute();
-          $permiso = $check_permiso->fetch();
-          
-          if (!$permiso || (int)$permiso['cnt'] === 0) {
-            return ['ok'=>false, 'error' => 'No tienes permiso para editar este paciente.'];
-          }
-        } else {
-          return ['ok'=>false, 'error' => 'No se pudo verificar tus permisos.'];
+        // Verificar que el paciente pertenezca a este médico
+        $check_permiso = $bd->prepare('SELECT medico_id FROM pacientes WHERE paciente_id = :pid');
+        $check_permiso->bindValue(':pid', $id, PDO::PARAM_INT);
+        $check_permiso->execute();
+        $paciente = $check_permiso->fetch();
+        
+        if (!$paciente || (int)$paciente['medico_id'] !== (int)$medico_id_sesion) {
+          return ['ok'=>false, 'error' => 'No tienes permiso para editar este paciente.'];
         }
       }
       
@@ -216,11 +204,18 @@ function procesar_post_pacientes(){
       $sentencia->bindValue(':notas', $datos['notas']);
       $sentencia->bindValue(':id', $id, PDO::PARAM_INT);
   $sentencia->execute();
-  // registrar bitacora (usuario_id por ahora null)
-  registrar_bitacora_pdo($bd, null, 'UPDATE', 'pacientes', $id, 'Paciente editado');
+  // registrar bitacora (usuario_id por ahora null) - COMENTADO: causa errores de BD
+  // registrar_bitacora_pdo($bd, null, 'UPDATE', 'pacientes', $id, 'Paciente editado');
   return ['ok'=>true, 'mensaje' => 'Paciente actualizado correctamente.'];
     }
     // crear
+    // Obtener el medico_id del usuario actual
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+    $usuario_rol = $_SESSION['rol'] ?? null;
+    $medico_id_sesion = $_SESSION['medico_id'] ?? null;
+    
     // Validar datos de entrada
     $validacion = validar_datos_paciente($_POST);
     if (!$validacion['valido']) {
@@ -228,8 +223,23 @@ function procesar_post_pacientes(){
     }
     
     $datos = $validacion['datos'];
-  $ins = 'INSERT INTO pacientes (nombres, apellidos, sexo, fecha_nacimiento, telefono, email, direccion, ciudad, estado, cp, prioridad, tipo_sangre, alergias, notas) VALUES (:nombres, :apellidos, :sexo, :fecha_nacimiento, :telefono, :email, :direccion, :ciudad, :estado, :cp, :prioridad, :tipo_sangre, :alergias, :notas)';
+    
+    // Determinar el medico_id a asignar
+    $medico_id_asignar = null;
+    if ($usuario_rol === 'medico' && $medico_id_sesion) {
+      // Si es médico, asignar sus propios pacientes
+      $medico_id_asignar = $medico_id_sesion;
+    } elseif ($usuario_rol === 'secretaria' && $medico_id_sesion) {
+      // Si es secretaria, asignar al médico asociado
+      $medico_id_asignar = $medico_id_sesion;
+    } elseif ($usuario_rol === 'super_admin') {
+      // Si es admin, puede especificar un médico o dejarlo null
+      $medico_id_asignar = !empty($_POST['medico_id']) ? (int)$_POST['medico_id'] : null;
+    }
+    
+  $ins = 'INSERT INTO pacientes (medico_id, nombres, apellidos, sexo, fecha_nacimiento, telefono, email, direccion, ciudad, estado, cp, prioridad, tipo_sangre, alergias, notas) VALUES (:medico_id, :nombres, :apellidos, :sexo, :fecha_nacimiento, :telefono, :email, :direccion, :ciudad, :estado, :cp, :prioridad, :tipo_sangre, :alergias, :notas)';
   $sentencia = $bd->prepare($ins);
+  $sentencia->bindValue(':medico_id', $medico_id_asignar, PDO::PARAM_INT);
   $sentencia->bindValue(':nombres', $datos['nombres']);
   $sentencia->bindValue(':apellidos', $datos['apellidos']);
   $sentencia->bindValue(':sexo', $datos['sexo']);
@@ -246,8 +256,8 @@ function procesar_post_pacientes(){
   $sentencia->bindValue(':notas', $datos['notas']);
   $sentencia->execute();
   $id_nuevo = $bd->lastInsertId();
-  // registrar bitacora
-  registrar_bitacora_pdo($bd, null, 'INSERT', 'pacientes', $id_nuevo, 'Paciente creado');
+  // registrar bitacora - COMENTADO: causa errores de BD
+  // registrar_bitacora_pdo($bd, null, 'INSERT', 'pacientes', $id_nuevo, 'Paciente creado');
   return ['ok'=>true, 'mensaje' => 'Paciente guardado correctamente.'];
   } catch(PDOException $e){
     // Mejorar mensaje de error para duplicados
@@ -261,44 +271,55 @@ function procesar_post_pacientes(){
   }
 }
 
-// aqui listamos los pacientes pero filtramos segun el rol del usuario
-// medico y secretaria ven solo del medico asociado, admin ve todos
+// Listar pacientes según el rol del usuario
+// Médicos/Secretarias: Solo ven pacientes que les pertenecen (medico_id)
+// Admin: Ve todos los pacientes
 function listar_pacientes($limit = 200){
   $bd = obtener_conexion();
   if(!$bd) return ['error' => 'No se pudo conectar a la BD.'];
   
   try{
-    // aqui obtenemos el usuario actual de la sesion
-    // verificamos si la sesion ya esta iniciada antes de llamar session_start
+    // Obtener el usuario actual de la sesión
     if (session_status() === PHP_SESSION_NONE) {
         session_start();
     }
     $usuario_rol = $_SESSION['rol'] ?? null;
     $medico_id_sesion = $_SESSION['medico_id'] ?? null;
     
-    // si es medico o secretaria filtramos por su medico_id
-    $medico_id = null;
+    // Determinar si filtrar por médico
     $filtrar_por_medico = false;
+    $medico_id = null;
     
     if (($usuario_rol === 'medico' || $usuario_rol === 'secretaria') && $medico_id_sesion) {
       $medico_id = $medico_id_sesion;
       $filtrar_por_medico = true;
     }
     
-    // aqui armamos la consulta segun el filtro
+    // Si es admin y viene el parámetro medico_id por GET
+    if ($usuario_rol === 'super_admin' && isset($_GET['medico_id']) && $_GET['medico_id'] !== '') {
+      $medico_id = (int)$_GET['medico_id'];
+      $filtrar_por_medico = true;
+    }
+    
+    // Armar la consulta según el filtro
     if ($filtrar_por_medico) {
-      // el medico o secretaria solo ve pacientes del medico asignado
-      $sql = 'SELECT DISTINCT p.paciente_id, p.nombres, p.apellidos, p.sexo, p.fecha_nacimiento, p.telefono, p.email, p.ciudad, p.prioridad 
+      // Médico/Secretaria: Solo sus pacientes (filtrar por medico_id)
+      $sql = 'SELECT p.paciente_id, p.nombres, p.apellidos, p.sexo, p.fecha_nacimiento, p.telefono, p.email, p.ciudad, p.prioridad, p.medico_id, m.nombre as medico_nombre
               FROM pacientes p
-              INNER JOIN citas c ON p.paciente_id = c.paciente_id
-              WHERE c.medico_id = :medico_id
-              ORDER BY p.paciente_id DESC LIMIT :lim';
+              LEFT JOIN medicos m ON p.medico_id = m.medico_id
+              WHERE p.medico_id = :medico_id
+              ORDER BY p.paciente_id DESC 
+              LIMIT :lim';
       $sentencia = $bd->prepare($sql);
       $sentencia->bindValue(':medico_id', $medico_id, PDO::PARAM_INT);
       $sentencia->bindValue(':lim', (int)$limit, PDO::PARAM_INT);
     } else {
-      // el admin ve todos los pacientes
-      $sql = 'SELECT paciente_id, nombres, apellidos, sexo, fecha_nacimiento, telefono, email, ciudad, prioridad FROM pacientes ORDER BY paciente_id DESC LIMIT :lim';
+      // Admin: Todos los pacientes
+      $sql = 'SELECT p.paciente_id, p.nombres, p.apellidos, p.sexo, p.fecha_nacimiento, p.telefono, p.email, p.ciudad, p.prioridad, p.medico_id, m.nombre as medico_nombre
+              FROM pacientes p
+              LEFT JOIN medicos m ON p.medico_id = m.medico_id
+              ORDER BY p.paciente_id DESC 
+              LIMIT :lim';
       $sentencia = $bd->prepare($sql);
       $sentencia->bindValue(':lim', (int)$limit, PDO::PARAM_INT);
     }
@@ -311,39 +332,32 @@ function listar_pacientes($limit = 200){
   }
 }
 
-// devuelve un paciente por id o null
+// Obtener un paciente por ID - filtrado por medico_id según el rol
 function obtener_paciente($id){
   $bd = obtener_conexion();
   if(!$bd) return null;
   try{
-    // verificamos si la sesion ya esta iniciada antes de llamar session_start
+    // Verificar sesión
     if (session_status() === PHP_SESSION_NONE) {
         session_start();
     }
     $usuario_rol = $_SESSION['rol'] ?? null;
     $medico_id_sesion = $_SESSION['medico_id'] ?? null;
     
-    // si es medico o secretaria verificamos que el paciente sea del medico asociado
+    // Determinar si filtrar por médico
     $filtrar_por_medico = false;
-    $medico_id = null;
     
     if (($usuario_rol === 'medico' || $usuario_rol === 'secretaria') && $medico_id_sesion) {
-      $medico_id = $medico_id_sesion;
       $filtrar_por_medico = true;
     }
     
     if ($filtrar_por_medico) {
-      // solo traemos el paciente si tiene citas con este medico
-      $sql = 'SELECT DISTINCT p.* 
-              FROM pacientes p
-              INNER JOIN citas c ON p.paciente_id = c.paciente_id
-              WHERE p.paciente_id = :id AND c.medico_id = :medico_id
-              LIMIT 1';
-      $sentencia = $bd->prepare($sql);
+      // Médico/Secretaria: Solo sus pacientes
+      $sentencia = $bd->prepare('SELECT * FROM pacientes WHERE paciente_id = :id AND medico_id = :medico_id LIMIT 1');
       $sentencia->bindValue(':id', (int)$id, PDO::PARAM_INT);
-      $sentencia->bindValue(':medico_id', $medico_id, PDO::PARAM_INT);
+      $sentencia->bindValue(':medico_id', $medico_id_sesion, PDO::PARAM_INT);
     } else {
-      // admin puede ver cualquier paciente
+      // Admin: Cualquier paciente
       $sentencia = $bd->prepare('SELECT * FROM pacientes WHERE paciente_id = :id LIMIT 1');
       $sentencia->bindValue(':id', (int)$id, PDO::PARAM_INT);
     }

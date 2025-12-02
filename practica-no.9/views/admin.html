@@ -55,12 +55,7 @@
                             <i class="bi bi-shield-lock"></i> Roles
                         </button>
                     </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="sistema-tab" data-bs-toggle="tab" data-bs-target="#sistema"
-                            type="button" role="tab">
-                            <i class="bi bi-gear"></i> Sistema
-                        </button>
-                    </li>
+
                 </ul>
 
                 <!-- Contenido de las tabs -->
@@ -131,7 +126,7 @@
                                             <tr>
                                                 <th>ID</th>
                                                 <th>Nombre</th>
-                                                <th>Email</th>
+                                                <th>Gmail</th>
                                                 <th>Rol</th>
                                                 <th>Médico Asociado</th>
                                                 <th>Estado</th>
@@ -160,9 +155,6 @@
                                         </h5>
                                         <p class="text-muted mb-0">Administra los roles y crea usuarios del sistema</p>
                                     </div>
-                                    <button class="btn btn-primary" onclick="abrirModalNuevoRol()">
-                                        <i class="bi bi-plus-circle"></i> Nuevo Rol
-                                    </button>
                                 </div>
 
                                 <!-- Tabla de roles -->
@@ -190,17 +182,7 @@
 
                     <!-- Tab de Sistema -->
 
-                    <div class="tab-pane fade" id="sistema" role="tabpanel">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">Configuración del Sistema</h5>
-                                <p class="text-muted">Configuración general del sistema</p>
-                                <div class="alert alert-info">
-                                    <i class="bi bi-info-circle"></i> Esta sección está en desarrollo
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+
                 </div>
             </div>
         </div>
@@ -317,7 +299,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="usuario_email" class="form-label">Email *</label>
+                        <label for="usuario_email" class="form-label">Gmail *</label>
                         <input type="email" class="form-control" id="usuario_email" name="email" required>
                         <small class="text-muted">Será usado para iniciar sesión</small>
                     </div>
@@ -397,7 +379,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="edit_usuario_email" class="form-label">Email *</label>
+                        <label for="edit_usuario_email" class="form-label">Gmail *</label>
                         <input type="email" class="form-control" id="edit_usuario_email" name="email" required>
                     </div>
 
@@ -434,6 +416,46 @@
                 <button id="btn_actualizar_usuario" class="btn-modal-primary" onclick="actualizarUsuario()">
                     <i class="bi bi-save"></i> Guardar Cambios
                 </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Exito Bootstrap -->
+    <div class="modal fade" id="modal_exito_admin" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title">Acción registrada</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <i class="bi bi-check-circle-fill text-success" style="font-size: 3rem;"></i>
+                    <p class="mt-3 fs-5">Operación completada correctamente</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Error Bootstrap -->
+    <div class="modal fade" id="modal_error_admin" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title">Error</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <i class="bi bi-exclamation-triangle-fill text-danger" style="font-size: 3rem;"></i>
+                    <p class="mt-3 fs-5">Ha ocurrido un error</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
             </div>
         </div>
     </div>

@@ -27,6 +27,12 @@
       </div>
       <div
         style="max-width:900px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center; gap:12px;">
+        <!-- Filtro de médicos (solo admin) -->
+        <div id="filtro_medico_container" style="display:none;">
+          <select id="filtro_medico" class="form-select form-select-sm" style="width: 200px;">
+            <option value="">Todos los médicos</option>
+          </select>
+        </div>
         <button id="btn_agregar_paciente" class="btn-admin">+ Agregar Paciente</button>
       </div>
 
@@ -39,9 +45,10 @@
               <th>Sexo</th>
               <th>Fecha Nac.</th>
               <th>Teléfono</th>
-              <th>Email</th>
+              <th>Gmail</th>
               <th>Ciudad</th>
               <th>Prioridad</th>
+              <th>Médico</th>
               <th>Acciones</th>
             </tr>
           </thead>
@@ -126,7 +133,7 @@
 
           <div class="row mt-2">
             <div class="col-md-6">
-              <label class="form-label">Email</label>
+              <label class="form-label">Gmail</label>
               <input class="form-control" type="email" id="p_email" name="email">
             </div>
             <div class="col-md-6">
@@ -265,6 +272,7 @@
   <script src="../assets/js/modal-handler.js"></script>
   <script src="../assets/js/notifications.js"></script>
   <script src="../assets/js/load-sidebar.js"></script>
+  <script src="../assets/js/auth-guard.js"></script>
   <script src="../assets/js/pacientes.js"></script>
   <!-- Modal Agendamiento -->
   <div id="modal_agendar" class="modal-modern">
@@ -335,6 +343,44 @@
         <button id="btn_confirmar_eliminar" class="btn-modal-danger" onclick="ejecutarEliminacionPaciente()">
           <i class="bi bi-trash"></i> Eliminar
         </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Exito Bootstrap -->
+  <div class="modal fade" id="modal_exito_bootstrap" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header bg-success text-white">
+          <h5 class="modal-title">Acción registrada</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-center">
+          <i class="bi bi-check-circle-fill text-success" style="font-size: 3rem;"></i>
+          <p class="mt-3 fs-5">Paciente guardado correctamente</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Error Bootstrap -->
+  <div class="modal fade" id="modal_error_paciente" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header bg-danger text-white">
+          <h5 class="modal-title">Error</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-center">
+          <i class="bi bi-exclamation-triangle-fill text-danger" style="font-size: 3rem;"></i>
+          <p class="mt-3 fs-5">Ha ocurrido un error</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
       </div>
     </div>
   </div>

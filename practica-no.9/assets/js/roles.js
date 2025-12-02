@@ -306,34 +306,22 @@ function guardarUsuarioRol() {
 
 // Mostrar mensaje de éxito
 function mostrarExito(mensaje) {
-    const alerta = document.createElement('div');
-    alerta.className = 'alert alert-success alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3';
-    alerta.style.zIndex = '9999';
-    alerta.innerHTML = `
-        <i class="bi bi-check-circle"></i> ${mensaje}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    `;
-    document.body.appendChild(alerta);
+    const modalEl = document.getElementById('modal_exito_admin');
+    const modalBodyP = modalEl.querySelector('.modal-body p');
+    if (modalBodyP) modalBodyP.textContent = mensaje;
 
-    setTimeout(() => {
-        alerta.remove();
-    }, 3000);
+    const modalExito = new bootstrap.Modal(modalEl);
+    modalExito.show();
 }
 
 // Mostrar mensaje de error
 function mostrarError(mensaje) {
-    const alerta = document.createElement('div');
-    alerta.className = 'alert alert-danger alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3';
-    alerta.style.zIndex = '9999';
-    alerta.innerHTML = `
-        <i class="bi bi-exclamation-triangle"></i> ${mensaje}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    `;
-    document.body.appendChild(alerta);
+    const modalEl = document.getElementById('modal_error_admin');
+    const modalBodyP = modalEl.querySelector('.modal-body p');
+    if (modalBodyP) modalBodyP.textContent = mensaje;
 
-    setTimeout(() => {
-        alerta.remove();
-    }, 5000);
+    const modalError = new bootstrap.Modal(modalEl);
+    modalError.show();
 }
 
 // Escapar HTML para prevenir XSS

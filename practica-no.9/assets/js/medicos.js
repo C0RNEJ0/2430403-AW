@@ -50,7 +50,15 @@
           .then(r => r.json())
           .then(res => {
             if (res.exito) {
-              location.reload();
+              const modalEl = document.getElementById('modal_exito_medico');
+              const modalBodyP = modalEl.querySelector('.modal-body p');
+              if (modalBodyP) modalBodyP.textContent = 'Médico eliminado correctamente';
+
+              const modalExito = new bootstrap.Modal(modalEl);
+              modalEl.addEventListener('hidden.bs.modal', function () {
+                location.reload();
+              });
+              modalExito.show();
             } else {
               alert('Error: ' + (res.error || 'No se pudo eliminar'));
             }
@@ -69,9 +77,21 @@
           document.getElementById('medico_accion').value = 'editar';
           document.getElementById('medico_id').value = m.medico_id || '';
           document.getElementById('medico_nombre').value = m.nombre || '';
-          document.getElementById('medico_especialidad').value = m.especialidad || '';
-          document.getElementById('medico_horario').value = m.horario || '';
+          document.getElementById('medico_especialidad').value = m.especialidad_id || '';
+
+          // Parsear horario si existe (formato: "HH:MM-HH:MM")
+          if (m.horario && m.horario.includes('-')) {
+            const partes = m.horario.split('-');
+            document.getElementById('medico_hora_inicio').value = partes[0].trim() || '';
+            document.getElementById('medico_hora_fin').value = partes[1].trim() || '';
+          } else {
+            document.getElementById('medico_hora_inicio').value = '';
+            document.getElementById('medico_hora_fin').value = '';
+          }
+
           document.getElementById('medico_email').value = m.email || '';
+          document.getElementById('medico_telefono').value = m.telefono || '';
+          document.getElementById('medico_cedula_profesional').value = m.cedula_profesional || '';
         }).catch(err => { console.error(err); alert('Error al obtener datos'); });
       });
     });
@@ -102,6 +122,36 @@
     if (form) {
       form.addEventListener('submit', function (e) {
         e.preventDefault();
+
+        // Validar horarios si se proporcionaron
+        const horaInicio = document.getElementById('medico_hora_inicio').value;
+        const horaFin = document.getElementById('medico_hora_fin').value;
+
+        if (horaInicio || horaFin) {
+          // Si se proporciona una, ambas son requeridas
+          if (!horaInicio || !horaFin) {
+            alert('Debe especificar tanto la hora de inicio como la hora de fin');
+            return;
+          }
+
+          // Validar rango de horario (7:00 AM - 5:00 PM)
+          if (horaInicio < '07:00' || horaInicio > '17:00') {
+            alert('La hora de inicio debe estar entre 7:00 AM y 5:00 PM');
+            return;
+          }
+
+          if (horaFin < '07:00' || horaFin > '17:00') {
+            alert('La hora de fin debe estar entre 7:00 AM y 5:00 PM');
+            return;
+          }
+
+          // Validar que hora fin sea mayor que hora inicio
+          if (horaFin <= horaInicio) {
+            alert('La hora de fin debe ser posterior a la hora de inicio');
+            return;
+          }
+        }
+
         const formData = new FormData(form);
 
         fetch('../controllers/medicos.php', {
@@ -111,7 +161,15 @@
           .then(response => response.json())
           .then(data => {
             if (data.exito) {
-              alert('Médico guardado correctamente');
+              const accion = document.getElementById('medico_accion').value;
+              const mensaje = accion === 'editar' ? 'Médico editado correctamente' : 'Médico guardado correctamente';
+
+              const modalEl = document.getElementById('modal_exito_medico');
+              const modalBodyP = modalEl.querySelector('.modal-body p');
+              if (modalBodyP) modalBodyP.textContent = mensaje;
+
+              const modalExito = new bootstrap.Modal(modalEl);
+              modalExito.show();
               form.reset();
               document.getElementById('medico_accion').value = 'crear';
               document.getElementById('medico_id').value = '';

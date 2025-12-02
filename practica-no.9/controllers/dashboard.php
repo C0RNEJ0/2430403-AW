@@ -13,13 +13,21 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 $usuario_rol = $_SESSION['rol'] ?? null;
-$medico_id = $_SESSION['medico_id'] ?? null;
+$medico_id_sesion = $_SESSION['medico_id'] ?? null;
 
 // Obtener ID de médico para filtrado basado en rol
-// Roles: admin (sin filtro), secretaria (médico asociado), médico (datos propios)
+// Roles: admin (sin filtro o filtro opcional), secretaria (médico asociado), médico (datos propios)
+$medico_id = null;
 $filtrar_por_medico = false;
 
-if (($usuario_rol === 'medico' || $usuario_rol === 'secretaria') && $medico_id) {
+if (($usuario_rol === 'medico' || $usuario_rol === 'secretaria') && $medico_id_sesion) {
+  $medico_id = $medico_id_sesion;
+  $filtrar_por_medico = true;
+}
+
+// Si es admin, puede filtrar por médico específico (parámetro opcional)
+if ($usuario_rol === 'super_admin' && isset($_GET['medico_id']) && $_GET['medico_id'] !== '') {
+  $medico_id = (int)$_GET['medico_id'];
   $filtrar_por_medico = true;
 }
 

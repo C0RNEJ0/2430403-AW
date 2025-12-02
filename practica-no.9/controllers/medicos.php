@@ -42,12 +42,39 @@ else if ($accion === 'crear') {
         $telefono = $_POST['telefono'] ?? '';
         // Compatibilidad con múltiples nombres de campo para especialidad
         $especialidad = $_POST['especialidad'] ?? $_POST['especialidad_id'] ?? null;
-        $horario = $_POST['horario'] ?? '';
+        
+        // Procesar horario desde hora_inicio y hora_fin
+        $hora_inicio = $_POST['hora_inicio'] ?? '';
+        $hora_fin = $_POST['hora_fin'] ?? '';
+        $horario = '';
+        
+        if ($hora_inicio && $hora_fin) {
+            // Validar rango de horario (7:00 AM - 5:00 PM)
+            if ($hora_inicio < '07:00' || $hora_inicio > '17:00') {
+                echo json_encode(['exito' => false, 'error' => 'La hora de inicio debe estar entre 7:00 AM y 5:00 PM']);
+                exit;
+            }
+            
+            if ($hora_fin < '07:00' || $hora_fin > '17:00') {
+                echo json_encode(['exito' => false, 'error' => 'La hora de fin debe estar entre 7:00 AM y 5:00 PM']);
+                exit;
+            }
+            
+            // Validar que hora fin sea mayor que hora inicio
+            if ($hora_fin <= $hora_inicio) {
+                echo json_encode(['exito' => false, 'error' => 'La hora de fin debe ser posterior a la hora de inicio']);
+                exit;
+            }
+            
+            $horario = $hora_inicio . '-' . $hora_fin;
+        }
+        
+        $cedula_profesional = $_POST['cedula_profesional'] ?? '';
         
         // Insertar nuevo médico con estado activo
-        $sql = "INSERT INTO medicos (nombre, email, telefono, especialidad_id, horario, activo) VALUES (?, ?, ?, ?, ?, 1)";
+        $sql = "INSERT INTO medicos (nombre, email, telefono, cedula_profesional, especialidad_id, horario, activo) VALUES (?, ?, ?, ?, ?, ?, 1)";
         $stmt = $bd->prepare($sql);
-        $stmt->execute([$nombre, $email, $telefono, $especialidad, $horario]);
+        $stmt->execute([$nombre, $email, $telefono, $cedula_profesional, $especialidad, $horario]);
         
         echo json_encode(['exito' => true, 'mensaje' => 'Medico creado']);
     } catch (Exception $e) {
@@ -57,17 +84,44 @@ else if ($accion === 'crear') {
 // Actualizar datos de médico existente
 else if ($accion === 'editar') {
     try {
-        $id = $_POST['medico_id'];
+        $id = $_POST['id'];
         $nombre = $_POST['nombre'];
         $email = $_POST['email'];
         $telefono = $_POST['telefono'] ?? '';
         $especialidad = $_POST['especialidad'] ?? $_POST['especialidad_id'] ?? null;
-        $horario = $_POST['horario'] ?? '';
+        
+        // Procesar horario desde hora_inicio y hora_fin
+        $hora_inicio = $_POST['hora_inicio'] ?? '';
+        $hora_fin = $_POST['hora_fin'] ?? '';
+        $horario = '';
+        
+        if ($hora_inicio && $hora_fin) {
+            // Validar rango de horario (7:00 AM - 5:00 PM)
+            if ($hora_inicio < '07:00' || $hora_inicio > '17:00') {
+                echo json_encode(['exito' => false, 'error' => 'La hora de inicio debe estar entre 7:00 AM y 5:00 PM']);
+                exit;
+            }
+            
+            if ($hora_fin < '07:00' || $hora_fin > '17:00') {
+                echo json_encode(['exito' => false, 'error' => 'La hora de fin debe estar entre 7:00 AM y 5:00 PM']);
+                exit;
+            }
+            
+            // Validar que hora fin sea mayor que hora inicio
+            if ($hora_fin <= $hora_inicio) {
+                echo json_encode(['exito' => false, 'error' => 'La hora de fin debe ser posterior a la hora de inicio']);
+                exit;
+            }
+            
+            $horario = $hora_inicio . '-' . $hora_fin;
+        }
+        
+        $cedula_profesional = $_POST['cedula_profesional'] ?? '';
         
         // Ejecutar UPDATE en base de datos
-        $sql = "UPDATE medicos SET nombre=?, email=?, telefono=?, especialidad_id=?, horario=? WHERE medico_id=?";
+        $sql = "UPDATE medicos SET nombre=?, email=?, telefono=?, cedula_profesional=?, especialidad_id=?, horario=? WHERE medico_id=?";
         $stmt = $bd->prepare($sql);
-        $stmt->execute([$nombre, $email, $telefono, $especialidad, $horario, $id]);
+        $stmt->execute([$nombre, $email, $telefono, $cedula_profesional, $especialidad, $horario, $id]);
         
         echo json_encode(['exito' => true, 'mensaje' => 'Medico actualizado']);
     } catch (Exception $e) {

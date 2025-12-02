@@ -33,7 +33,13 @@
       <p>Calendario y citas programadas.</p>
 
       <!-- Botón para agregar nueva cita -->
-      <div class="mb-3">
+      <div class="mb-3 d-flex justify-content-between align-items-center">
+        <!-- Filtro de médicos (solo admin) -->
+        <div id="filtro_medico_container" style="display:none;">
+          <select id="filtro_medico" class="form-select form-select-sm" style="width: 200px;">
+            <option value="">Todos los médicos</option>
+          </select>
+        </div>
         <button id="btn_nueva_cita" class="btn-admin">+ Nueva Cita</button>
       </div>
 
@@ -90,10 +96,12 @@
             <div class="col-md-6">
               <label class="form-label">Fecha *</label>
               <input class="form-control" type="date" id="cita_fecha" name="fecha" required>
+              <small class="text-muted">No se permiten fechas pasadas</small>
             </div>
             <div class="col-md-6">
               <label class="form-label">Hora *</label>
-              <input class="form-control" type="time" id="cita_hora" name="hora" required>
+              <input class="form-control" type="time" id="cita_hora" name="hora" min="07:00" max="17:00" required>
+              <small class="text-muted">Horario: 7:00 AM - 5:00 PM</small>
             </div>
           </div>
 
@@ -159,6 +167,72 @@
       </div>
     </div>
   </div>
+
+  <!-- Modal Bootstrap de Éxito -->
+  <div class="modal fade" id="modal_exito_cita" tabindex="-1" aria-labelledby="modalExitoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header bg-success text-white">
+          <h5 class="modal-title" id="modalExitoLabel">
+            <i class="bi bi-check-circle-fill me-2"></i>Operación Exitosa
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p class="mb-0">Cita guardada correctamente.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success" data-bs-dismiss="modal">Aceptar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Bootstrap de Error -->
+  <div class="modal fade" id="modal_error_cita" tabindex="-1" aria-labelledby="modalErrorLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header bg-danger text-white">
+          <h5 class="modal-title" id="modalErrorLabel">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>Error
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p class="mb-0">Ha ocurrido un error.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Confirmación para Eliminar Cita -->
+  <div class="modal fade" id="modal_confirmar_eliminar_cita" tabindex="-1" aria-labelledby="modalConfirmarLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header bg-warning text-dark">
+          <h5 class="modal-title" id="modalConfirmarLabel">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>Confirmar Eliminación
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p class="mb-0">¿Estás seguro que deseas eliminar esta cita?</p>
+          <p class="text-muted small mb-0">Esta acción no se puede deshacer.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-danger" id="confirmar_eliminar_cita">
+            <i class="bi bi-trash"></i> Eliminar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script src="../assets/js/modal-handler.js"></script>
   <script src="../assets/js/global-modals.js"></script>
   <script src="../assets/js/modal-utils.js"></script>

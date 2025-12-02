@@ -307,6 +307,71 @@ $medicos = listar_medicos();
     </div>
   </div>
 
+  <!-- Modal Eliminar Paciente -->
+  <div id="modal_eliminar_paciente" class="modal-modern">
+    <div class="modal-overlay"></div>
+    <div class="modal-container modal-small">
+      <div class="modal-header">
+        <i class="bi bi-trash"></i>
+        <h3>Eliminar Paciente</h3>
+        <button class="modal-close" onclick="cerrarModal('modal_eliminar_paciente')">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="eliminar_paciente_id">
+        <p>¿Estás seguro que deseas eliminar este paciente?</p>
+        <p style="font-size: 13px; color: #888;">Esta acción no se puede deshacer.</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-secondary" onclick="cerrarModal('modal_eliminar_paciente')">Cancelar</button>
+        <button class="btn-modal-danger" onclick="ejecutarEliminacionPaciente()">
+          <i class="bi bi-trash"></i> Eliminar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Bootstrap de Éxito -->
+  <div class="modal fade" id="modal_exito_bootstrap" tabindex="-1" aria-labelledby="modalExitoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header bg-success text-white">
+          <h5 class="modal-title" id="modalExitoLabel">
+            <i class="bi bi-check-circle-fill me-2"></i>Operación Exitosa
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p class="mb-0">Operación completada correctamente.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success" data-bs-dismiss="modal">Aceptar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Bootstrap de Error -->
+  <div class="modal fade" id="modal_error_paciente" tabindex="-1" aria-labelledby="modalErrorLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header bg-danger text-white">
+          <h5 class="modal-title" id="modalErrorLabel">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>Error
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p class="mb-0">Ha ocurrido un error.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script src="../assets/js/modal-handler.js"></script>
   <script src="../assets/js/load-sidebar.js"></script>

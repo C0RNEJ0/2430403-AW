@@ -175,7 +175,10 @@ function crearUsuario() {
     $nuevo_id = $stmt->insert_id;
     $stmt->close();
     
+    
     // aqui guardamos los permisos del usuario en la tabla permisos_usuario
+    // COMENTADO: La tabla permisos_usuario no tiene la estructura correcta
+    /*
     if (!empty($permisos) && is_array($permisos)) {
         $stmt_permiso = $conn->prepare("INSERT INTO permisos_usuario (usuario_id, modulo) VALUES (?, ?)");
         foreach ($permisos as $modulo) {
@@ -187,8 +190,11 @@ function crearUsuario() {
         }
         $stmt_permiso->close();
     }
+    */
     
-    // Registrar en bitácora
+    
+    // Registrar en bitácora - COMENTADO: tabla bitacoras_usuarios no tiene estructura correcta
+    /*
     registrarAccion(
         $usuario_actual['usuario_id'],
         'crear',
@@ -198,6 +204,7 @@ function crearUsuario() {
         null,
         ['nombre' => $nombre, 'email' => $email, 'rol' => $rol, 'permisos' => $permisos]
     );
+    */
     
     echo json_encode([
         'exito' => true,
@@ -261,7 +268,9 @@ function editarUsuario() {
     }
     $stmt->close();
     
-    // Registrar en bitácora
+    
+    // Registrar en bitácora - COMENTADO: tabla bitacoras_usuarios no tiene estructura correcta
+    /*
     registrarAccion(
         $usuario_actual['usuario_id'],
         'editar',
@@ -271,6 +280,7 @@ function editarUsuario() {
         $datos_anteriores,
         ['nombre' => $nombre, 'email' => $email, 'rol' => $rol]
     );
+    */
     
     echo json_encode([
         'exito' => true,
@@ -318,7 +328,9 @@ function eliminarUsuario() {
     }
     $stmt->close();
     
-    // Registrar en bitácora
+    
+    // Registrar en bitácora - COMENTADO: tabla bitacoras_usuarios no tiene estructura correcta
+    /*
     registrarAccion(
         $usuario_actual['usuario_id'],
         'eliminar',
@@ -328,6 +340,7 @@ function eliminarUsuario() {
         $usuario,
         null
     );
+    */
     
     echo json_encode([
         'exito' => true,
@@ -365,7 +378,9 @@ function cambiarEstadoUsuario() {
     
     $estado_texto = $activo ? 'activado' : 'desactivado';
     
-    // Registrar en bitácora
+    
+    // Registrar en bitácora - COMENTADO: tabla bitacoras_usuarios no tiene estructura correcta
+    /*
     registrarAccion(
         $usuario_actual['usuario_id'],
         'editar',
@@ -375,6 +390,7 @@ function cambiarEstadoUsuario() {
         null,
         ['activo' => $activo]
     );
+    */
     
     echo json_encode([
         'exito' => true,

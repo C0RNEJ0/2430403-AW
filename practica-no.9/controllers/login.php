@@ -31,7 +31,7 @@ try {
             throw new Exception('Acción no válida');
     }
 } catch (Exception $e) {
-    http_response_code(400);
+    http_response_code(200);
     echo json_encode([
         'exito' => false,
         'error' => $e->getMessage()

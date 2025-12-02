@@ -22,6 +22,8 @@
   </style>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
   <link rel="stylesheet" href="../assets/css/sidebar-modern.css">
 </head>
 
@@ -50,8 +52,16 @@
             <div>Pacientes nuevos</div>
             <div id="kpi_pacientes" style="font-weight:800; font-size:18px">0</div>
           </div>
-          <div class="ms-auto">
-            <button id="btn_nuevo_pago" class="btn-registrar-medico me-2">Registrar Pago</button>
+          <div class="ms-auto d-flex align-items-center gap-2">
+            <!-- Filtro de médicos (solo admin) -->
+            <div id="filtro_medico_container" style="display:none;">
+              <select id="filtro_medico" class="form-select form-select-sm" style="width: 200px;">
+                <option value="">Todos los médicos</option>
+              </select>
+            </div>
+
+            <button id="btn_nuevo_pago" class="btn-registrar-medico">Registrar Pago</button>
+            <button id="btn_imprimir_reporte" class="btn btn-danger"><i class="bi bi-file-pdf"></i> PDF Reporte</button>
             <button id="btn_export" class="btn-registrar-medico">Exportar</button>
           </div>
         </div>
@@ -184,6 +194,47 @@
       </div>
     </div>
   </div>
+
+  <!-- Modal Bootstrap de Éxito -->
+  <div class="modal fade" id="modal_exito_pago" tabindex="-1" aria-labelledby="modalExitoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header bg-success text-white">
+          <h5 class="modal-title" id="modalExitoLabel">
+            <i class="bi bi-check-circle-fill me-2"></i>Pago Registrado
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p class="mb-0">Pago registrado correctamente.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-success" data-bs-dismiss="modal">Aceptar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Bootstrap de Error -->
+  <div class="modal fade" id="modal_error_pago" tabindex="-1" aria-labelledby="modalErrorLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header bg-danger text-white">
+          <h5 class="modal-title" id="modalErrorLabel">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>Error
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p class="mb-0">Ha ocurrido un error al registrar el pago.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script src="../assets/js/reportes.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script src="../assets/js/modal-handler.js"></script>

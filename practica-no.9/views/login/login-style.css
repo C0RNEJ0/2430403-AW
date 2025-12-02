@@ -3,7 +3,8 @@
     padding: 0;
     box-sizing: border-box;
 }
- /* Estilos generales */
+
+/* Estilos generales */
 body {
     font-family: Arial, sans-serif;
     background-color: #1a1a1a;
@@ -44,7 +45,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
 }
 
 .logo {
@@ -77,7 +78,7 @@ body {
     border-radius: 20px;
     width: 100%;
     max-width: 450px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
 .login-box h2 {
@@ -99,7 +100,8 @@ label {
     color: #333;
     font-weight: 500;
 }
- /* Estilos de los inputs y botones */
+
+/* Estilos de los inputs y botones */
 input[type="text"],
 input[type="email"],
 input[type="password"] {
@@ -116,12 +118,12 @@ input[type="text"]:focus,
 input[type="email"]:focus,
 input[type="password"]:focus {
     outline: none;
-    border-color: #7ca673;
+    border-color: #1e3a5f;
 }
 
 .btn-login {
     padding: 12px 30px;
-    background-color: #7ca673;
+    background-color: #1e3a5f;
     color: white;
     border: none;
     border-radius: 8px;
@@ -133,7 +135,7 @@ input[type="password"]:focus {
 }
 
 .btn-login:hover {
-    background-color: #6a9261;
+    background-color: #2d5a7b;
 }
 
 .register-link {
@@ -144,13 +146,13 @@ input[type="password"]:focus {
 }
 
 .register-link a {
-    color: #4a7c4a;
+    color: #1e3a5f;
     text-decoration: underline;
     font-weight: 500;
 }
 
 .register-link a:hover {
-    color: #3a6a3a;
+    color: #2d5a7b;
 }
 
 /* Modal de confirmación */
@@ -176,7 +178,7 @@ input[type="password"]:focus {
     padding: 50px 80px;
     border-radius: 20px;
     text-align: center;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
     animation: fadeIn 0.3s ease-in;
 }
 
@@ -196,6 +198,7 @@ input[type="password"]:focus {
         opacity: 0;
         transform: scale(0.9);
     }
+
     to {
         opacity: 1;
         transform: scale(1);
@@ -223,12 +226,12 @@ input[type="password"]:focus {
 #modal_bienvenida .modal-content h2 {
     font-size: 22px;
     margin-bottom: 8px;
-    color: #154724;
+    color: #1e3a5f;
     font-weight: 700;
 }
 
 #modal_bienvenida .modal-content p {
-    color: #2b4b3a;
+    color: #2d5a7b;
     margin: 0 0 18px 0;
     line-height: 1.3;
 }
@@ -238,14 +241,14 @@ input[type="password"]:focus {
     padding: 10px 18px;
     border-radius: 10px;
     border: none;
-    background-color: #2a7a4a;
+    background-color: #1e3a5f;
     color: white;
     cursor: pointer;
     font-weight: 600;
 }
 
 #modal_bienvenida .btn:hover {
-    background-color: #24663f;
+    background-color: #2d5a7b;
 }
 
 /*  reducir tamaño en móviles */
@@ -274,7 +277,20 @@ input[type="password"]:focus {
     box-shadow: 0 20px 50px rgba(11, 41, 20, 0.45);
 }
 
-#modal_exito .modal-content h2 { color: #154724; margin-bottom: 8px; }
-#modal_exito .modal-content p { color: #2b4b3a; margin: 0 0 18px 0; }
-#modal_exito .btn { padding: 10px 18px; border-radius: 10px; background-color: #2a7a4a; color: white; border: none; }
+#modal_exito .modal-content h2 {
+    color: #1e3a5f;
+    margin-bottom: 8px;
+}
 
+#modal_exito .modal-content p {
+    color: #2d5a7b;
+    margin: 0 0 18px 0;
+}
+
+#modal_exito .btn {
+    padding: 10px 18px;
+    border-radius: 10px;
+    background-color: #1e3a5f;
+    color: white;
+    border: none;
+}

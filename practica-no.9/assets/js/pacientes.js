@@ -41,6 +41,7 @@ document.addEventListener('DOMContentLoaded', function () {
       var json = await respuesta.json();
       var select = document.getElementById('p_especialidad');
       if (!select) return;
+      var valorPrevio = select.value;
       select.innerHTML = '';
       if (json.exito && Array.isArray(json.datos)) {
         select.appendChild(new Option('Seleccione', ''));
@@ -49,6 +50,7 @@ document.addEventListener('DOMContentLoaded', function () {
           var valor = e.especialidad_id || e.id || '';
           select.appendChild(new Option(texto, valor));
         });
+        if (valorPrevio) select.value = valorPrevio;
       } else {
         select.appendChild(new Option('No hay especialidades', ''));
       }
@@ -66,6 +68,7 @@ document.addEventListener('DOMContentLoaded', function () {
       var json = await respuesta.json();
       var select = document.getElementById('p_medico_asignado');
       if (!select) return;
+      var valorPrevio = select.value;
       select.innerHTML = '';
       if (json.exito && Array.isArray(json.datos)) {
         select.appendChild(new Option('Seleccione', ''));
@@ -74,6 +77,7 @@ document.addEventListener('DOMContentLoaded', function () {
           var valor = m.medico_id || m.id || '';
           select.appendChild(new Option(texto, valor));
         });
+        if (valorPrevio) select.value = valorPrevio;
       } else {
         select.appendChild(new Option('No hay médicos', ''));
       }
@@ -226,7 +230,14 @@ document.addEventListener('DOMContentLoaded', function () {
           var data = await response.json();
           console.log('JSON data:', data);
           if (data.exito) {
-            alert(data.mensaje || 'Paciente guardado exitosamente');
+            // Mostrar modal de éxito Bootstrap
+            const modalEl = document.getElementById('modal_exito_bootstrap');
+            const modalBodyP = modalEl.querySelector('.modal-body p');
+            if (modalBodyP) modalBodyP.textContent = 'Paciente guardado correctamente';
+
+            const modalExito = new bootstrap.Modal(modalEl);
+            modalExito.show();
+
             cerrarModal('modal_paciente');
             formPaciente.reset();
             cargarPacientes(); // Recargar tabla
@@ -256,11 +267,49 @@ document.addEventListener('DOMContentLoaded', function () {
 /**
  * Carga el listado de pacientes desde el controlador y renderiza la tabla
  * @async
- * @returns {Promise<void>}
- */
+  // Cargar médicos para el filtro (solo admin)
+  async function cargarMedicosFiltro() {
+    try {
+      const res = await fetch('/practica-no.9/controllers/medicos_list.php');
+      const datos = await res.json();
+      const sel = document.getElementById('filtro_medico');
+      
+      if (sel && datos.exito) {
+        sel.innerHTML = '<option value="">Todos los médicos</option>';
+        datos.datos.forEach(m => {
+          sel.appendChild(new Option(m.nombre, m.medico_id));
+        });
+        sel.addEventListener('change', cargarPacientes);
+      }
+    } catch (e) {
+      console.error('Error cargando lista de médicos para filtro:', e);
+    }
+  }
+
+  document.addEventListener('sesionVerificada', (e) => {
+    const usuario = e.detail;
+    if (usuario.rol === 'super_admin') {
+      const container = document.getElementById('filtro_medico_container');
+      if (container) {
+        container.style.display = 'block';
+        cargarMedicosFiltro();
+      }
+    }
+  });
+
+  /**
+   * Carga el listado de pacientes desde el controlador
+   * @async
+   * @returns {Promise<void>}
+   */
 async function cargarPacientes() {
   try {
-    var respuesta = await fetch('/practica-no.9/controllers/pacientes.php?api=listar');
+    let url = '/practica-no.9/controllers/pacientes.php?api=listar';
+    const filtro = document.getElementById('filtro_medico');
+    if (filtro && filtro.value) {
+      url += `&medico_id=${filtro.value}`;
+    }
+    var respuesta = await fetch(url);
     var json = await respuesta.json();
     var tabla = document.getElementById('tabla_pacientes');
     if (!tabla) return;
@@ -277,7 +326,8 @@ async function cargarPacientes() {
           '<td>' + escaparHtml(paciente.telefono || '') + '</td>' +
           '<td>' + escaparHtml(paciente.email || '') + '</td>' +
           '<td>' + escaparHtml(paciente.ciudad || '') + '</td>' +
-          '<td>' + escaparHtml(paciente.prioridad || '') + '</td>';
+          '<td>' + escaparHtml(paciente.prioridad || '') + '</td>' +
+          '<td>' + escaparHtml(paciente.medico_nombre || 'Sin asignar') + '</td>';
         var tdAcc = document.createElement('td');
 
         // Botón para editar paciente
@@ -424,14 +474,33 @@ function ejecutarEliminacionPaciente() {
     .then(res => res.json())
     .then(data => {
       if (data.exito) {
-        alert('Paciente eliminado correctamente');
+        // Mostrar modal de éxito Bootstrap
+        const modalEl = document.getElementById('modal_exito_bootstrap');
+        const modalBodyP = modalEl.querySelector('.modal-body p');
+        if (modalBodyP) modalBodyP.textContent = 'Paciente eliminado correctamente';
+
+        const modalExito = new bootstrap.Modal(modalEl);
+        modalExito.show();
+
         if (typeof cerrarModal === 'function') cerrarModal('modal_eliminar_paciente');
         cargarPacientes();
       } else {
-        alert('Error al eliminar: ' + data.error);
+        const modalEl = document.getElementById('modal_error_paciente');
+        const modalBodyP = modalEl.querySelector('.modal-body p');
+        if (modalBodyP) modalBodyP.textContent = data.error || 'Error al eliminar';
+
+        const modalError = new bootstrap.Modal(modalEl);
+        modalError.show();
       }
     })
-    .catch(err => alert('Error de red: ' + err));
+    .catch(err => {
+      const modalEl = document.getElementById('modal_error_paciente');
+      const modalBodyP = modalEl.querySelector('.modal-body p');
+      if (modalBodyP) modalBodyP.textContent = 'Error de red: ' + err;
+
+      const modalError = new bootstrap.Modal(modalEl);
+      modalError.show();
+    });
 }
 
 /**
@@ -465,4 +534,41 @@ document.addEventListener('DOMContentLoaded', function () {
       btnCerrarEliminar.addEventListener('click', () => cerrarModal('modal_eliminar_paciente'));
     }
   }, 500);
+
+  // Manejar envío del formulario de cobro
+  const formCobro = document.getElementById('formulario_cobro');
+  if (formCobro) {
+    formCobro.addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const formData = new FormData(formCobro);
+
+      try {
+        const response = await fetch('/practica-no.9/controllers/reportes.php', {
+          method: 'POST',
+          body: formData
+        });
+
+        const data = await response.json();
+
+        if (data.exito) {
+          // Mostrar modal de éxito Bootstrap
+          const modalEl = document.getElementById('modal_exito_bootstrap');
+          const modalBodyP = modalEl.querySelector('.modal-body p');
+          if (modalBodyP) modalBodyP.textContent = 'Pago registrado correctamente';
+
+          const modalExito = new bootstrap.Modal(modalEl);
+          modalExito.show();
+
+          cerrarModal('modal_cobro');
+          formCobro.reset();
+        } else {
+          alert('Error al registrar pago: ' + (data.error || 'Error desconocido'));
+        }
+      } catch (error) {
+        console.error('Error registrando pago:', error);
+        alert('Error de conexión al registrar pago');
+      }
+    });
+  }
 });

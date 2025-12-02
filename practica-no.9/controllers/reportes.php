@@ -12,25 +12,23 @@ $bd = obtener_conexion();
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-$usuario_rol = $_SESSION['usuario_rol'] ?? null;
-$usuario_id = $_SESSION['usuario_id'] ?? null;
+$usuario_rol = $_SESSION['rol'] ?? null;
+$medico_id_sesion = $_SESSION['medico_id'] ?? null;
 
 // obtener medico_id para filtrar según el rol
-// admin: ve todo, secretaria: ve del médico asociado, medico: ve solo sus datos
+// admin: ve todo y puede filtrar por médico, médico/secretaria: ve solo sus datos
 $medico_id = null;
-$es_medico = ($usuario_rol === 'medico');
-$es_secretaria = ($usuario_rol === 'secretaria');
 $filtrar_por_medico = false;
 
-if (($es_medico || $es_secretaria) && $usuario_id) {
-  $stmt_medico = $bd->prepare('SELECT medico_id FROM usuarios WHERE usuario_id = :uid LIMIT 1');
-  $stmt_medico->bindValue(':uid', $usuario_id, PDO::PARAM_INT);
-  $stmt_medico->execute();
-  $medico_data = $stmt_medico->fetch();
-  if ($medico_data && $medico_data['medico_id']) {
-    $medico_id = $medico_data['medico_id'];
-    $filtrar_por_medico = true;
-  }
+if (($usuario_rol === 'medico' || $usuario_rol === 'secretaria') && $medico_id_sesion) {
+  $medico_id = $medico_id_sesion;
+  $filtrar_por_medico = true;
+}
+
+// Si es admin, puede filtrar por médico específico (parámetro opcional)
+if ($usuario_rol === 'super_admin' && isset($_GET['medico_id']) && $_GET['medico_id'] !== '') {
+  $medico_id = (int)$_GET['medico_id'];
+  $filtrar_por_medico = true;
 }
 
 // obtener tipo de reporte
@@ -51,6 +49,8 @@ try {
         $estatus = trim($_POST['estatus'] ?? 'pagado');
         $servicio = trim($_POST['servicio'] ?? '');
         
+        $medico_id_pago = isset($_POST['medico']) && $_POST['medico'] !== '' ? (int)$_POST['medico'] : null;
+        
         // validar datos requeridos
         if (empty($paciente_id) || $monto <= 0) {
             echo json_encode(['exito' => false, 'error' => 'paciente_id y monto son requeridos']);
@@ -62,12 +62,12 @@ try {
         
         // insertar pago
         // Nota: concepto se usa para guardar el servicio si no hay cita
-        $sql = "INSERT INTO pagos (paciente_id, cita_id, monto, moneda, metodo, estatus, referencia, fecha_pago, concepto) 
-                VALUES (?, ?, ?, 'MXN', ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO pagos (paciente_id, cita_id, medico_id, monto, moneda, metodo, estatus, referencia, fecha_pago, concepto) 
+                VALUES (?, ?, ?, ?, 'MXN', ?, ?, ?, ?, ?)";
         
         // ejecutar con PDO
         $stmt = $bd->prepare($sql);
-        $stmt->execute([$paciente_id, $cita_id, $monto, $metodo_pago, $estatus, $referencia, $fecha_pago, $servicio]);
+        $stmt->execute([$paciente_id, $cita_id, $medico_id_pago, $monto, $metodo_pago, $estatus, $referencia, $fecha_pago, $servicio]);
         
         echo json_encode(['exito' => true, 'id' => $bd->lastInsertId()]);
         exit;

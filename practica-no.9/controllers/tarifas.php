@@ -11,23 +11,7 @@ $bd = obtener_conexion();
 // Obtener acción desde parámetros de solicitud
 $accion = $_REQUEST['accion'] ?? '';
 
-// Obtener una tarifa específica por id (cuando viene id por GET sin acción)
-if (isset($_GET['id']) && $accion === '') {
-    try {
-        $id = $_GET['id'];
-        $sql = "SELECT tarifa_id, nombre_servicio as especialidad, servicio, precio FROM tarifas WHERE tarifa_id = ?";
-        $stmt = $bd->prepare($sql);
-        $stmt->execute([$id]);
-        $tarifa = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        
-        echo json_encode(['exito' => true, 'datos' => $tarifa]);
-    } catch (Exception $e) {
-        echo json_encode(['exito' => false, 'error' => $e->getMessage()]);
-    }
-    exit;
-}
-
-// Listar todas las tarifas si no se especifica acción
+// Listar todas las tarifas si no se especifica acción (PÚBLICO - para PDF)
 if ($accion === 'listar' || $accion === '') {
     try {
         // Obtener tarifas ordenadas alfabéticamente
@@ -42,8 +26,29 @@ if ($accion === 'listar' || $accion === '') {
     }
     exit;
 }
+
+// Para todas las demás acciones, validar autenticación y permisos de super admin
+require_once __DIR__ . '/../config/auth.php';
+requerirRol('super_admin');
+
+// Obtener una tarifa específica por id (cuando viene id por GET sin acción)
+if (isset($_GET['id'])) {
+    try {
+        $id = $_GET['id'];
+        $sql = "SELECT tarifa_id, nombre_servicio as especialidad, servicio, precio FROM tarifas WHERE tarifa_id = ?";
+        $stmt = $bd->prepare($sql);
+        $stmt->execute([$id]);
+        $tarifa = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        echo json_encode(['exito' => true, 'datos' => $tarifa]);
+    } catch (Exception $e) {
+        echo json_encode(['exito' => false, 'error' => $e->getMessage()]);
+    }
+    exit;
+}
+
 // Crear una nueva tarifa
-else if ($accion === 'crear' || (!isset($_POST['id']) && !empty($_POST['especialidad']))) {
+if ($accion === 'crear' || (!isset($_POST['id']) && !empty($_POST['especialidad']))) {
     try {
         // Extraer datos del formulario POST
         $especialidad = $_POST['especialidad'] ?? '';

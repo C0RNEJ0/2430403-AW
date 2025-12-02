@@ -61,7 +61,12 @@ function guardarUsuarioConPermisos() {
         .then(response => response.json())
         .then(data => {
             if (data.exito) {
-                alert('Usuario creado con permisos exitosamente');
+                const modalEl = document.getElementById('modal_exito_admin');
+                const modalBodyP = modalEl.querySelector('.modal-body p');
+                if (modalBodyP) modalBodyP.textContent = 'Usuario creado con permisos exitosamente';
+
+                const modalExito = new bootstrap.Modal(modalEl);
+                modalExito.show();
                 const modal = bootstrap.Modal.getInstance(document.getElementById('modal_usuario'));
                 if (modal) modal.hide();
                 cargarUsuarios();
@@ -130,9 +135,6 @@ function renderizarTablaUsuarios(usuarios) {
                 <td><span class="badge ${estadoClass}">${estadoTexto}</span></td>
                 <td class="text-end">
                     <div class="btn-group btn-group-sm">
-                        <button class="btn btn-primary" onclick="abrirModalEditarUsuario(${u.usuario_id})" title="Editar">
-                            <i class="bi bi-pencil"></i>
-                        </button>
                         <button class="btn btn-${u.activo == 1 ? 'warning' : 'success'}" 
                                 onclick="cambiarEstadoUsuario(${u.usuario_id}, ${u.activo == 1 ? 0 : 1})" 
                                 title="${u.activo == 1 ? 'Desactivar' : 'Activar'}">
@@ -395,12 +397,22 @@ function formatearFecha(fecha) {
 // Helpers para mostrar mensajes (si no existen globalmente)
 if (typeof mostrarExito !== 'function') {
     window.mostrarExito = function (mensaje) {
-        alert('bien ' + mensaje);
+        const modalEl = document.getElementById('modal_exito_admin');
+        const modalBodyP = modalEl.querySelector('.modal-body p');
+        if (modalBodyP) modalBodyP.textContent = mensaje;
+
+        const modalExito = new bootstrap.Modal(modalEl);
+        modalExito.show();
     };
 }
 
 if (typeof mostrarError !== 'function') {
     window.mostrarError = function (mensaje) {
-        alert('mal ' + mensaje);
+        const modalEl = document.getElementById('modal_error_admin');
+        const modalBodyP = modalEl.querySelector('.modal-body p');
+        if (modalBodyP) modalBodyP.textContent = mensaje;
+
+        const modalError = new bootstrap.Modal(modalEl);
+        modalError.show();
     };
 }

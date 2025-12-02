@@ -30,6 +30,10 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('accion_cita').value = 'crear';
     document.getElementById('titulo_modal_cita').innerText = 'Nueva Cita';
 
+    // Establecer fecha mínima (hoy)
+    const hoy = new Date().toISOString().split('T')[0];
+    document.getElementById('cita_fecha').setAttribute('min', hoy);
+
     // Ocultar botón eliminar
     const btnEliminar = document.getElementById('btn_eliminar_cita');
     if (btnEliminar) btnEliminar.style.display = 'none';
@@ -67,24 +71,54 @@ document.addEventListener('DOMContentLoaded', function () {
   };
 
   window.eliminarCita = function (id) {
-    if (!confirm('¿Estás seguro de que deseas eliminar esta cita?')) return;
+    // Mostrar modal de confirmación
+    const modalConfirmar = new bootstrap.Modal(document.getElementById('modal_confirmar_eliminar_cita'));
+    modalConfirmar.show();
 
-    const formData = new FormData();
-    formData.append('accion', 'eliminar');
-    formData.append('cita_id', id);
+    // Manejar confirmación
+    document.getElementById('confirmar_eliminar_cita').onclick = function () {
+      const formData = new FormData();
+      formData.append('accion', 'eliminar');
+      formData.append('cita_id', id);
 
-    fetch('/practica-no.9/controllers/citas.php', { method: 'POST', body: formData })
-      .then(res => res.json())
-      .then(data => {
-        if (data.exito) {
-          alert('Cita eliminada correctamente');
-          document.getElementById('modal_cita').style.display = 'none';
-          cargarCitas();
-        } else {
-          alert('Error al eliminar: ' + data.error);
-        }
-      })
-      .catch(err => alert('Error de red: ' + err));
+      fetch('/practica-no.9/controllers/citas.php', { method: 'POST', body: formData })
+        .then(res => res.json())
+        .then(data => {
+          // Cerrar modal de confirmación
+          modalConfirmar.hide();
+
+          if (data.exito) {
+            // Mostrar modal de éxito
+            const modalExito = document.getElementById('modal_exito_cita');
+            const modalBodyP = modalExito.querySelector('.modal-body p');
+            if (modalBodyP) modalBodyP.textContent = 'Cita eliminada correctamente';
+
+            const bsModalExito = new bootstrap.Modal(modalExito);
+            bsModalExito.show();
+
+            document.getElementById('modal_cita').style.display = 'none';
+            cargarCitas();
+          } else {
+            // Mostrar modal de error
+            const modalError = document.getElementById('modal_error_cita');
+            const modalBodyP = modalError.querySelector('.modal-body p');
+            if (modalBodyP) modalBodyP.textContent = data.error || 'Error al eliminar la cita';
+
+            const bsModalError = new bootstrap.Modal(modalError);
+            bsModalError.show();
+          }
+        })
+        .catch(err => {
+          modalConfirmar.hide();
+
+          const modalError = document.getElementById('modal_error_cita');
+          const modalBodyP = modalError.querySelector('.modal-body p');
+          if (modalBodyP) modalBodyP.textContent = 'Error de red: ' + err;
+
+          const bsModalError = new bootstrap.Modal(modalError);
+          bsModalError.show();
+        });
+    };
   };
 
   // Botón nueva cita
@@ -116,8 +150,44 @@ document.addEventListener('DOMContentLoaded', function () {
     cargarCitas();
   }
 
+  // Cargar médicos para el filtro (solo admin)
+  async function cargarMedicosFiltro() {
+    try {
+      const res = await fetch('/practica-no.9/controllers/medicos_list.php');
+      const datos = await res.json();
+      const sel = document.getElementById('filtro_medico');
+
+      if (sel && datos.exito) {
+        sel.innerHTML = '<option value="">Todos los médicos</option>';
+        datos.datos.forEach(m => {
+          sel.appendChild(new Option(m.nombre, m.medico_id));
+        });
+        sel.addEventListener('change', cargarCitas);
+      }
+    } catch (e) {
+      console.error('Error cargando lista de médicos para filtro:', e);
+    }
+  }
+
+  document.addEventListener('sesionVerificada', (e) => {
+    const usuario = e.detail;
+    if (usuario.rol === 'super_admin') {
+      const container = document.getElementById('filtro_medico_container');
+      if (container) {
+        container.style.display = 'block';
+        cargarMedicosFiltro();
+      }
+    }
+  });
+
   function cargarCitas() {
-    fetch('/practica-no.9/controllers/citas.php?accion=listar')
+    let url = '/practica-no.9/controllers/citas.php?accion=listar';
+    const filtro = document.getElementById('filtro_medico');
+    if (filtro && filtro.value) {
+      url += `&medico_id=${filtro.value}`;
+    }
+
+    fetch(url)
       .then(res => res.json())
       .then(data => {
         if (data.exito) {
@@ -230,23 +300,70 @@ document.addEventListener('DOMContentLoaded', function () {
     form.onsubmit = function (e) {
       e.preventDefault();
 
+      // Validar fecha no sea pasada
+      const fechaInput = document.getElementById('cita_fecha').value;
+      const horaInput = document.getElementById('cita_hora').value;
+      const hoy = new Date().toISOString().split('T')[0];
+
+      if (fechaInput < hoy) {
+        const modalError = document.getElementById('modal_error_cita');
+        const modalBodyP = modalError.querySelector('.modal-body p');
+        if (modalBodyP) modalBodyP.textContent = 'No se pueden agendar citas en fechas pasadas';
+
+        const bsModalError = new bootstrap.Modal(modalError);
+        bsModalError.show();
+        return;
+      }
+
+      // Validar horario (7:00 AM - 5:00 PM)
+      if (horaInput < '07:00' || horaInput > '17:00') {
+        const modalError = document.getElementById('modal_error_cita');
+        const modalBodyP = modalError.querySelector('.modal-body p');
+        if (modalBodyP) modalBodyP.textContent = 'El horario de citas es de 7:00 AM a 5:00 PM';
+
+        const bsModalError = new bootstrap.Modal(modalError);
+        bsModalError.show();
+        return;
+      }
+
       const formData = new FormData(form);
+      const accion = document.getElementById('accion_cita').value;
+      const mensaje = accion === 'crear' ? 'Cita creada correctamente' : 'Cita actualizada correctamente';
 
       fetch('/practica-no.9/controllers/citas.php', { method: 'POST', body: formData })
         .then(res => res.json())
         .then(data => {
           if (data.exito) {
-            alert('Guardado correctamente');
+            // Mostrar modal de éxito
+            const modalExito = document.getElementById('modal_exito_cita');
+            const modalBodyP = modalExito.querySelector('.modal-body p');
+            if (modalBodyP) modalBodyP.textContent = mensaje;
+
+            const bsModalExito = new bootstrap.Modal(modalExito);
+            bsModalExito.show();
+
             document.getElementById('modal_cita').style.display = 'none';
             cargarCitas(); // Recargar calendario
           } else {
-            alert('Error: ' + data.error);
+            // Mostrar modal de error
+            const modalError = document.getElementById('modal_error_cita');
+            const modalBodyP = modalError.querySelector('.modal-body p');
+            if (modalBodyP) modalBodyP.textContent = data.error || 'Error al guardar la cita';
+
+            const bsModalError = new bootstrap.Modal(modalError);
+            bsModalError.show();
           }
+        })
+        .catch(err => {
+          const modalError = document.getElementById('modal_error_cita');
+          const modalBodyP = modalError.querySelector('.modal-body p');
+          if (modalBodyP) modalBodyP.textContent = 'Error de red: ' + err;
+
+          const bsModalError = new bootstrap.Modal(modalError);
+          bsModalError.show();
         });
     };
   }
-
-
 
   // Cerrar modales
   document.querySelectorAll('.modal-close, .btn-modal-secondary').forEach(btn => {
