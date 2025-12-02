@@ -2,7 +2,8 @@
 
 **Autor:** José Guadalupe Cornejo Alva
 
-Sistema web completo para la gestión de clínicas médicas que permite administrar pacientes, médicos, citas, expedientes clínicos, pagos y reportes. Desarrollado con arquitectura MVC utilizando PHP, MySQL y JavaScript.
+Sistema web completo para la gestión de clínicas médicas que permite administrar pacientes, médicos, citas, expedientes clínicos, pagos y reportes. 
+Desarrollado con arquitectura MVC utilizando PHP, MySQL, JavaScript y mucho amor.
 
 ## Enlaces
 
